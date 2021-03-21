@@ -5,12 +5,22 @@ public class Truck {
     private String model;
     private int maxWeight;
     private String type;
+    private int factoryWeight;
 
-    public Truck(int plateNum, String model, int maxWeight, String type) {
+    public Truck(int plateNum, String model, int maxWeight, String type, int Fw) {
         setPlateNum(plateNum);
         setModel(model);
         setMaxWeight(maxWeight);
         setType(type);
+        setFactoryWeight(Fw);
+    }
+
+    public void setFactoryWeight(int factoryWeight) {
+        this.factoryWeight = factoryWeight;
+    }
+
+    public int getFactoryWeight() {
+        return factoryWeight;
     }
 
     public int getPlateNum() {
