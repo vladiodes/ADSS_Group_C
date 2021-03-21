@@ -1,5 +1,6 @@
 package Business.Controllers;
 
-public interface Controller<T> {
+import java.util.HashMap;
 
+public interface Controller<T> {
 }
