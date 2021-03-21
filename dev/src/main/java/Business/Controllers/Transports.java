@@ -4,24 +4,28 @@ import Business.Objects.*;
 import java.util.*;
 
 public class Transports implements Controller<Transport> {
-    private ArrayList<Transport> transports = new ArrayList<Transport>();
+    private ArrayList<Transport> transports;
 
-    public void addTransport(Transport transport){
+    public Transports() {
+        this.transports = new ArrayList<Transport>();
+    }
+
+    public void addTransport(Transport transport) {
         transports.add(transport);
     }
 
-    public ArrayList<Transport> getTransportsOfDriver(int driverID){
+    public ArrayList<Transport> getTransportsOfDriver(int driverID) {
         ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
         for (Transport t : transports)
-            if(t.getDriver().getID()==driverID)
+            if (t.getDriver().getID() == driverID)
                 filteredTransports.add(t);
         return filteredTransports;
     }
 
-    public ArrayList<Transport> getTransportsByDate(Date date){
+    public ArrayList<Transport> getTransportsByDate(Date date) {
         ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
         for (Transport t : transports)
-            if(t.getDate()==date)
+            if (t.getDate() == date)
                 filteredTransports.add(t);
         return filteredTransports;
     }

@@ -1,7 +1,6 @@
 package Business.Objects;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Transport {
     private Date date;
@@ -25,19 +24,19 @@ public class Transport {
     }
 
     public void setWeight(int weight) throws Exception {
-        if(truck!=null && truck.getMaxWeight() < weight)
+        if (truck != null && truck.getMaxWeight() < weight)
             throw new Exception("Truck weight exceeded.");
         this.weight = weight;
     }
 
     public void setDriver(Driver driver) throws Exception {
-        if(truck!=null && truck.getFactoryWeight() >= driver.getLicense())
+        if (truck != null && truck.getFactoryWeight() >= driver.getLicense())
             throw new Exception(driver.getName() + " Doesn't have a license to drive " + truck.getPlateNum());
         this.driver = driver;
     }
 
     public void setTruck(Truck _truck) throws Exception {
-        if(driver!=null && _truck.getFactoryWeight() >= driver.getLicense())
+        if (driver != null && _truck.getFactoryWeight() >= driver.getLicense())
             throw new Exception(driver.getName() + " Doesn't have a license to drive " + truck.getPlateNum());
         this.truck = _truck;
     }

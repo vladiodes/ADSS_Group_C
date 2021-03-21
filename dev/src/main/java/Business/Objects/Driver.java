@@ -5,7 +5,7 @@ public class Driver {
     private int License;
     private int ID;
 
-    public Driver(String _name, int _license, int _id){
+    public Driver(String _name, int _license, int _id) {
         setID(_id);
         setName((_name));
         setLicense(_license);
