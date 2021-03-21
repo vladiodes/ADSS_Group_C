@@ -1,9 +1,28 @@
 package Business.Controllers;
 
-import Business.Objects.Transport;
-import java.util.HashMap;
+import Business.Objects.*;
+import java.util.*;
 
 public class Transports implements Controller<Transport> {
-    HashMap<Integer, Transport> transports;
+    private ArrayList<Transport> transports = new ArrayList<Transport>();
 
+    public void addTransport(Transport transport){
+        transports.add(transport);
+    }
+
+    public ArrayList<Transport> getTransportsOfDriver(int driverID){
+        ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
+        for (Transport t : transports)
+            if(t.getDriver().getID()==driverID)
+                filteredTransports.add(t);
+        return filteredTransports;
+    }
+
+    public ArrayList<Transport> getTransportsByDate(Date date){
+        ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
+        for (Transport t : transports)
+            if(t.getDate()==date)
+                filteredTransports.add(t);
+        return filteredTransports;
+    }
 }

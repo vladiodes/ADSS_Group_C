@@ -1,6 +1,16 @@
 package Business.Objects;
 
 public class Driver {
+    private String Name;
+    private int License;
+    private int ID;
+
+    public Driver(String _name, int _license, int _id){
+        setID(_id);
+        setName((_name));
+        setLicense(_license);
+    }
+
     public void setLicense(int license) {
         License = license;
     }
@@ -23,14 +33,5 @@ public class Driver {
 
     public int getID() {
         return ID;
-    }
-
-    private String Name;
-    private int License;
-    private int ID;
-    public Driver(String _name, int _license, int _id){
-        setID(_id);
-        setName((_name));
-        setLicense(_license);
     }
 }
