@@ -1,4 +1,5 @@
 package Business.Controllers;
 
-public interface Controller {
+public interface Controller<T> {
+
 }
