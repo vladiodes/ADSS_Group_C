@@ -1,0 +1,9 @@
+package main.java.BusinessLayer.Controllers;
+
+import java.util.Map;
+import main.java.BusinessLayer.Supplier;
+
+public class SuppliersController{
+    private Map<Integer, Supplier> supplierMap;
+
+}

@@ -1,0 +1,9 @@
+package main.java.BusinessLayer.Controllers;
+
+import main.java.BusinessLayer.Product;
+
+import java.util.Map;
+
+public class Inventory{
+    private Map<Integer, Product> productMap;
+}

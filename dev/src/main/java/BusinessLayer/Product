@@ -1,0 +1,6 @@
+package main.java.BusinessLayer;
+
+public class Product{
+    private int productID;
+    private String productName;
+}

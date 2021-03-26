@@ -1,3 +1,5 @@
+package main.java.BusinessLayer.Facade;
+
 public class Response<T> {
     private T value;
     private boolean wasException=false;

@@ -1,4 +1,4 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
+package main.java.BusinessLayer.Facade;
 
 import java.util.*;
 
@@ -181,9 +181,9 @@ public interface ISuppliersFacade {
 
     /**
      * Deletes a product from an order
-     * @param supplierID
-     * @param orderID
-     * @param productID
+     * @param supplierID - supplier id
+     * @param orderID - order id
+     * @param productID - product's id
      * @return returns true upon success
      */
     Response<Boolean> deleteProductFromOrder(int supplierID,int orderID,int productID);
