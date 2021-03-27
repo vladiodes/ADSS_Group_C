@@ -1,4 +1,4 @@
-package main.java.BusinessLayer;
+package BusinessLayer;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
 

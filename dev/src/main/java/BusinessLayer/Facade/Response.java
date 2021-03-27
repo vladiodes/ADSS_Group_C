@@ -1,4 +1,4 @@
-package main.java.BusinessLayer.Facade;
+package BusinessLayer.Facade;
 
 public class Response<T> {
     private T value;

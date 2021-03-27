@@ -1,5 +1,5 @@
-package main.java.BusinessLayer.Facade;
 
+package BusinessLayer.Facade;
 import java.util.*;
 
 public interface ISuppliersFacade {

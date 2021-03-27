@@ -1,4 +1,4 @@
-package main.java.BusinessLayer;
+package BusinessLayer;
 
 public class ProductInOrder{
     private int quantity;

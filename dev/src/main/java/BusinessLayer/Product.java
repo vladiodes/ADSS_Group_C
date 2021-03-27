@@ -1,4 +1,4 @@
-package main.java.BusinessLayer;
+package BusinessLayer;
 
 public class Product{
     private int productID;

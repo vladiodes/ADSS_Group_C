@@ -1,6 +1,6 @@
-package main.java.BusinessLayer.Controllers;
+package BusinessLayer.Controllers;
 
-import main.java.BusinessLayer.Product;
+import BusinessLayer.Product;
 
 import java.util.Map;
 
