@@ -5,7 +5,6 @@ import java.util.*;
 public interface ISuppliersFacade {
     /**
      * Adds a new supplier to the system
-     * @param supplierId - the id of the supplier
      * @param supplierName - the name of the supplier
      * @param supplyingDays - the fixed supplying days of the supplier
      *                      0 - Sunday ,.... , 6 - Friday, null if none
@@ -21,7 +20,7 @@ public interface ISuppliersFacade {
      *                  A dictionary of the type: [Price:Discount]
      * @return A response message, if true - than success.
      */
-    Response<Boolean> addSupplier(int supplierId, String supplierName, List<Integer>supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, List<String> categories, List<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
+    Response<Boolean> addSupplier(String supplierName, List<Integer>supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, List<String> categories, List<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
 
     /**
      * Deletes a supplier from the system
