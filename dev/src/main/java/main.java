@@ -1,7 +1,7 @@
-import PresentationLayer.mainWindow;
+import PresentationLayer.mainMenuWindow;
 
 public class main {
     public static void main(String[] args){
-        new mainWindow(null).start();
+        new mainMenuWindow(null).start();
     }
 }

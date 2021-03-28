@@ -1,8 +1,12 @@
 package PresentationLayer;
 
-import java.io.IOException;
+import BusinessLayer.Facade.Response;
 
-public class inputChecker {
+import java.util.List;
+import java.util.Scanner;
+
+public class utills {
+    public static final Scanner scanner=new Scanner(System.in);
 
     /**
      * Checks if a given string represents a number that is {@code 0<number<bound}
@@ -45,5 +49,29 @@ public class inputChecker {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    public static void printMessageOrSuccess(Response<? extends Object> response, String successMessage) {
+        if(response.WasException())
+            System.out.println(response.getMessage());
+        else
+            System.out.println(successMessage);
+    }
+
+    public static void printErrorMessageOrListOfValues(Response<List<String>> response){
+        if(response.WasException())
+            System.out.println(response.getMessage());
+        else {
+            for (String element : response.getValue())
+                System.out.println(element);
+        }
+    }
+
+    public static int getNonNegativeNumber(String prompt){
+        int output=-1;
+        System.out.println(prompt);
+        for(output= checkPositiveNumber(scanner.nextLine()); output==-1; output= checkPositiveNumber(scanner.nextLine()))
+            System.out.println("Wrong input, please enter a non negative number");
+        return output;
     }
 }

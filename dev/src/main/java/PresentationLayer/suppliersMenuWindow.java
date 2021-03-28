@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class suppliersWindow extends Window {
+public class suppliersMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
-    private Map<Integer,String> menu=createMenu();
 
-    private Map<Integer, String> createMenu() {
-        HashMap menu=new HashMap();
+    protected void createMenu() {
+        menu=new HashMap();
         menu.put(1,"Add supplier");
         menu.put(2,"Delete supplier");
         menu.put(3,"View supplier's details");
@@ -26,29 +25,54 @@ public class suppliersWindow extends Window {
         menu.put(11,"Add a discount to a specific product supplied by a supplier"); //@TODO: Add this function to the facade.
         menu.put(12,"Delete a discount from a specific product by a supplier");
         menu.put(13,"Go back to the main menu");
-        return menu;
     }
 
-    public suppliersWindow(ISuppliersFacade facade,String description) {
+    public suppliersMenuWindow(ISuppliersFacade facade, String description) {
         super(facade,description);
     }
     public void start() {
         printDescription();
-        while (!shouldTerminate){
-            switch (printMenu()){
-                case 1: addSupplier(); break;
-                case 2: deleteSupplier(); break;
-                case 3: getSupplier(); break;
-                case 4: getSuppliers(); break;
-                case 5: updateSupplierShipping(); break;
-                case 6: updateSupplierShippingDays(); break;
-                case 7: addDiscount(); break;
-                case 8: deleteDiscount(); break;
-                case 9: addItem(); break;
-                case 10: deleteItem(); break;
-                case 11: addDiscountProduct(); break;
-                case 12: deleteDiscountProduct(); break;
-                case 13: terminate(); break;
+        while (!shouldTerminate) {
+            switch (printMenu()) {
+                case 1:
+                    addSupplier();
+                    break;
+                case 2:
+                    deleteSupplier();
+                    break;
+                case 3:
+                    getSupplier();
+                    break;
+                case 4:
+                    getSuppliers();
+                    break;
+                case 5:
+                    updateSupplierShipping();
+                    break;
+                case 6:
+                    updateSupplierShippingDays();
+                    break;
+                case 7:
+                    addDiscount();
+                    break;
+                case 8:
+                    deleteDiscount();
+                    break;
+                case 9:
+                    addItem();
+                    break;
+                case 10:
+                    deleteItem();
+                    break;
+                case 11:
+                    addDiscountProduct();
+                    break;
+                case 12:
+                    deleteDiscountProduct();
+                    break;
+                case 13:
+                    terminate();
+                    break;
             }
         }
         closeWindow();
@@ -63,63 +87,65 @@ public class suppliersWindow extends Window {
     }
 
     private void deleteDiscountProduct() {
-
+        Response<Boolean> response=facade.deleteProductDiscount(utills.getNonNegativeNumber("\nEnter supplier's ID"),
+                utills.getNonNegativeNumber("\nEnter the product ID as it appears in the store"),
+                utills.getNonNegativeNumber("\nAdd the quantity of the product you'd like to delete discount"));
+        utills.printMessageOrSuccess(response,"Successfully deleted a discount from the supplier's product");
     }
 
     private void addDiscountProduct() {
-
+        //@TODO: Add this function to the facade.
     }
 
     private void deleteItem() {
-
+        Response<Boolean> response=facade.deleteItemFromSupplier(utills.getNonNegativeNumber("\nEnter supplier's ID:"),
+                utills.getNonNegativeNumber("\nEnter the product's ID in the supplier's catalogue"));
+        utills.printMessageOrSuccess(response,"Successfully deleted an item from the supplier's contract");
     }
 
     private void addItem() {
-
-
+        Response<Boolean> response=facade.addItemToSupplier(utills.getNonNegativeNumber("\nEnter supplier's ID:"),
+                utills.getNonNegativeNumber("\nEnter product's store ID:"),
+                utills.getNonNegativeNumber("\nEnter product's id in supplier's catalouge"),getPrice(),getQuantityAgreementForProduct());
+        utills.printMessageOrSuccess(response,"Successfully added an item to the supplier's contract");
     }
 
     private void deleteDiscount() {
-        Response<Boolean> response=facade.deleteSupplierDiscount(getSupplierID(),getPrice());
-        printMessageOrSuccess(response,"Successfully deleted a discount");
-
+        Response<Boolean> response=facade.deleteSupplierDiscount(utills.getNonNegativeNumber("\nEnter supplier's ID:"),getPrice());
+        utills.printMessageOrSuccess(response,"Successfully deleted a discount");
     }
 
     private void addDiscount() {
-        Response<Boolean> response=facade.addDiscount(getSupplierID(),getPrice(),getPercentage());
-        printMessageOrSuccess(response,"Successfully added a discount");
+        Response<Boolean> response=facade.addDiscount(utills.getNonNegativeNumber("\nEnter supplier's ID:"),getPrice()
+                ,utills.getNonNegativeNumber("Please enter the discount percentage"));
+        utills.printMessageOrSuccess(response,"Successfully added a discount");
     }
 
     private void updateSupplierShippingDays() {
-        Response<Boolean> response=facade.updateSuppliersFixedDays(getSupplierID(),getFixedDays());
-        printMessageOrSuccess(response,"Successfully updated the supplier's shipping days");
+        Response<Boolean> response=facade.updateSuppliersFixedDays(utills.getNonNegativeNumber("\nEnter supplier's ID:"),getFixedDays());
+        utills.printMessageOrSuccess(response,"Successfully updated the supplier's shipping days");
     }
 
     private void updateSupplierShipping() {
-        Response<Boolean> response=facade.updateSuppliersShippingStatus(getSupplierID(), getSupplierPickUp());
-        printMessageOrSuccess(response,"Successfully updated supplier's shipping policy");
+        Response<Boolean> response=facade.updateSuppliersShippingStatus(utills.getNonNegativeNumber("\nEnter supplier's ID:"), getSupplierPickUp());
+        utills.printMessageOrSuccess(response,"Successfully updated supplier's shipping policy");
     }
 
     private void getSuppliers() {
         Response<List<String>> response=facade.getAllSuppliers();
-        if(response.WasException())
-            System.out.println(response.getMessage());
-        else {
-            for (String supplier : response.getValue())
-                System.out.println(supplier);
-        }
+        utills.printErrorMessageOrListOfValues(response);
     }
 
     private void getSupplier() {
-        int supplierID=getSupplierID();
+        int supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
         Response<String> response=facade.getSupplier(supplierID);
-        printMessageOrSuccess(response,response.getValue());
+        utills.printMessageOrSuccess(response,response.getValue());
     }
 
     private void deleteSupplier() {
-        int supplierID=getSupplierID();
+        int supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
         Response<Boolean> response=facade.deleteSupplier(supplierID);
-        printMessageOrSuccess(response,"Supplier was deleted successfully!");
+        utills.printMessageOrSuccess(response,"Supplier was deleted successfully!");
     }
 
     private void addSupplier() {
@@ -132,7 +158,7 @@ public class suppliersWindow extends Window {
         HashMap<String,String> contactInfo=new HashMap<>();
         HashMap<Double,Integer>discount=new HashMap<>();
 
-        supplierID=getSupplierID();
+        supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
 
         System.out.println("\nEnter the name of the supplier:");
         supplierName=scanner.nextLine();
@@ -146,7 +172,7 @@ public class suppliersWindow extends Window {
 
         //@TODO: change the documentation of the facade regarding the binding of the number of the payment type
         System.out.println("\nPlease enter the payment policy: 1.Monthly    2.Per Order");
-        for(paymentMethod=inputChecker.checkPositiveNumber(scanner.nextLine());paymentMethod<1 || paymentMethod>2;paymentMethod=inputChecker.checkPositiveNumber(scanner.nextLine()))
+        for(paymentMethod= utills.checkPositiveNumber(scanner.nextLine()); paymentMethod<1 || paymentMethod>2; paymentMethod= utills.checkPositiveNumber(scanner.nextLine()))
             System.out.println("Wrong input!    1.Monthly    2.Per Order");
 
         System.out.println("\nPlease enter the categories of products this supplier supplies, when finished enter 'Q'");
@@ -165,28 +191,18 @@ public class suppliersWindow extends Window {
         while (!scanner.nextLine().equals("Q")) {
 
             System.out.println("Please enter the discount for orders above this price");
-            double price = getPrice();
-            int percentage = getPercentage();
-            discount.put(price, percentage);
+            discount.put(getPrice(), utills.getNonNegativeNumber("Please enter the discount percentage"));
             System.out.println("to continue press Enter or 'Q' if done");
         }
 
         Response<Boolean> response=facade.addSupplier(supplierID,supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discount);
-        printMessageOrSuccess(response,"Supplier was added successfully!");
-    }
-
-    private int getPercentage() {
-        int percentage=-1;
-        System.out.println("Please enter the discount percentage");
-        for(percentage=inputChecker.checkPositiveNumber(scanner.nextLine());percentage==-1;percentage=inputChecker.checkPositiveNumber(scanner.nextLine()))
-            System.out.println("Wrong input, enter percentage again");
-        return percentage;
+        utills.printMessageOrSuccess(response,"Supplier was added successfully!");
     }
 
     private double getPrice() {
         double price=-1;
         System.out.println("Please enter the price");
-        for(price=inputChecker.checkDoubleNumber(scanner.nextLine());price==-1;price=inputChecker.checkDoubleNumber(scanner.nextLine()))
+        for(price= utills.checkDoubleNumber(scanner.nextLine()); price==-1; price= utills.checkDoubleNumber(scanner.nextLine()))
             System.out.println("Wrong input, enter price again");
         return price;
     }
@@ -195,7 +211,7 @@ public class suppliersWindow extends Window {
         ArrayList<Integer> supplyingDays=null;
         System.out.println("\nPlease enter the supplying days, each in a separated line, when finished enter a non-number input");
         printDays();
-        for(int day=inputChecker.checkIfInBounds(scanner.nextLine(),7);day!=-1;day=inputChecker.checkIfInBounds(scanner.nextLine(),7)) {
+        for(int day = utills.checkIfInBounds(scanner.nextLine(),7); day!=-1; day= utills.checkIfInBounds(scanner.nextLine(),7)) {
             if (supplyingDays == null)
                 supplyingDays = new ArrayList<>();
             if (supplyingDays.contains(day))
@@ -211,41 +227,24 @@ public class suppliersWindow extends Window {
         System.out.println("1.Sunday    2.Monday    3.Tuesday    4.Wednesday    5.Thursday    6.Friday");
     }
 
-    private int getSupplierID(){
-        int supplierID=-1;
-        System.out.println("\nEnter the id of the supplier:");
-        for(supplierID=inputChecker.checkPositiveNumber(scanner.nextLine());supplierID==-1;supplierID=inputChecker.checkPositiveNumber(scanner.nextLine()))
-            System.out.println("Wrong input, please enter a non negative number");
-        return supplierID;
-    }
-
     private boolean getSupplierPickUp(){
         System.out.println("\nPlease enter the pickup policy: 1.Self pickup    2.Delivery by Supplier");
         int pickup=3;
-        for(pickup=inputChecker.checkPositiveNumber(scanner.nextLine());pickup<1 || pickup>2;pickup=inputChecker.checkPositiveNumber(scanner.nextLine()))
+        for(pickup= utills.checkPositiveNumber(scanner.nextLine()); pickup<1 || pickup>2; pickup= utills.checkPositiveNumber(scanner.nextLine()))
             System.out.println("Wrong input!    1.Self pickup    2.Delivery by Supplier");
         return pickup==1;
     }
 
-    private void printMessageOrSuccess(Response<? extends Object> response, String successMessage) {
-        if(response.WasException())
-            System.out.println(response.getMessage());
-        else
-            System.out.println(successMessage);
-    }
+    private Map<Integer, Integer> getQuantityAgreementForProduct() {
+        //@TODO: No discounts, should the map be empty or null?
+        HashMap<Integer, Integer> discount = new HashMap<>();
+        System.out.println("\nPlease enter discounts this supplier provides for the product, to start press Enter or 'Q' if none");
 
-    private int printMenu() {
-        int input = -2;
-        System.out.println("Please choose an option");
-        while (input < 0) {
-            if (input == -1)
-                System.out.println("Wrong input. Please choose one of the following numbers:");
-            for (int i = 1; menu.get(i) != null; i++)
-                System.out.println(i + ". " + menu.get(i));
-            System.out.println("\nEnter your choice:");
-            String choice = scanner.nextLine();
-            input = inputChecker.checkIfInBounds(choice, menu.size() + 1);
+        while (!scanner.nextLine().equals("Q")) {
+            discount.put(utills.getNonNegativeNumber("Please enter the quantity of items above this product gets a discount"),
+                    utills.getNonNegativeNumber("Please enter the percentage of discount this item will receive exceeding the quantity"));
+            System.out.println("to continue press Enter or 'Q' if done");
         }
-        return input;
+        return discount;
     }
 }
