@@ -1,1 +1,7 @@
-//TODO: 1) need to allow to run the system without saved info and also to load saved info.
+//TODO:1) need to allow to run the system without saved info and also to load saved info.
+//TODO:2) add date check in order
+//TODO:3) wrap order functions in FacadeImpl with try catch
+//TODO:4) save price after discount in order
+//TODO:5) add comments
+//TODO:6) refactor the supplier search
+//TODO:7) maybe create a supplier util class for all the parameter checking
