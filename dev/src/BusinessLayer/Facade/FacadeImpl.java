@@ -62,4 +62,9 @@ public class FacadeImpl implements ISuppliersFacade {
     public Response<Integer> reOrder(int supplierID, int orderID, Date date) {
         return suppliersController.reOrder(supplierID,orderID,date);
     }
+
+    @Override
+    public Response<Boolean> addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
+        return null;
+    }
 }

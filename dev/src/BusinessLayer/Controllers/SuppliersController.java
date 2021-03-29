@@ -3,6 +3,7 @@ package BusinessLayer.Controllers;
 import java.util.*;
 
 import BusinessLayer.Facade.Response;
+import BusinessLayer.Order;
 import BusinessLayer.Supplier;
 
 public class SuppliersController {
@@ -56,8 +57,13 @@ public class SuppliersController {
         if (s == null) {
             return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
         }
-        s.setSelfPickUp(selfPickUp);
-        return new Response<>(true);
+        try {
+            s.setSelfPickUp(selfPickUp);
+            return new Response<>(true);
+        }
+        catch (Exception e){
+            return new Response<>(e);
+        }
     }
 
     public Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays) {
@@ -91,8 +97,13 @@ public class SuppliersController {
         if (s == null) {
             return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
         }
-        s.addOrder(date, isFixed, currOrderID);
-        currOrderID++;
+        try {
+            s.addOrder(date, isFixed, currOrderID);
+            currOrderID++;
+        }
+        catch (Exception e){
+            return new Response<>(e);
+        }
         return new Response<>(currOrderID - 1);
     }
 
@@ -101,8 +112,27 @@ public class SuppliersController {
         if (s == null) {
             return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
         }
-        s.reOrder(currOrderID, orderID, date);
-        currOrderID++;
+        try {
+            s.reOrder(currOrderID, orderID, date);
+            currOrderID++;
+        }
+        catch (Exception e){
+            return new Response<>(e);
+        }
         return new Response<>(currOrderID - 1);
+    }
+
+    public Response<Boolean> addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
+        Supplier s = supplierMap.get(supplierId);
+        if (s == null) {
+            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
+        }
+        try {
+            s.addItemToOrder(orderId,quantity,supplierProductId);
+            return new Response<>(true);
+        }
+        catch (Exception e){
+            return new Response<>(e);
+        }
     }
 }

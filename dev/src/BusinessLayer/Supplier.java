@@ -16,7 +16,6 @@ public class Supplier{
     private Set<String> manufacturers;
     private Map<String,String> contactInfo;
     private Map<Double,Integer> discountsByPrice;
-    private List<Product> suppliedProducts;
     private List<Order> ordersFromSupplier;
     private List<Contract> supplierContracts;
 
@@ -31,7 +30,6 @@ public class Supplier{
         this.manufacturers=manufactures;
         this.contactInfo=contactInfo;
         this.discountsByPrice=discounts;
-        this.suppliedProducts=new LinkedList<>();
         this.ordersFromSupplier=new LinkedList<>();
         this.supplierContracts=new LinkedList<>();
     }
@@ -107,7 +105,10 @@ public class Supplier{
         paymentMethod=method;
     }
 
-    public void setSelfPickUp(boolean selfPickUp){
+    public void setSelfPickUp(Boolean selfPickUp){
+        if(selfPickUp==null){
+            throw new IllegalArgumentException("the self pick up status has to false or true so it can't have a null value.")
+        }
         this.selfPickUp=selfPickUp;
     }
 
@@ -124,17 +125,50 @@ public class Supplier{
     }
 
     public void reOrder(int newOrderID,int originalOrderID, Date date){
+        Order order=findOrder(originalOrderID);
+        if(order==null){
+            throw new IllegalArgumentException("there is no order with the given ID.");
+        }
+        if(!order.getisFixed()){
+            throw new IllegalArgumentException("the order with the given id isn't fixed so it can't be reordered.");
+        }
+         ordersFromSupplier.add(new Order(order,newOrderID,date));
+    }
+
+    public void addItemToOrder(int orderId, int quantity, int supplierProductId){
+        Order order=findOrder(orderId);
+        if(order==null){
+            throw new IllegalArgumentException("there is no order with the given ID.");
+        }
+        Contract contract=findContract(supplierProductId);
+        if(contract==null){
+            throw new IllegalArgumentException("the supplier has no contract for the given product id.");
+        }
+        order.addItem(contract,quantity);
+    }
+
+    private Order findOrder(int id){
         Order order=null;
         for (Order o:
-             ordersFromSupplier) {
-            if(o.getOrderID()==originalOrderID & o.getisFixed()){
+                ordersFromSupplier) {
+            if(o.getOrderID()==id){
                 order=o;
                 break;
             }
         }
-        if(order==null){
-            throw new IllegalArgumentException("there is no fixed order with the given ID.");
-        }
-         ordersFromSupplier.add(new Order(order,newOrderID,date));
+        return order;
     }
+
+    private Contract findContract(int supplierProductId){
+        Contract contract=null;
+        for (Contract c:
+             supplierContracts) {
+                if(c.getCatalogueIDBySupplier()==supplierProductId){
+                    contract=c;
+                    break;
+                }
+        }
+        return contract;
+    }
+
 }

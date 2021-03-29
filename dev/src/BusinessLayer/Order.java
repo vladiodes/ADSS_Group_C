@@ -40,4 +40,25 @@ public class Order{
     public int getOrderID(){
         return orderID;
     }
+
+    public void addItem(Contract contract,int quantity){
+        ProductInOrder pio=findProductInOrder(contract);
+        if(pio==null){
+            productsInOrder.add(new ProductInOrder(quantity,contract.getPricePerUnit()*quantity,contract.getCatalogueIDBySupplier(),this,contract.getProduct()));
+        }
+        else {
+            pio.orderMore(contract,quantity);
+        }
+    }
+
+    public ProductInOrder findProductInOrder(Contract c){
+        Product product=c.getProduct();
+        for (ProductInOrder pio:
+             productsInOrder) {
+            if(pio.getProduct().equals(product)){
+                return pio;
+            }
+        }
+        return null;
+    }
 }
