@@ -44,4 +44,14 @@ public class Site {
     public String getSection() {
         return Section;
     }
+
+    @Override
+    public String toString() {
+        return "Site{" +
+                "Address='" + Address + '\'' +
+                ", PhoneNum=" + PhoneNum +
+                ", Contact='" + Contact + '\'' +
+                ", Section='" + Section + '\'' +
+                '}';
+    }
 }

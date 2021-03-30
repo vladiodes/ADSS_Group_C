@@ -5,18 +5,18 @@ import java.util.*;
 public class Transport {
     private Date date;
     private int weight;
-    private Driver driver;
-    private Truck truck;
+    private Driver driver = null;
+    private Truck truck = null;
     private List<ItemContract> Contracts;
-    private Site source;
+    private Site source = null;
 
     public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source) throws Exception {
-        setDate(date);
-        setWeight(weight);
-        setDriver(driver);
         setTruck(truck);
+        setDate(date);
+        setDriver(driver);
         setContracts(contracts);
         setSource(source);
+        setWeight(weight);
     }
 
     public void setDate(Date date) {
@@ -26,6 +26,8 @@ public class Transport {
     public void setWeight(int weight) throws Exception {
         if (truck != null && truck.getMaxWeight() < weight)
             throw new Exception("Truck weight exceeded.");
+        if (truck != null && truck.getFactoryWeight() > weight)
+            throw new Exception("Truck weight is under the factory weight.");
         this.weight = weight;
     }
 
@@ -71,5 +73,17 @@ public class Transport {
 
     public Site getSource() {
         return source;
+    }
+
+    @Override
+    public String toString() {
+        return "Transport{" +
+                "date=" + date +
+                ", weight=" + weight +
+                ", driver=" + driver +
+                ", truck=" + truck +
+                ", Contracts=" + Contracts +
+                ", source=" + source +
+                '}';
     }
 }

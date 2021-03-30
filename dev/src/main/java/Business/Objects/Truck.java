@@ -54,4 +54,15 @@ public class Truck {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Truck{" +
+                "plateNum=" + plateNum +
+                ", model='" + model + '\'' +
+                ", maxWeight=" + maxWeight +
+                ", type='" + type + '\'' +
+                ", factoryWeight=" + factoryWeight +
+                '}';
+    }
 }

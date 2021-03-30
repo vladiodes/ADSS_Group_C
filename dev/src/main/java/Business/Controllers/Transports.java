@@ -29,4 +29,8 @@ public class Transports implements Controller<Transport> {
                 filteredTransports.add(t);
         return filteredTransports;
     }
+
+    public ArrayList<Transport> getTransports(){
+        return transports;
+    }
 }

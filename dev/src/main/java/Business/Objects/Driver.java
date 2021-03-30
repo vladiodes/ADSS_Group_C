@@ -5,22 +5,22 @@ public class Driver {
     private int License;
     private int ID;
 
-    public Driver(String _name, int _license, int _id) {
-        setID(_id);
-        setName((_name));
-        setLicense(_license);
-    }
-
-    public void setLicense(int license) {
-        License = license;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
+    public Driver(String name, int id, int license) {
+        setName(name);
+        setID(id);
+        setLicense(license);
     }
 
     public void setName(String name) {
         Name = name;
+    }
+    
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setLicense(int license) {
+        License = license;
     }
 
     public String getName() {
@@ -33,5 +33,14 @@ public class Driver {
 
     public int getID() {
         return ID;
+    }
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "Name='" + Name + '\'' +
+                ", License=" + License +
+                ", ID=" + ID +
+                '}';
     }
 }

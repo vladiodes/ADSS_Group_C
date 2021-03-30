@@ -1,6 +1,7 @@
 package Business.Controllers;
 
 import Business.Objects.Truck;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Trucks implements Controller<Truck> {
@@ -8,6 +9,7 @@ public class Trucks implements Controller<Truck> {
 
     public Trucks() {
         this.trucks = new HashMap<Integer, Truck>();
+        trucks.put(2571769,new Truck(2571769,"Mazda 6",2500,"Car",1000));
     }
 
     public void addTruck(int plate, String model, int maxweight, String type, int factoryweight) throws Exception {
@@ -20,5 +22,9 @@ public class Trucks implements Controller<Truck> {
         if (trucks.containsKey(plate))
             return trucks.get(plate);
         else throw new Exception(plate + " doesn't exist");
+    }
+
+    public ArrayList<Truck> getTrucks(){
+        return new ArrayList<Truck>(trucks.values());
     }
 }

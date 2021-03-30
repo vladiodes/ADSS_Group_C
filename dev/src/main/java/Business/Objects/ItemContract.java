@@ -46,4 +46,14 @@ public class ItemContract {
     public void setPassed(Boolean passed) {
         this.passed = passed;
     }
+
+    @Override
+    public String toString() {
+        return "ItemContract{" +
+                "ID=" + ID +
+                ", destination=" + destination +
+                ", items=" + items +
+                ", passed=" + passed +
+                '}';
+    }
 }
