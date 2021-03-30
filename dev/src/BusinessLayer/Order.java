@@ -1,8 +1,6 @@
 package BusinessLayer;
 
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Order{
     private Date dateOfOrder;
@@ -60,5 +58,35 @@ public class Order{
             }
         }
         return null;
+    }
+
+    public List<String> getOrderDetails(){
+        String details="date of order: "+dateOfOrder.toString()+'\n'+
+                "id: "+orderID+'\n'+
+                "received order: "+shipmentStatus+'\n'+
+                "price before discount: "+priceBeforeDiscount+'\n'+
+                "is fixed: "+isFixed;
+
+        List<String> order=new LinkedList<>();
+        order.add(details);
+        for (ProductInOrder pio:
+             productsInOrder) {
+            order.add(pio.toString());
+        }
+        return order;
+    }
+
+    public void receive() {
+        shipmentStatus=true;
+    }
+
+    public void removeProduct(int productID) {
+        for (ProductInOrder pio:
+             productsInOrder) {
+            if(pio.getProduct().getID()==productID)
+                productsInOrder.remove(pio);
+            return;
+        }
+        throw new IllegalArgumentException("there is no product with the given id in the order.");
     }
 }

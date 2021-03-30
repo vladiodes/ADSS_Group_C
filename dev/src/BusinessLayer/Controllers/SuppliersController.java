@@ -4,6 +4,7 @@ import java.util.*;
 
 import BusinessLayer.Facade.Response;
 import BusinessLayer.Order;
+import BusinessLayer.Product;
 import BusinessLayer.Supplier;
 
 public class SuppliersController {
@@ -17,122 +18,121 @@ public class SuppliersController {
         currOrderID = 0;
     }
 
-    public Response<Boolean> addSupplier(String supplierName, Set<Integer> supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
-        try {
+    public void addSupplier(String supplierName, Set<Integer> supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
             supplierMap.put(currID, new Supplier(currID, supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts));
             currID++;
-            return new Response<>(true);
-        } catch (Exception e) {
-            return new Response<>(e);
-        }
     }
 
-    public Response<Boolean> deleteSupplier(int supplierID) {
+    public void deleteSupplier(int supplierID) {
         Supplier deleted = supplierMap.remove(supplierID);
         if (deleted == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
+            throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
         }
-        return new Response<>(true);
     }
 
-    public Response<String> getSupplier(int supplierID) {
-        Supplier s = supplierMap.get(supplierID);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        return new Response<>(s.toString());
+    public String getSupplier(int supplierID) {
+        Supplier s = search(supplierID);
+        return s.toString();
     }
 
-    public Response<List<String>> getAllSuppliers() {
+    public List<String> getAllSuppliers() {
         List<String> suppliersStrings = new LinkedList<>();
         for (Integer id :
                 supplierMap.keySet()) {
             suppliersStrings.add(supplierMap.get(id).toString());
         }
-        return new Response<>(suppliersStrings);
+        return suppliersStrings;
     }
 
-    public Response<Boolean> updateSuppliersShippingStatus(int supplierID, boolean selfPickUp) {
-        Supplier s = supplierMap.get(supplierID);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public void updateSuppliersShippingStatus(int supplierID, boolean selfPickUp) {
+        Supplier s = search(supplierID);
             s.setSelfPickUp(selfPickUp);
-            return new Response<>(true);
-        }
-        catch (Exception e){
-            return new Response<>(e);
-        }
     }
 
-    public Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays) {
-        Supplier s = supplierMap.get(supplierID);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public void updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays) {
+        Supplier s = search(supplierID);
             s.setFixedDays(newFixedDays);
-            return new Response<>(true);
-        } catch (Exception e) {
-            return new Response<>(e);
-        }
     }
 
-    public Response<Boolean> addDiscount(int supplierId, double price, int discountPerecentage) {
-        Supplier s = supplierMap.get(supplierId);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public void addDiscount(int supplierId, double price, int discountPerecentage) {
+        Supplier s = search(supplierId);
             s.addDiscount(price, discountPerecentage);
-            return new Response<>(true);
-        } catch (Exception e) {
-            return new Response<>(e);
-        }
     }
 
-    public Response<Integer> openOrder(int supplierId, Date date, boolean isFixed) {
-        Supplier s = supplierMap.get(supplierId);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public int openOrder(int supplierId, Date date, boolean isFixed) {
+        Supplier s = search(supplierId);
             s.addOrder(date, isFixed, currOrderID);
             currOrderID++;
-        }
-        catch (Exception e){
-            return new Response<>(e);
-        }
-        return new Response<>(currOrderID - 1);
+            return currOrderID-1;
     }
 
-    public Response<Integer> reOrder(int supplierID, int orderID, Date date) {
-        Supplier s = supplierMap.get(supplierID);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public int reOrder(int supplierID, int orderID, Date date) {
+        Supplier s =search(supplierID);
             s.reOrder(currOrderID, orderID, date);
             currOrderID++;
-        }
-        catch (Exception e){
-            return new Response<>(e);
-        }
-        return new Response<>(currOrderID - 1);
+            return currOrderID-1;
     }
 
-    public Response<Boolean> addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
-        Supplier s = supplierMap.get(supplierId);
-        if (s == null) {
-            return new Response<>(new IllegalArgumentException("A supplier with that id doesn't exist in the system."));
-        }
-        try {
+    public void addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
+        Supplier s = search(supplierId);
             s.addItemToOrder(orderId,quantity,supplierProductId);
-            return new Response<>(true);
+    }
+
+    public List<String> getOrder(int supplierID, int orderID) {
+        Supplier s = search(supplierID);
+        return s.getOrder(orderID);
+    }
+
+    public void receiveOrder(int supplierID, int orderID) {
+        Supplier s = search(supplierID);
+        s.receiveOrder(orderID);
+    }
+
+    public List<Integer> getOrderIdsBySupplier(int supplierId) {
+        Supplier s =search(supplierId);
+        return s.getOrdersIDs();
+    }
+
+    public List<String> getItemsBySupplier(int supplierID){
+        Supplier s = search(supplierID);
+        return s.getSuppliedItems();
+    }
+
+    public void addItemToSupplier(int supplierID, Product product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement){
+        Supplier s = search(supplierID);
+        s.addContract(product,supplierProductID,price,quantityAgreement);
+    }
+
+    public void deleteItemFromSupplier(int supplierID, int supplierProductID){
+        Supplier s = search(supplierID);
+        s.removeContract(supplierProductID);
+    }
+
+    public void deleteSupplierDiscount(int supplierID, double price){
+        Supplier s = search(supplierID);
+        s.removeDiscount(price);
+    }
+
+    public void deleteProductDiscount(int supplierID, int productID, int quantity){
+        Supplier s = search(supplierID);
+        s.deleteProductDiscount(productID,quantity);
+    }
+
+    public void cancelOrder(int supplierID, int orderID){
+        Supplier s = search(supplierID);
+        s.cancelOrder(orderID);
+    }
+
+    public void deleteProductFromOrder(int supplierID, int orderID, int productID){
+        Supplier s=search(supplierID);
+        s.deleteProductFromOrder(orderID,productID);
+    }
+
+    private Supplier search(int ID){
+        Supplier s = supplierMap.get(ID);
+        if (s == null) {
+            throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
         }
-        catch (Exception e){
-            return new Response<>(e);
-        }
+        return s;
     }
 }

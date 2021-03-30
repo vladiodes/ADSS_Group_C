@@ -24,4 +24,11 @@ public class ProductInOrder{
         this.quantity+=quantity;
         this.totalPrice+=quantity*contract.getPricePerUnit();
     }
+
+    public String toString(){
+        return "name: "+product.getName()+'\n'+
+                "total quantity: "+quantity+'\n'+
+                "catalogue ID by supplier: "+catalogueIDBySupplier+'\n'+
+                "total price: "+totalPrice;
+    }
 }

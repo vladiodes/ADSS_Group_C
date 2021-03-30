@@ -29,4 +29,12 @@ public class Contract{
         return pricePerUnit;
     }
 
+    public void deleteDiscount(int quantity) {
+        for (Integer minQuantityForDiscount:
+             discountByQuantity.keySet()) {
+            if(minQuantityForDiscount==quantity)
+                discountByQuantity.remove(minQuantityForDiscount);
+        }
+        throw new IllegalArgumentException("there's no discount starting from the given quantity.");
+    }
 }

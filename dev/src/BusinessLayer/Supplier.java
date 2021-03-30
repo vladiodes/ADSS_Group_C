@@ -107,7 +107,7 @@ public class Supplier{
 
     public void setSelfPickUp(Boolean selfPickUp){
         if(selfPickUp==null){
-            throw new IllegalArgumentException("the self pick up status has to false or true so it can't have a null value.")
+            throw new IllegalArgumentException("the self pick up status has to false or true so it can't have a null value.");
         }
         this.selfPickUp=selfPickUp;
     }
@@ -147,7 +147,7 @@ public class Supplier{
         order.addItem(contract,quantity);
     }
 
-    private Order findOrder(int id){
+    public Order findOrder(int id){
         Order order=null;
         for (Order o:
                 ordersFromSupplier) {
@@ -171,4 +171,89 @@ public class Supplier{
         return contract;
     }
 
+    public List<String> getOrder(int orderID) {
+        Order order=findOrder(orderID);
+        if(order==null){
+            throw new IllegalArgumentException("no order with such id.");
+        }
+        return order.getOrderDetails();
+    }
+
+    public void receiveOrder(int orderID) {
+        Order order=findOrder(orderID);
+        if(order==null){
+            throw new IllegalArgumentException("no order with such id.");
+        }
+        order.receive();
+    }
+
+    public List<Integer> getOrdersIDs() {
+        List<Integer> orderIds=new LinkedList<>();
+        for (Order o:
+             ordersFromSupplier) {
+            orderIds.add(o.getOrderID());
+        }
+        return orderIds;
+    }
+
+    public List<String> getSuppliedItems() {
+        List<String> items=new LinkedList<>();
+        for (Contract c:
+             supplierContracts) {
+            items.add(c.getProduct().toString());
+        }
+        return items;
+    }
+
+    public void addContract(Product product,int supplierProductID, double price, Map<Integer, Integer> quantityAgreement) {
+        supplierContracts.add(new Contract(price,supplierProductID,quantityAgreement,this,product));
+    }
+
+    public void removeContract(int supplierProductID) {
+        for (Contract c:
+             supplierContracts) {
+            if(c.getCatalogueIDBySupplier()==supplierProductID){
+                supplierContracts.remove(c);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("the supplier has no contract for a product with the given id.");
+    }
+
+    public void cancelOrder(int orderID) {
+        Order order=findOrder(orderID);
+        if(order==null){
+            throw new IllegalArgumentException("no order with such id.");
+        }
+        ordersFromSupplier.remove(order);
+    }
+
+    public void removeDiscount(double price) {
+        for (Double minPriceForDiscount:
+             discountsByPrice.keySet()) {
+            if(minPriceForDiscount==price){
+                discountsByPrice.remove(price);
+            }
+        }
+        throw new IllegalArgumentException("no discount starting from the given price.");
+    }
+
+    public void deleteProductDiscount(int productID, int quantity) {
+        Contract contract=findContractByStoreID(productID);
+        contract.deleteDiscount(quantity);
+    }
+
+    private Contract findContractByStoreID(int ID){
+        for (Contract contract:
+             supplierContracts) {
+            if(contract.getProduct().getID()==ID)
+                return contract;
+        }
+        throw new IllegalArgumentException("the supplier doesn't have a contract for a product with the given id.");
+    }
+
+    public void deleteProductFromOrder(int orderID, int productID) {
+        Order o=findOrder(orderID);
+        o.removeProduct(productID);
+    }
 }
