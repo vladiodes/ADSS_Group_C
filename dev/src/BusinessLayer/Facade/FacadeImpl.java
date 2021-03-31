@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//this class is an implementation of the Facade interface. each method passes on the work to the supplier controller or to the
+//inventory depending on the method and returns an appropriate response object based on the success or failure of the operation.
+
 public class FacadeImpl implements ISuppliersFacade {
     private Inventory inventory;
     private SuppliersController suppliersController;

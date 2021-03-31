@@ -20,9 +20,9 @@ public class ProductInOrder{
         return product;
     }
 
-    public void orderMore(Contract contract,int quantity){
+    public void orderMore(double pricePerUnit,int quantity){
         this.quantity+=quantity;
-        this.totalPrice+=quantity*contract.getPricePerUnit();
+        this.totalPrice+=quantity*pricePerUnit;
     }
 
     public String toString(){
@@ -30,5 +30,13 @@ public class ProductInOrder{
                 "total quantity: "+quantity+'\n'+
                 "catalogue ID by supplier: "+catalogueIDBySupplier+'\n'+
                 "total price: "+totalPrice;
+    }
+
+    public int getQuantity(){
+        return quantity;
+    }
+
+    public double getTotalPrice(){
+        return totalPrice;
     }
 }

@@ -21,6 +21,8 @@ public class Order{
         this.isFixed=isFixed;
     }
 
+    //this constructor is used to reorder fixed orders. it receives a fixed order and an ID and date for the copy
+    //of the fixed order and creates a copy.
     public Order(Order original,int ID,Date date){
         dateOfOrder=date;
         orderID=ID;
@@ -39,18 +41,24 @@ public class Order{
         return orderID;
     }
 
-    public void addItem(Contract contract,int quantity){
-        ProductInOrder pio=findProductInOrder(contract);
+    //this function adds an item to an order. it first searches the productInOrder object matching to that
+    //product.if there is no such object it adds a new entry to the products in order set .otherwise it will
+    //update the already existing object using the orderMore method of productInOrder class.
+    public void addItem(Product product,double pricePerUnit,int catalogueIDBySupplier,int quantity){
+        ProductInOrder pio=findProductInOrder(product);
         if(pio==null){
-            productsInOrder.add(new ProductInOrder(quantity,contract.getPricePerUnit()*quantity,contract.getCatalogueIDBySupplier(),this,contract.getProduct()));
+            productsInOrder.add(new ProductInOrder(quantity,pricePerUnit*quantity,catalogueIDBySupplier,this,product));
         }
         else {
-            pio.orderMore(contract,quantity);
+            pio.orderMore(pricePerUnit,quantity);
         }
+        totalQuantity+=quantity;
+        priceBeforeDiscount+=quantity*pricePerUnit;
     }
 
-    public ProductInOrder findProductInOrder(Contract c){
-        Product product=c.getProduct();
+    //this functions receives a product and searches for a productInOrder matching to that product.
+    //if one is found we return it. otherwise return null.
+    public ProductInOrder findProductInOrder(Product product){
         for (ProductInOrder pio:
              productsInOrder) {
             if(pio.getProduct().equals(product)){
@@ -60,6 +68,9 @@ public class Order{
         return null;
     }
 
+    //a function used to describe an order.
+    //it returns a list of 2 strings the first one being the characteristics of the order and the second being
+    //a string representing the products in the order.
     public List<String> getOrderDetails(){
         String details="date of order: "+dateOfOrder.toString()+'\n'+
                 "id: "+orderID+'\n'+
@@ -76,15 +87,21 @@ public class Order{
         return order;
     }
 
+    //this function is used when an order is received.simply change the status to received(true).
     public void receive() {
         shipmentStatus=true;
     }
 
+    //this function tries to remove a product from the order.we search for a productInOrder object
+    //that matches the product id given. if we found one we remove it and update the price before discount and total quantity
+    //accordingly. otherwise, we throw an exception.
     public void removeProduct(int productID) {
         for (ProductInOrder pio:
              productsInOrder) {
             if(pio.getProduct().getID()==productID)
                 productsInOrder.remove(pio);
+            totalQuantity-=pio.getQuantity();
+            priceBeforeDiscount-=pio.getQuantity()*pio.getTotalPrice();
             return;
         }
         throw new IllegalArgumentException("there is no product with the given id in the order.");

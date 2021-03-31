@@ -34,6 +34,7 @@ public class Supplier{
         this.supplierContracts=new LinkedList<>();
     }
 
+    //returns a string with the supplier details.
     public String toString(){
         return "supplier name: "+supplierName+'\n'+
                 "fixed days: "+fixedDaysToString()+'\n'+
@@ -49,6 +50,8 @@ public class Supplier{
                 //need to return more?
     }
 
+    //the functions fixedDaysToString until convertWithStream are used to obtain a string representation of the supplier's
+    //data members.
     private String fixedDaysToString(){
         if(fixedDays==null){
             return "none";
@@ -79,6 +82,9 @@ public class Supplier{
         return mapAsString;
     }
 
+    //a setter for the fixedDays field. we check that there are no more than 6 elements in the set as we can only receive
+    //orders from sunday to friday and we check that all elements are in the range of 1 to 6 so they will match to
+    //week days.
     public void setFixedDays(Set<Integer> newFixedDays){
         if(newFixedDays!=null){
             if(newFixedDays.size()==0){
@@ -90,7 +96,7 @@ public class Supplier{
             }
             for (Integer day:
                  newFixedDays) {
-                if(!(day>=0 & day<=6)){
+                if(!(day>=1 & day<=6)){
                     throw new IllegalArgumentException("illegal fixed days of supplying,can only supply between sunday and friday.");
                 }
             }
@@ -120,10 +126,12 @@ public class Supplier{
         discountsByPrice.putIfAbsent(price,discountPerecentage);
     }
 
+    //add an order to the supplier's orders
     public void addOrder(Date date,Boolean isFixed,int ID){
         ordersFromSupplier.add(new Order(date,isFixed,ID));
     }
 
+    /**/
     public void reOrder(int newOrderID,int originalOrderID, Date date){
         Order order=findOrder(originalOrderID);
         if(order==null){
@@ -135,6 +143,7 @@ public class Supplier{
          ordersFromSupplier.add(new Order(order,newOrderID,date));
     }
 
+    /**/
     public void addItemToOrder(int orderId, int quantity, int supplierProductId){
         Order order=findOrder(orderId);
         if(order==null){
@@ -144,9 +153,11 @@ public class Supplier{
         if(contract==null){
             throw new IllegalArgumentException("the supplier has no contract for the given product id.");
         }
-        order.addItem(contract,quantity);
+        order.addItem(contract.getProduct(),contract.getPricePerUnit(),contract.getCatalogueIDBySupplier(),quantity);
     }
 
+    //the function receives an id and return the order from the supplier with that id if there is such an order.returns
+    //null otherwise.
     public Order findOrder(int id){
         Order order=null;
         for (Order o:
@@ -159,6 +170,8 @@ public class Supplier{
         return order;
     }
 
+    //this function receives a product id and if there is a contract for a product with such an id it returns the
+    //contract for it. otherwise it returns null.
     private Contract findContract(int supplierProductId){
         Contract contract=null;
         for (Contract c:
@@ -171,6 +184,7 @@ public class Supplier{
         return contract;
     }
 
+    /**/
     public List<String> getOrder(int orderID) {
         Order order=findOrder(orderID);
         if(order==null){
@@ -179,6 +193,7 @@ public class Supplier{
         return order.getOrderDetails();
     }
 
+    /**/
     public void receiveOrder(int orderID) {
         Order order=findOrder(orderID);
         if(order==null){
@@ -196,6 +211,8 @@ public class Supplier{
         return orderIds;
     }
 
+    //this function returns a list of strings which describes all the supplied items by the supplier.
+    // each element in the list describes one item.
     public List<String> getSuppliedItems() {
         List<String> items=new LinkedList<>();
         for (Contract c:
@@ -205,10 +222,13 @@ public class Supplier{
         return items;
     }
 
+    //adds a new contract for the supplier
     public void addContract(Product product,int supplierProductID, double price, Map<Integer, Integer> quantityAgreement) {
         supplierContracts.add(new Contract(price,supplierProductID,quantityAgreement,this,product));
     }
 
+    //this function receives some product id (as saved by the supplier) and searches for a contract for that a product
+    //with that id. if a contract is found it's removed. otherwise an exception is thrown.
     public void removeContract(int supplierProductID) {
         for (Contract c:
              supplierContracts) {
@@ -220,6 +240,7 @@ public class Supplier{
         throw new IllegalArgumentException("the supplier has no contract for a product with the given id.");
     }
 
+    /**/
     public void cancelOrder(int orderID) {
         Order order=findOrder(orderID);
         if(order==null){
@@ -228,6 +249,8 @@ public class Supplier{
         ordersFromSupplier.remove(order);
     }
 
+    //removes the discount given by the supplier starting from the given price.
+    //if there is no such discount an exception is thrown.
     public void removeDiscount(double price) {
         for (Double minPriceForDiscount:
              discountsByPrice.keySet()) {
@@ -238,11 +261,14 @@ public class Supplier{
         throw new IllegalArgumentException("no discount starting from the given price.");
     }
 
+    //this function deletes a discount for a specific product supplied by supplier.
     public void deleteProductDiscount(int productID, int quantity) {
         Contract contract=findContractByStoreID(productID);
         contract.deleteDiscount(quantity);
     }
 
+    //this function receives an id of a product in the store and finds and searches for a contract for it.
+    //if no such contract is found an exception is thrown.
     private Contract findContractByStoreID(int ID){
         for (Contract contract:
              supplierContracts) {
@@ -252,6 +278,7 @@ public class Supplier{
         throw new IllegalArgumentException("the supplier doesn't have a contract for a product with the given id.");
     }
 
+    /**/
     public void deleteProductFromOrder(int orderID, int productID) {
         Order o=findOrder(orderID);
         o.removeProduct(productID);

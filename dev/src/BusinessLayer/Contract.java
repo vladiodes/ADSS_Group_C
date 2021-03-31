@@ -29,6 +29,9 @@ public class Contract{
         return pricePerUnit;
     }
 
+    //this function receives a quantity which is a minimum buying amount in order to receive some discount according to the
+    //contract. it searches for the map entry which corresponds to the discount mentioned. if it finds it then this discount
+    //(entry) is deleted from the map. otherwise an exception is thrown.
     public void deleteDiscount(int quantity) {
         for (Integer minQuantityForDiscount:
              discountByQuantity.keySet()) {

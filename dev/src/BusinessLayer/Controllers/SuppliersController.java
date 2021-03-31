@@ -2,10 +2,15 @@ package BusinessLayer.Controllers;
 
 import java.util.*;
 
-import BusinessLayer.Facade.Response;
-import BusinessLayer.Order;
 import BusinessLayer.Product;
 import BusinessLayer.Supplier;
+
+//this class manages the suppliers. it saves a map of the suppliers by their id's.
+//each method will find the wanted supplier in the map (or throw an exception if he doesn't exist)
+//and pass on the work to him.
+//the class also maintains a currID data member for issuing new supplier id's and a data member currOrderID
+//for issuing new orderID's.
+
 
 public class SuppliersController {
     private Map<Integer, Supplier> supplierMap;
@@ -128,6 +133,7 @@ public class SuppliersController {
         s.deleteProductFromOrder(orderID,productID);
     }
 
+    //this function searches for a supplier in the map and throws an exception if not found.
     private Supplier search(int ID){
         Supplier s = supplierMap.get(ID);
         if (s == null) {
