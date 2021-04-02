@@ -1,5 +1,6 @@
 package BusinessLayer.Controllers;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import BusinessLayer.Product;
@@ -64,14 +65,14 @@ public class SuppliersController {
             s.addDiscount(price, discountPerecentage);
     }
 
-    public int openOrder(int supplierId, Date date, boolean isFixed) {
+    public int openOrder(int supplierId, LocalDateTime date, boolean isFixed) {
         Supplier s = search(supplierId);
             s.addOrder(date, isFixed, currOrderID);
             currOrderID++;
             return currOrderID-1;
     }
 
-    public int reOrder(int supplierID, int orderID, Date date) {
+    public int reOrder(int supplierID, int orderID, LocalDateTime date) {
         Supplier s =search(supplierID);
             s.reOrder(currOrderID, orderID, date);
             currOrderID++;

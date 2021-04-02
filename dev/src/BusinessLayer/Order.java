@@ -1,9 +1,10 @@
 package BusinessLayer;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Order{
-    private Date dateOfOrder;
+    private LocalDateTime dateOfOrder;
     private int orderID;
     private boolean shipmentStatus;
     private double priceBeforeDiscount;
@@ -11,21 +12,21 @@ public class Order{
     private Set<ProductInOrder> productsInOrder;
     private boolean isFixed;
 
-    public Order(Date date,Boolean isFixed,int ID){
-        dateOfOrder=date;
-        orderID=ID;
+    public Order(LocalDateTime date,Boolean isFixed,int ID){
+        setDateOfOrder(date);
+        setOrderID(ID);
         shipmentStatus=false;
         priceBeforeDiscount=0;
         totalQuantity=0;
         productsInOrder=new LinkedHashSet<>();
-        this.isFixed=isFixed;
+        setisFixed(isFixed);
     }
 
     //this constructor is used to reorder fixed orders. it receives a fixed order and an ID and date for the copy
     //of the fixed order and creates a copy.
-    public Order(Order original,int ID,Date date){
-        dateOfOrder=date;
-        orderID=ID;
+    public Order(Order original,int ID,LocalDateTime date){
+        setDateOfOrder(date);
+        setOrderID(ID);
         shipmentStatus=false;
         priceBeforeDiscount=original.priceBeforeDiscount;
         totalQuantity=original.totalQuantity;
@@ -50,7 +51,7 @@ public class Order{
             productsInOrder.add(new ProductInOrder(quantity,pricePerUnit*quantity,catalogueIDBySupplier,this,product));
         }
         else {
-            pio.orderMore(pricePerUnit,quantity);
+            pio.orderMore(quantity);
         }
         totalQuantity+=quantity;
         priceBeforeDiscount+=quantity*pricePerUnit;
@@ -105,5 +106,28 @@ public class Order{
             return;
         }
         throw new IllegalArgumentException("there is no product with the given id in the order.");
+    }
+
+    //these functions are used to check the validity of the constructor arguments
+
+    private void setDateOfOrder(LocalDateTime dateOfOrder){
+        if(dateOfOrder.isAfter(LocalDateTime.now())){
+            throw new IllegalArgumentException("the issuing date of an order cannot be in the future.");
+        }
+        this.dateOfOrder=dateOfOrder;
+    }
+
+    private void setOrderID(int orderID){
+        if(orderID<0){
+            throw new IllegalArgumentException("an order can't have a negative id.");
+        }
+        this.orderID=orderID;
+    }
+
+    private void setisFixed(Boolean isFixed){
+        if(isFixed==null){
+            throw new IllegalArgumentException("each order must be fixed or not fixed.");
+        }
+        this.isFixed=isFixed;
     }
 }

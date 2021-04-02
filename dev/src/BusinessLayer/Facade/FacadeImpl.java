@@ -3,6 +3,7 @@ package BusinessLayer.Facade;
 import BusinessLayer.Controllers.Inventory;
 import BusinessLayer.Controllers.SuppliersController;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Integer> openOrder(int supplierId, Date date, boolean isFixed) {
+    public Response<Integer> openOrder(int supplierId, LocalDateTime date, boolean isFixed) {
         try {
             return new Response<>(suppliersController.openOrder(supplierId,date,isFixed));
         }
@@ -107,7 +108,7 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Integer> reOrder(int supplierID, int orderID, Date date) {
+    public Response<Integer> reOrder(int supplierID, int orderID, LocalDateTime date) {
         try {
             return new Response<>(suppliersController.reOrder(supplierID,orderID,date));
         }

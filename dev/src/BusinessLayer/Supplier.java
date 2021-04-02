@@ -2,6 +2,7 @@ package BusinessLayer;
 
 import com.sun.deploy.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,15 +21,15 @@ public class Supplier{
     private List<Contract> supplierContracts;
 
     public Supplier(int SupplierID,String supplierName, Set<Integer>supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts){
-        this.SupplierID=SupplierID;
-        this.supplierName=supplierName;
+        setSupplierID(SupplierID);
+        setSupplierName(supplierName);
         setFixedDays(supplyingDays);
-        this.selfPickUp=selfPickup;
-        this.bankAccount=bankAccount;
+        setSelfPickUp(selfPickup);
+        setBankAccount(bankAccount);
         setPaymentMethod(paymentMethod);
-        this.categories=categories;
-        this.manufacturers=manufactures;
-        this.contactInfo=contactInfo;
+        setCategories(categories);
+        setManufacturers(manufactures);
+        setContactInfo(contactInfo);
         this.discountsByPrice=discounts;
         this.ordersFromSupplier=new LinkedList<>();
         this.supplierContracts=new LinkedList<>();
@@ -82,6 +83,28 @@ public class Supplier{
         return mapAsString;
     }
 
+    //the setters are used for checking the validity of the constructor arguments and implementing the Facade interface.
+    public void setSupplierID(int supplierID){
+        if(supplierID<0){
+            throw new IllegalArgumentException("a supplier can't have a negative id.");
+        }
+        this.SupplierID=supplierID;
+    }
+
+    public void setSupplierName(String supplierName){
+        if(supplierName==null || supplierName.length()==0){
+            throw new IllegalArgumentException("a supplier must have a non empty name.");
+        }
+        this.supplierName=supplierName;
+    }
+
+    public void setBankAccount(String bankAccount){
+        if(bankAccount==null || bankAccount.length()==0){
+            throw new IllegalArgumentException("the bank account details of a supplier must be non empty.");
+        }
+        this.bankAccount=bankAccount;
+    }
+
     //a setter for the fixedDays field. we check that there are no more than 6 elements in the set as we can only receive
     //orders from sunday to friday and we check that all elements are in the range of 1 to 6 so they will match to
     //week days.
@@ -118,6 +141,39 @@ public class Supplier{
         this.selfPickUp=selfPickUp;
     }
 
+    public void setCategories(Set<String> categories){
+        if(!checkNonEmptyString(categories)){
+            throw new IllegalArgumentException("each category of a supplier must be non empty");
+        }
+            this.categories=categories;
+    }
+
+    public void setManufacturers(Set<String> manufacturers){
+        if(!checkNonEmptyString(manufacturers)){
+            throw new IllegalArgumentException("each manufacturer name related to a supplier must be non empty.");
+        }
+        this.manufacturers=manufacturers;
+    }
+
+    private boolean checkNonEmptyString(Set<String> stringSet){
+        for (String str:
+             stringSet) {
+            if(str==null||str.length()==0)
+                return false;
+        }
+        return true;
+    }
+
+    public void setContactInfo(Map<String,String> contactInfo){
+        for (String key:
+             contactInfo.keySet()) {
+            if((key==null||key.length()==0)||(contactInfo.get(key)==null||contactInfo.get(key).length()==0)){
+                throw new IllegalArgumentException("the contact info of a supplier cannot be empty.");
+            }
+        }
+        this.contactInfo=contactInfo;
+    }
+
     public void addDiscount(double price, int discountPerecentage){
         if(price<0 | discountPerecentage<0){
             throw new IllegalArgumentException("tried to add an illegal discount to a supplier. the discount starting price" +
@@ -127,12 +183,12 @@ public class Supplier{
     }
 
     //add an order to the supplier's orders
-    public void addOrder(Date date,Boolean isFixed,int ID){
+    public void addOrder(LocalDateTime date,Boolean isFixed,int ID){
         ordersFromSupplier.add(new Order(date,isFixed,ID));
     }
 
     /**/
-    public void reOrder(int newOrderID,int originalOrderID, Date date){
+    public void reOrder(int newOrderID,int originalOrderID, LocalDateTime date){
         Order order=findOrder(originalOrderID);
         if(order==null){
             throw new IllegalArgumentException("there is no order with the given ID.");

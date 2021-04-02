@@ -5,8 +5,8 @@ public class Product{
     private String productName;
 
     public Product(int productID,String productName){
-        this.productID=productID;
-        this.productName=productName;
+        setProductID(productID);
+        setProductName(productName);
     }
 
     public boolean equals(Product product){
@@ -24,5 +24,21 @@ public class Product{
 
     public int getID() {
         return productID;
+    }
+
+    //these functions are private setters for checking the validity of the constructor arguments
+
+    private void setProductID(int productID){
+        if(productID<0){
+            throw new IllegalArgumentException("a product cannot have a negative id.");
+        }
+        this.productID=productID;
+    }
+
+    private void setProductName(String productName){
+        if(productName==null || productName.length()==0){
+            throw new IllegalArgumentException("a product must have a non empty name.");
+        }
+        this.productName=productName;
     }
 }

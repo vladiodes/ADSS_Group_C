@@ -1,5 +1,6 @@
 
 package BusinessLayer.Facade;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public interface ISuppliersFacade {
@@ -75,7 +76,7 @@ public interface ISuppliersFacade {
      * @param isFixed - is the order fixed (we can reorder anytime)
      * @return a response message containing the id of the opened order
      */
-    Response<Integer> openOrder(int supplierId, Date date, boolean isFixed);
+    Response<Integer> openOrder(int supplierId, LocalDateTime date, boolean isFixed);
 
     /**
      * Allows to re-order a fixed order
@@ -84,7 +85,7 @@ public interface ISuppliersFacade {
      * @param date - the date issued with the new order
      * @return returns a response message with the id of the new issued order
      */
-    Response<Integer> reOrder(int supplierID,int orderID,Date date);
+    Response<Integer> reOrder(int supplierID,int orderID,LocalDateTime date);
 
     /**
      * Adds an item to an existing order

@@ -10,11 +10,11 @@ public class Contract{
     private Product product;
 
     public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Supplier supplier,Product product){
-        this.pricePerUnit=pricePerUnit;
-        this.catalogueIDBySupplier=catalogueIDBySupplier;
-        this.discountByQuantity=discountByQuantity;
-        this.supplier=supplier;
-        this.product=product;
+        setPricePerUnit(pricePerUnit);
+        setCatalogueIDBySupplier(catalogueIDBySupplier);
+        setDiscountByQuantity(discountByQuantity);
+        setSupplier(supplier);
+        setProduct(product);
     }
 
     public int getCatalogueIDBySupplier(){
@@ -39,5 +39,45 @@ public class Contract{
                 discountByQuantity.remove(minQuantityForDiscount);
         }
         throw new IllegalArgumentException("there's no discount starting from the given quantity.");
+    }
+
+    //these functions are private setters used to check the validity of the constructor arguments
+
+    private void setPricePerUnit(double pricePerUnit){
+        if(pricePerUnit<0){
+            throw new IllegalArgumentException("a price of a product cannot be negative.");
+        }
+        this.pricePerUnit=pricePerUnit;
+    }
+
+    private void setCatalogueIDBySupplier(int catalogueIDBySupplier){
+        if(catalogueIDBySupplier<0){
+            throw new IllegalArgumentException("the id of a product cannot be negative.");
+        }
+        this.catalogueIDBySupplier=catalogueIDBySupplier;
+    }
+
+    private void setDiscountByQuantity(Map<Integer,Integer> discountByQuantity){
+        for (Integer quantity:
+             this.discountByQuantity.keySet()) {
+            if(quantity<0 | this.discountByQuantity.get(quantity)<0){
+                throw new IllegalArgumentException("discount by quantity can only have a positive starting quantity and a positive discount percentage.");
+            }
+        }
+        this.discountByQuantity=discountByQuantity;
+    }
+
+    private void setSupplier(Supplier supplier){
+        if(supplier==null){
+            throw new IllegalArgumentException("a contract must belong to some supplier. supplier field cannot be Null.");
+        }
+        this.supplier=supplier;
+    }
+
+    private void setProduct(Product product){
+        if(product==null){
+            throw new IllegalArgumentException("a contract must be related to some product. product field cannot be Null.");
+        }
+        this.product=product;
     }
 }
