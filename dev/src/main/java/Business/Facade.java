@@ -5,4 +5,6 @@ public class Facade {
     private StaffController staffController;
 
 
+    //When creating the assignment screen add the skills of each employee
+
 }
