@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 public class Supplier{
     private String supplierName;
-    private Set<Integer> fixedDays;
+    private Set<DayOfWeek> fixedDays;
     private boolean selfPickUp;
     private int SupplierID;
     private String bankAccount;
-    private int paymentMethod;
+    private PaymentAgreement paymentMethod;
     private Set<String> categories;
     private Set<String> manufacturers;
     private Map<String,String> contactInfo;
@@ -20,7 +20,7 @@ public class Supplier{
     private List<Order> ordersFromSupplier;
     private List<Contract> supplierContracts;
 
-    public Supplier(int SupplierID,String supplierName, Set<Integer>supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts){
+    public Supplier(int SupplierID,String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts){
         setSupplierID(SupplierID);
         setSupplierName(supplierName);
         setFixedDays(supplyingDays);
@@ -108,29 +108,17 @@ public class Supplier{
     //a setter for the fixedDays field. we check that there are no more than 6 elements in the set as we can only receive
     //orders from sunday to friday and we check that all elements are in the range of 1 to 6 so they will match to
     //week days.
-    public void setFixedDays(Set<Integer> newFixedDays){
+    public void setFixedDays(Set<DayOfWeek> newFixedDays){
         if(newFixedDays!=null){
             if(newFixedDays.size()==0){
                 fixedDays=null;
                 return;
             }
-            if(newFixedDays.size()>6){
-                throw new IllegalArgumentException("illegal fixed days of supplying, can supply on at most 6 days.");
-            }
-            for (Integer day:
-                 newFixedDays) {
-                if(!(day>=1 & day<=6)){
-                    throw new IllegalArgumentException("illegal fixed days of supplying,can only supply between sunday and friday.");
-                }
-            }
         }
         fixedDays=newFixedDays;
     }
 
-    public void setPaymentMethod(int method){
-        if(method!=0 & method!=1){
-            throw new IllegalArgumentException("payment method can only be represented by 0 or 1. 0 for monthly and 1 for per order.");
-        }
+    public void setPaymentMethod(PaymentAgreement method){
         paymentMethod=method;
     }
 
@@ -338,5 +326,13 @@ public class Supplier{
     public void deleteProductFromOrder(int orderID, int productID) {
         Order o=findOrder(orderID);
         o.removeProduct(productID);
+    }
+
+    public enum DayOfWeek{
+        Sunday,Monday,Tuesday,Wednesday,Thursday,Friday;
+    }
+
+    public enum PaymentAgreement{
+        Monthly,PerOrder;
     }
 }

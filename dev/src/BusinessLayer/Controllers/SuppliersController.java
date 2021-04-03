@@ -24,7 +24,7 @@ public class SuppliersController {
         currOrderID = 0;
     }
 
-    public void addSupplier(String supplierName, Set<Integer> supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
+    public void addSupplier(String supplierName, Set<Supplier.DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, Supplier.PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
             supplierMap.put(currID, new Supplier(currID, supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts));
             currID++;
     }
@@ -55,7 +55,7 @@ public class SuppliersController {
             s.setSelfPickUp(selfPickUp);
     }
 
-    public void updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays) {
+    public void updateSuppliersFixedDays(int supplierID, Set<Supplier.DayOfWeek> newFixedDays) {
         Supplier s = search(supplierID);
             s.setFixedDays(newFixedDays);
     }

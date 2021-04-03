@@ -2,9 +2,9 @@ package BusinessLayer.Facade;
 
 import BusinessLayer.Controllers.Inventory;
 import BusinessLayer.Controllers.SuppliersController;
+import BusinessLayer.Supplier;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Boolean> addSupplier(String supplierName, Set<Integer> supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
+    public Response<Boolean> addSupplier(String supplierName, Set<Supplier.DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, Supplier.PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
         try {
              suppliersController.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discounts);
              return new Response<>(true);
@@ -76,7 +76,7 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays) {
+    public Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Supplier.DayOfWeek> newFixedDays) {
         try {
             suppliersController.updateSuppliersFixedDays(supplierID,newFixedDays);
             return new Response<>(true);

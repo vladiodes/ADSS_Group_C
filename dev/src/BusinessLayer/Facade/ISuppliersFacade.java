@@ -1,5 +1,7 @@
 
 package BusinessLayer.Facade;
+import BusinessLayer.Supplier;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -21,7 +23,7 @@ public interface ISuppliersFacade {
      *                  A dictionary of the type: [Price:Discount]
      * @return A response message, if true - than success.
      */
-    Response<Boolean> addSupplier(String supplierName, Set<Integer>supplyingDays, boolean selfPickup, String bankAccount, int paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
+    Response<Boolean> addSupplier(String supplierName, Set<Supplier.DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, Supplier.PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
 
     /**
      * Deletes a supplier from the system
@@ -58,7 +60,7 @@ public interface ISuppliersFacade {
      * @param newFixedDays - the new fixed days
      * @return true upon success
      */
-    Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Integer> newFixedDays);
+    Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Supplier.DayOfWeek> newFixedDays);
 
     /**
      * Adds a discount per total price of an order for a specific supplier in the system

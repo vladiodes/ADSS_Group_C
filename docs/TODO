@@ -1,3 +1,0 @@
-//TODO:1) need to allow to run the system without saved info and also to load saved info.
-//TODO:2) add DTO objects for order and supplier to replace getters and setters for order and supplier.
-//TODO:3) write unit tests.

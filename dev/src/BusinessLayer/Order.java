@@ -6,7 +6,7 @@ import java.util.*;
 public class Order{
     private LocalDateTime dateOfOrder;
     private int orderID;
-    private boolean shipmentStatus;
+    private ShipmentStatus shipmentStatus;
     private double priceBeforeDiscount;
     private int totalQuantity;
     private Set<ProductInOrder> productsInOrder;
@@ -15,7 +15,7 @@ public class Order{
     public Order(LocalDateTime date,Boolean isFixed,int ID){
         setDateOfOrder(date);
         setOrderID(ID);
-        shipmentStatus=false;
+        shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=0;
         totalQuantity=0;
         productsInOrder=new LinkedHashSet<>();
@@ -27,7 +27,7 @@ public class Order{
     public Order(Order original,int ID,LocalDateTime date){
         setDateOfOrder(date);
         setOrderID(ID);
-        shipmentStatus=false;
+        shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=original.priceBeforeDiscount;
         totalQuantity=original.totalQuantity;
         productsInOrder=original.productsInOrder;
@@ -90,7 +90,7 @@ public class Order{
 
     //this function is used when an order is received.simply change the status to received(true).
     public void receive() {
-        shipmentStatus=true;
+        shipmentStatus=ShipmentStatus.Delivered;
     }
 
     //this function tries to remove a product from the order.we search for a productInOrder object
@@ -129,5 +129,9 @@ public class Order{
             throw new IllegalArgumentException("each order must be fixed or not fixed.");
         }
         this.isFixed=isFixed;
+    }
+
+    private enum ShipmentStatus{
+        Delivered,WaitingForDelivery;
     }
 }

@@ -9,11 +9,11 @@ public class ProductInOrder{
 
 
     public ProductInOrder(int quantity, double totalPrice, int catalogueIDBySupplier, Order order, Product product){
-        this.quantity=quantity;
-        this.totalPrice=totalPrice;
-        this.catalogueIDBySupplier=catalogueIDBySupplier;
-        this.order=order;
-        this.product=product;
+        setQuantity(quantity);
+        setTotalPrice(totalPrice);
+        setCatalogueIDBySupplier(catalogueIDBySupplier);
+        setOrder(order);
+        setProduct(product);
     }
 
     public Product getProduct() {
@@ -52,7 +52,7 @@ public class ProductInOrder{
         this.quantity=quantity;
     }
 
-    private void setTotalPrice(int totalPrice){
+    private void setTotalPrice(double totalPrice){
         if(totalPrice<0){
             throw new IllegalArgumentException("the total price of a product in order cannot be negative.");
         }
