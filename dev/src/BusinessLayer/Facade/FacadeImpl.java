@@ -5,6 +5,7 @@ import BusinessLayer.Controllers.SuppliersController;
 import BusinessLayer.Supplier;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,9 +46,9 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<String> getSupplier(int supplierId) {
+    public Response<BusinessLayer.DTO.Supplier> getSupplier(int supplierId) {
         try {
-             return new Response<>(suppliersController.getSupplier(supplierId));
+             return new Response<>(new BusinessLayer.DTO.Supplier(suppliersController.getSupplier(supplierId)));
         }
         catch (Exception e){
             return new Response<>(e);
@@ -55,9 +56,26 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<List<String>> getAllSuppliers() {
+    public Response<List<BusinessLayer.DTO.Supplier>> getAllSuppliers() {
         try {
-            return new Response<>(suppliersController.getAllSuppliers());
+            List<Supplier> suppliers=suppliersController.getAllSuppliers();
+            List<BusinessLayer.DTO.Supplier> supplierList=new LinkedList<>();
+            for (Supplier s:
+                 suppliers) {
+                supplierList.add(new BusinessLayer.DTO.Supplier(s));
+            }
+            return new Response<>(supplierList);
+        }
+        catch (Exception e){
+            return new Response<>(e);
+        }
+    }
+
+    @Override
+    public Response<Boolean> setSupplier(BusinessLayer.DTO.Supplier supplier) {
+        try {
+            suppliersController.setSupplier(supplier);
+            return new Response<>(true);
         }
         catch (Exception e){
             return new Response<>(e);
@@ -129,9 +147,9 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<List<String>> getOrder(int supplierID, int orderID) {
+    public Response<BusinessLayer.DTO.Order> getOrder(int supplierID, int orderID) {
         try {
-            return new Response<>(suppliersController.getOrder(supplierID,orderID));
+            return new Response<>(new BusinessLayer.DTO.Order(suppliersController.getOrder(supplierID,orderID)));
         }
         catch (Exception e){
             return new Response<>(e);

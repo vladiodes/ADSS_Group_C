@@ -69,25 +69,6 @@ public class Order{
         return null;
     }
 
-    //a function used to describe an order.
-    //it returns a list of 2 strings the first one being the characteristics of the order and the second being
-    //a string representing the products in the order.
-    public List<String> getOrderDetails(){
-        String details="date of order: "+dateOfOrder.toString()+'\n'+
-                "id: "+orderID+'\n'+
-                "received order: "+shipmentStatus+'\n'+
-                "price before discount: "+priceBeforeDiscount+'\n'+
-                "is fixed: "+isFixed;
-
-        List<String> order=new LinkedList<>();
-        order.add(details);
-        for (ProductInOrder pio:
-             productsInOrder) {
-            order.add(pio.toString());
-        }
-        return order;
-    }
-
     //this function is used when an order is received.simply change the status to received(true).
     public void receive() {
         shipmentStatus=ShipmentStatus.Delivered;
@@ -131,7 +112,23 @@ public class Order{
         this.isFixed=isFixed;
     }
 
-    private enum ShipmentStatus{
-        Delivered,WaitingForDelivery;
+    public LocalDateTime getDateOfOrder() {
+        return this.dateOfOrder;
+    }
+
+    public ShipmentStatus getShipmentStatus() {
+        return this.shipmentStatus;
+    }
+
+    public double getPriceBeforeDiscount() {
+        return this.priceBeforeDiscount;
+    }
+
+    public int getTotalQuantity() {
+        return this.totalQuantity;
+    }
+
+    public enum ShipmentStatus{
+        Delivered,WaitingForDelivery
     }
 }

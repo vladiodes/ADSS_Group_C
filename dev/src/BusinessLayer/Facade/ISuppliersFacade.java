@@ -35,16 +35,24 @@ public interface ISuppliersFacade {
     /**
      * Gets a supplier
      * @param supplierId - the id of the supplier
-     * @return a response message wrapped with a string that represents the supplier info
+     * @return a response message wrapped with a DTO that represents the supplier info
      *          in case of an error it would contain an appropriate message.
      */
-    Response<String> getSupplier(int supplierId);
+    Response<BusinessLayer.DTO.Supplier> getSupplier(int supplierId);
 
     /**
      * gets all suppliers in the system
-     * @return returns a list of all suppliers in a short description: "Supplier's name - Supplier's id"
+     * @return returns a list of DTO of all suppliers
      */
-    Response<List<String>> getAllSuppliers();
+    Response<List<BusinessLayer.DTO.Supplier>> getAllSuppliers();
+
+    /**
+     * updates the fields of a supplier according to the DTO provided
+     * @param supplier - a dto supplier object used to updated the supplier
+     * @return a response with a value true on success, in case of failure the response will contain an appropriate error
+     * message.
+     */
+    Response<Boolean> setSupplier(BusinessLayer.DTO.Supplier supplier);
 
     /**
      * Updates a supplier's shipping status
@@ -103,10 +111,10 @@ public interface ISuppliersFacade {
      *
      * @param supplierID - the supplier id
      * @param orderID - the order id
-     * @return returns a list of strings representing the order info, the first string represents the order
-     *          details, the rest are the products that the order contains.
+     * @return returns a response with a value containing a DTO representing the wanted order on success, and an appropriate
+     * error message on failure.
      */
-    Response<List<String>> getOrder(int supplierID,int orderID);
+    Response<BusinessLayer.DTO.Order> getOrder(int supplierID,int orderID);
 
     /**
      * Changes the status of an order to "received"

@@ -1,10 +1,7 @@
 package BusinessLayer;
 
-import com.sun.deploy.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Supplier{
     private String supplierName;
@@ -35,52 +32,8 @@ public class Supplier{
         this.supplierContracts=new LinkedList<>();
     }
 
-    //returns a string with the supplier details.
-    public String toString(){
-        return "supplier name: "+supplierName+'\n'+
-                "fixed days: "+fixedDaysToString()+'\n'+
-                "self pick up: "+selfPickUp+'\n'+
-                "id: "+SupplierID+'\n'+
-                "bank account: "+bankAccount+'\n'+
-                "categories: "+ categoriesToString()+'\n'+
-                "manufacturers: "+manufacturersToString()+'\n'+
-                "contact info: "+'\n'+
-                contactInfoToString()+'\n'+
-                "discounts: "+'\n'+
-                discountToString();
-                //need to return more?
-    }
-
-    //the functions fixedDaysToString until convertWithStream are used to obtain a string representation of the supplier's
-    //data members.
-    private String fixedDaysToString(){
-        if(fixedDays==null){
-            return "none";
-        }
-        return StringUtils.join(fixedDays,",");
-    }
-
-    private String categoriesToString(){
-        return StringUtils.join(categories,",");
-    }
-
-    private String manufacturersToString(){
-        return StringUtils.join(manufacturers,",");
-    }
-
-    private String contactInfoToString(){
-        return convertWithStream(contactInfo);
-    }
-
-    private String discountToString(){
-        return convertWithStream(discountsByPrice);
-    }
-
-    private String convertWithStream(Map<?, ?> map) {
-        String mapAsString = map.keySet().stream()
-                .map(key -> key + "=" + map.get(key))
-                .collect(Collectors.joining(", "+'\n', "{", "}"));
-        return mapAsString;
+    public Supplier getSupplier(){
+        return this;
     }
 
     //the setters are used for checking the validity of the constructor arguments and implementing the Facade interface.
@@ -229,12 +182,12 @@ public class Supplier{
     }
 
     /**/
-    public List<String> getOrder(int orderID) {
+    public Order getOrder(int orderID) {
         Order order=findOrder(orderID);
         if(order==null){
             throw new IllegalArgumentException("no order with such id.");
         }
-        return order.getOrderDetails();
+        return order;
     }
 
     /**/
@@ -328,11 +281,38 @@ public class Supplier{
         o.removeProduct(productID);
     }
 
+    public String getName() {
+        return supplierName;
+    }
+
+    public boolean getSelfPickUp() {
+        return selfPickUp;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public PaymentAgreement getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public int getID() {
+        return SupplierID;
+    }
+
+    public void setSupplier(BusinessLayer.DTO.Supplier supplier) {
+        setSelfPickUp(supplier.selfPickUp);
+        setSupplierName(supplier.name);
+        setBankAccount(supplier.bankAccount);
+        setPaymentMethod(supplier.paymentMethod);
+    }
+
     public enum DayOfWeek{
-        Sunday,Monday,Tuesday,Wednesday,Thursday,Friday;
+        Sunday,Monday,Tuesday,Wednesday,Thursday,Friday
     }
 
     public enum PaymentAgreement{
-        Monthly,PerOrder;
+        Monthly,PerOrder
     }
 }

@@ -3,6 +3,7 @@ package BusinessLayer.Controllers;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import BusinessLayer.Order;
 import BusinessLayer.Product;
 import BusinessLayer.Supplier;
 
@@ -36,16 +37,16 @@ public class SuppliersController {
         }
     }
 
-    public String getSupplier(int supplierID) {
+    public BusinessLayer.Supplier getSupplier(int supplierID) {
         Supplier s = search(supplierID);
-        return s.toString();
+        return s.getSupplier();
     }
 
-    public List<String> getAllSuppliers() {
-        List<String> suppliersStrings = new LinkedList<>();
+    public List<BusinessLayer.Supplier> getAllSuppliers() {
+        List<BusinessLayer.Supplier> suppliersStrings = new LinkedList<>();
         for (Integer id :
                 supplierMap.keySet()) {
-            suppliersStrings.add(supplierMap.get(id).toString());
+            suppliersStrings.add(supplierMap.get(id).getSupplier());
         }
         return suppliersStrings;
     }
@@ -84,7 +85,7 @@ public class SuppliersController {
             s.addItemToOrder(orderId,quantity,supplierProductId);
     }
 
-    public List<String> getOrder(int supplierID, int orderID) {
+    public Order getOrder(int supplierID, int orderID) {
         Supplier s = search(supplierID);
         return s.getOrder(orderID);
     }
@@ -141,5 +142,10 @@ public class SuppliersController {
             throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
         }
         return s;
+    }
+
+    public void setSupplier(BusinessLayer.DTO.Supplier supplier) {
+        Supplier s=search(supplier.id);
+        s.setSupplier(supplier);
     }
 }
