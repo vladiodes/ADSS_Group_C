@@ -30,7 +30,7 @@ public class Transports implements Controller<Transport> {
         return filteredTransports;
     }
 
-    public ArrayList<Transport> getTransports(){
+    public ArrayList<Transport> getTransports() {
         return transports;
     }
 }

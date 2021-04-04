@@ -9,7 +9,8 @@ public class TransportsFacade {
     Drivers Dri = new Drivers();
     Trucks Tru = new Trucks();
 
-    public TransportsFacade(){}
+    public TransportsFacade() {
+    }
 
     public void addDriver(String name, int license, int id) throws Exception {
         Dri.addDriver(name, id, license);
@@ -20,11 +21,11 @@ public class TransportsFacade {
     }
 
     public void addTruck(int plate, String model, int maxweight, String type, int factoryweight) throws Exception {
-        Tru.addTruck(plate,model,maxweight,type,factoryweight);
+        Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
     public void addTransport(Date date, int w, int driverID, int TruckID, List<ItemContract> IC, String Source) throws Exception {
-        Tra.addTransport(new Transport(date,w,Dri.getDriver(driverID),Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
+        Tra.addTransport(new Transport(date, w, Dri.getDriver(driverID), Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
     }
 
     public void addSection(String section) throws Exception {
@@ -39,23 +40,23 @@ public class TransportsFacade {
         return Tra.getTransportsByDate(date);
     }
 
-    public ArrayList<Truck> getAllTrucks(){
+    public ArrayList<Truck> getAllTrucks() {
         return Tru.getTrucks();
     }
 
-    public ArrayList<Driver> getAllDrivers(){
+    public ArrayList<Driver> getAllDrivers() {
         return Dri.getDrivers();
     }
 
-    public ArrayList<Site> getAllSites(){
+    public ArrayList<Site> getAllSites() {
         return Sit.getSites();
     }
 
-    public ArrayList<String> getAllSections(){
+    public ArrayList<String> getAllSections() {
         return Sit.getSections();
     }
 
-    public ArrayList<Transport> getAllTransports(){
+    public ArrayList<Transport> getAllTransports() {
         return Tra.getTransports();
     }
 

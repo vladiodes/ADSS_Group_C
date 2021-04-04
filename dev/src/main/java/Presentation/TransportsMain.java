@@ -14,65 +14,69 @@ public class TransportsMain {
     public static void main(String args[]) {
         in = new Scanner(System.in);
         while (true) {
-            System.out.println("Hello, write the number of the operation you would like to do?");
-            System.out.println("1. Add driver");
-            System.out.println("2. Add site");
-            System.out.println("3. Add truck");
-            System.out.println("4. Add transport");
-            System.out.println("5. Add section");
-            System.out.println("6. Get all trucks");
-            System.out.println("7. Get all drivers");
-            System.out.println("8. Get all sites");
-            System.out.println("9. Get all sections");
-            System.out.println("10. Get all transports");
-            System.out.println("11. Get transport of driver");
-            System.out.println("12. Get transport by date");
-            System.out.println("13. Quit");
-            Scanner in = new Scanner(System.in);
-            int option = in.nextInt();
-            in.nextLine();
-            if (option == 13)
-                break;
-            switch (option) {
-                case 1:
-                    AddDriver();
+            try {
+                System.out.println("Hello, write the number of the operation you would like to do?");
+                System.out.println("1. Add driver");
+                System.out.println("2. Add site");
+                System.out.println("3. Add truck");
+                System.out.println("4. Add transport");
+                System.out.println("5. Add section");
+                System.out.println("6. Get all trucks");
+                System.out.println("7. Get all drivers");
+                System.out.println("8. Get all sites");
+                System.out.println("9. Get all sections");
+                System.out.println("10. Get all transports");
+                System.out.println("11. Get transport of driver");
+                System.out.println("12. Get transport by date");
+                System.out.println("13. Quit");
+                Scanner in = new Scanner(System.in);
+                int option = in.nextInt();
+                in.nextLine();
+                if (option == 13)
                     break;
-                case 2:
-                    AddSite();
-                    break;
-                case 3:
-                   AddTruck();
-                    break;
-                case 4:
-                    AddTransport();
-                    break;
-                case 5:
-                    AddSection();
-                    break;
-                case 6:
-                    GetAllTrucks();
-                    break;
-                case 7:
-                    GetAllDrivers();
-                    break;
-                case 8:
-                    GetAllSites();
-                    break;
-                case 9:
-                    GetAllSections();
-                    break;
-                case 10:
-                    GetAllTransports();
-                    break;
-                case 11:
-                    GetTransportsByDriver();
-                    break;
-                case 12:
-                    GetTransportsByDate();
-                    break;
-                default:
-                    System.out.println("Please enter a valid number");
-                    break;
+                switch (option) {
+                    case 1:
+                        AddDriver();
+                        break;
+                    case 2:
+                        AddSite();
+                        break;
+                    case 3:
+                        AddTruck();
+                        break;
+                    case 4:
+                        AddTransport();
+                        break;
+                    case 5:
+                        AddSection();
+                        break;
+                    case 6:
+                        GetAllTrucks();
+                        break;
+                    case 7:
+                        GetAllDrivers();
+                        break;
+                    case 8:
+                        GetAllSites();
+                        break;
+                    case 9:
+                        GetAllSections();
+                        break;
+                    case 10:
+                        GetAllTransports();
+                        break;
+                    case 11:
+                        GetTransportsByDriver();
+                        break;
+                    case 12:
+                        GetTransportsByDate();
+                        break;
+                    default:
+                        System.out.println("Please enter a valid number");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number");
             }
         }
         in.close();
@@ -104,7 +108,7 @@ public class TransportsMain {
         return contracts;
     }
 
-    public static void AddDriver(){
+    public static void AddDriver() {
 
         try {
             System.out.println("Please enter the name of the new driver");
@@ -121,7 +125,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddSite(){
+    public static void AddSite() {
         try {
             System.out.println("Please enter the address of the site");
             String ad = in.nextLine();
@@ -138,19 +142,19 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTruck(){
+    public static void AddTruck() {
         try {
             System.out.println("Please enter the plate number of the truck");
             int plate = in.nextInt();
             in.nextLine();
             System.out.println("Please enter the model of the truck");
             String model = in.nextLine();
-            System.out.println("Please enter max weight for the truck (only numbers!):");
+            System.out.println("Please enter max weight for the truck (only numbers!)");
             int maxweight = in.nextInt();
             in.nextLine();
             System.out.println("Please enter the type of truck");
             String type = in.nextLine();
-            System.out.println("Please enter the weight of the truck without load:");
+            System.out.println("Please enter the weight of the truck without load");
             int factoryweight = in.nextInt();
             in.nextLine();
             API.addTruck(plate, model, maxweight, type, factoryweight);
@@ -159,7 +163,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTransport(){
+    public static void AddTransport() {
         try {
             System.out.println("Please enter the date of the transport in the following format: dd/MM/yyyy");
             String date = in.nextLine();
@@ -214,7 +218,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddSection(){
+    public static void AddSection() {
         try {
             System.out.println("Please enter the name of the new section");
             String section = in.nextLine();
@@ -224,7 +228,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTrucks(){
+    public static void GetAllTrucks() {
         try {
             System.out.println(API.getAllTrucks());
         } catch (Exception e) {
@@ -232,7 +236,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllDrivers(){
+    public static void GetAllDrivers() {
         try {
             System.out.println(API.getAllDrivers());
         } catch (Exception e) {
@@ -240,7 +244,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllSites(){
+    public static void GetAllSites() {
         try {
             System.out.println(API.getAllSites());
         } catch (Exception e) {
@@ -248,7 +252,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllSections(){
+    public static void GetAllSections() {
         try {
             System.out.println(API.getAllSections());
         } catch (Exception e) {
@@ -256,7 +260,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTransports(){
+    public static void GetAllTransports() {
         try {
             System.out.println(API.getAllTransports());
         } catch (Exception e) {
@@ -264,7 +268,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetTransportsByDriver(){
+    public static void GetTransportsByDriver() {
         try {
             System.out.println("Please enter the id of the driver");
             int id = in.nextInt();
@@ -275,7 +279,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetTransportsByDate(){
+    public static void GetTransportsByDate() {
         try {
             System.out.println("Please type the Date in the following format - dd/MM/yyyy");
             String sDate1 = in.nextLine();
