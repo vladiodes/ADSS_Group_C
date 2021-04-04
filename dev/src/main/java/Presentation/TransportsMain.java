@@ -9,8 +9,10 @@ import java.util.*;
 public class TransportsMain {
     private static TransportsFacade API = new TransportsFacade();
     public static int ICID = 0;
+    private static Scanner in;
 
     public static void main(String args[]) {
+        in = new Scanner(System.in);
         while (true) {
             System.out.println("Hello, write the number of the operation you would like to do?");
             System.out.println("1. Add driver");
@@ -28,6 +30,7 @@ public class TransportsMain {
             System.out.println("13. Quit");
             Scanner in = new Scanner(System.in);
             int option = in.nextInt();
+            in.nextLine();
             if (option == 13)
                 break;
             switch (option) {
@@ -72,43 +75,46 @@ public class TransportsMain {
                     break;
             }
         }
+        in.close();
     }
 
     public static ArrayList<ItemContract> makeItemContract() throws Exception {
         ArrayList<ItemContract> contracts = new ArrayList<ItemContract>();
-        Scanner in = new Scanner(System.in);
         while (true) {
             System.out.println("Please enter the destination address");
-            String dest = in.next();
+            String dest = in.nextLine();
             System.out.println("Please follow the instructions to add items:");
             HashMap<String, Integer> items = new HashMap<String, Integer>();
             while (true) {
                 System.out.println("What item do you want?");
-                String item = in.next();
+                String item = in.nextLine();
                 System.out.println("How many " + item + " do you want?");
                 int quantity = in.nextInt();
+                in.nextLine();
                 items.put(item, quantity);
                 System.out.println("Do you want to add another item? y/n");
-                if (in.next().equals("n"))
+                if (in.nextLine().equals("n"))
                     break;
             }
             contracts.add(new ItemContract(ICID++, API.getSite(dest), items, true));
             System.out.println("Another item contract? y/n");
-            if (in.next().equals("n"))
+            if (in.nextLine().equals("n"))
                 break;
         }
         return contracts;
     }
 
     public static void AddDriver(){
-        Scanner in = new Scanner(System.in);
+
         try {
             System.out.println("Please enter the name of the new driver");
-            String name = in.next();
+            String name = in.nextLine();
             System.out.println("Please enter the id of the new driver");
             int id = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the license of the new driver");
             int license = in.nextInt();
+            in.nextLine();
             API.addDriver(name, id, license);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -116,16 +122,16 @@ public class TransportsMain {
     }
 
     public static void AddSite(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please enter the address of the site");
-            String ad = in.next();
+            String ad = in.nextLine();
             System.out.println("Please enter the contact phone number of the site (only numbers no -)");
             int num = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the contact name of the site");
-            String c = in.next();
+            String c = in.nextLine();
             System.out.println("Please enter the section the site is in");
-            String sec = in.next();
+            String sec = in.nextLine();
             API.addSite(ad, num, c, API.getSection(sec));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -133,18 +139,20 @@ public class TransportsMain {
     }
 
     public static void AddTruck(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please enter the plate number of the truck");
             int plate = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the model of the truck");
-            String model = in.next();
+            String model = in.nextLine();
             System.out.println("Please enter max weight for the truck (only numbers!):");
             int maxweight = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the type of truck");
-            String type = in.next();
+            String type = in.nextLine();
             System.out.println("Please enter the weight of the truck without load:");
             int factoryweight = in.nextInt();
+            in.nextLine();
             API.addTruck(plate, model, maxweight, type, factoryweight);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -152,25 +160,27 @@ public class TransportsMain {
     }
 
     public static void AddTransport(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please enter the date of the transport in the following format: dd/MM/yyyy");
-            String date = in.next();
+            String date = in.nextLine();
             Date transDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
             Date today = new Date();
             while (transDate.before(today)) {
                 System.out.println("Please enter a valid date");
-                date = in.next();
+                date = in.nextLine();
                 transDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
             }
             System.out.println("Please enter the weight of the transport");
             int weight = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the id of the driver");
             int driverID = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter the plate number of the truck");
             int plateNum = in.nextInt();
+            in.nextLine();
             System.out.println("Please enter where the transport is going from");
-            String source = in.next();
+            String source = in.nextLine();
             System.out.println("Please follow the instructions to add item contracts to the current transportation:");
             ArrayList<ItemContract> contracts = makeItemContract();
             while (true) {
@@ -181,16 +191,18 @@ public class TransportsMain {
                 } catch (Exception e) {
                     if (e.getMessage().equals("Truck weight exceeded.")) {
                         System.out.println("Truck weight exceeded, would you like to discard the transport? y/n");
-                        if (in.next().equals("y"))
+                        if (in.nextLine().equals("y"))
                             break;
                         System.out.println("which item contract would you like to edit?");
                         for (int i = 0; i < contracts.size(); i++)
                             System.out.println(i + ". " + contracts.get(i));
                         int tempoption = in.nextInt();
+                        in.nextLine();
                         contracts.get(tempoption).setPassed(false);
                         contracts.addAll(makeItemContract());
                         System.out.println("Please enter the new weight of the transportation");
                         weight = in.nextInt();
+                        in.nextLine();
                     } else {
                         System.out.println(e.getMessage());
                         break;
@@ -203,10 +215,9 @@ public class TransportsMain {
     }
 
     public static void AddSection(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please enter the name of the new section");
-            String section = in.next();
+            String section = in.nextLine();
             API.addSection(section);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -254,10 +265,10 @@ public class TransportsMain {
     }
 
     public static void GetTransportsByDriver(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please enter the id of the driver");
             int id = in.nextInt();
+            in.nextLine();
             System.out.println(API.getTransportsOfDriver(id));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -265,10 +276,9 @@ public class TransportsMain {
     }
 
     public static void GetTransportsByDate(){
-        Scanner in = new Scanner(System.in);
         try {
             System.out.println("Please type the Date in the following format - dd/MM/yyyy");
-            String sDate1 = in.next();
+            String sDate1 = in.nextLine();
             System.out.println(API.getTransportsByDate(new SimpleDateFormat("dd/MM/yyyy").parse(sDate1)));
         } catch (Exception e) {
             System.out.println(e.getMessage());

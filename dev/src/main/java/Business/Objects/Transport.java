@@ -27,7 +27,7 @@ public class Transport {
         if (truck != null && truck.getMaxWeight() < weight)
             throw new Exception("Truck weight exceeded.");
         if (truck != null && truck.getFactoryWeight() > weight)
-            throw new Exception("Truck weight is under the factory weight.");
+            throw new Exception("Truck weight can't be less than factory weight.");
         this.weight = weight;
     }
 
