@@ -26,7 +26,10 @@ public class Sites implements Controller<Site> {
         sites.put(_ad, new Site(_ad, _num, _contact, Section));
     }
 
-    public void addSection(String section) {
+    public void addSection(String section) throws Exception {
+        for(String curr : sections)
+            if(curr.equals(section))
+                throw new Exception("Section already exists in the Database.");
         sections.add(section);
     }
 

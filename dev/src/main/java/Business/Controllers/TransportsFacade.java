@@ -27,7 +27,7 @@ public class TransportsFacade {
         Tra.addTransport(new Transport(date,w,Dri.getDriver(driverID),Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
     }
 
-    public void addSection(String section) {
+    public void addSection(String section) throws Exception {
         Sit.addSection(section);
     }
 

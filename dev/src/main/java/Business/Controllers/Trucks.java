@@ -9,7 +9,6 @@ public class Trucks implements Controller<Truck> {
 
     public Trucks() {
         this.trucks = new HashMap<Integer, Truck>();
-        trucks.put(2571769,new Truck(2571769,"Mazda 6",2500,"Car",1000));
         trucks.put(3212345,new Truck(3212345,"Honda Ridgeline",5000,"Pickup Truck",1500));
         trucks.put(6942021,new Truck(6942021,"Tesla",10000,"Smart Car",1500));
     }
