@@ -206,11 +206,11 @@ public class SuppliersController {
     /**
      * Deletes a discount from a supplier's contract
      * @param supplierID
-     * @param productID
+     * @param catalogueID
      * @param quantity
      */
-    public void deleteProductDiscount(int supplierID, int productID, int quantity){
-        search(supplierID).deleteProductDiscount(productID,quantity);
+    public void deleteProductDiscount(int supplierID, int catalogueID, int quantity){
+        search(supplierID).deleteProductDiscount(catalogueID,quantity);
     }
 
     /**

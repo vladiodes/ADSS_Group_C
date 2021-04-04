@@ -89,7 +89,7 @@ public class suppliersMenuWindow extends menuWindow {
 
     private void deleteDiscountProduct() {
         Response<Boolean> response=facade.deleteProductDiscount(utills.getNonNegativeNumber("\nEnter supplier's ID"),
-                utills.getNonNegativeNumber("\nEnter the product ID as it appears in the store"),
+                utills.getNonNegativeNumber("\nEnter the catalogue ID of the product as it appears in the supplier's catalogue"),
                 utills.getNonNegativeNumber("\nAdd the quantity of the product you'd like to delete discount"));
         utills.printMessageOrSuccess(response,"Successfully deleted a discount from the supplier's product");
     }
@@ -204,12 +204,11 @@ public class suppliersMenuWindow extends menuWindow {
         System.out.println("\nPlease enter the contact info, first the full name, afterwards the phone number");
         contactInfo.put(scanner.nextLine(),scanner.nextLine());
 
-        System.out.println("\nPlease enter discounts this supplier provides, to start press Enter or 'Q' if none");
+        System.out.println("\nPress Enter to start inserting discounts this supplier provides, or press 'Q' if none");
 
         while (!scanner.nextLine().equals("Q")) {
 
-            System.out.println("Please enter the discount for orders above this price");
-            discount.put(getPrice(), utills.getNonNegativeNumber("Please enter the discount percentage"));
+            discount.put(getPrice(), utills.getNonNegativeNumber("Please enter the discount percentage above this price"));
             System.out.println("to continue press Enter or 'Q' if done");
         }
 

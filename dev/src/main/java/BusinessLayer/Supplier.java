@@ -151,6 +151,8 @@ public class Supplier{
             throw new IllegalArgumentException("tried to add an illegal discount to a supplier. the discount starting price" +
                     "and the discount percentage have to be non negative.");
         }
+        if(discountPerecentage>100)
+            throw new IllegalArgumentException("Can't add a discount above 100%");
         if(discountsByPrice.containsKey(price))
             throw new IllegalArgumentException("A discount for that price already exists, you should delete it first, and then add a new one");
         discountsByPrice.put(price,discountPerecentage);
@@ -326,6 +328,7 @@ public class Supplier{
              discountsByPrice.keySet()) {
             if(minPriceForDiscount==price){
                 discountsByPrice.remove(price);
+                return;
             }
         }
         throw new IllegalArgumentException("no discount starting from the given price.");
@@ -333,11 +336,11 @@ public class Supplier{
 
     /**
      * Deletes a discount from a given product
-     * @param productID the id of the product - as appears in the store
+     * @param catalogueID the id of the product - as appears in the catalogue
      * @param quantity
      */
-    public void deleteProductDiscount(int productID, int quantity) {
-        findContractByStoreID(productID).deleteDiscount(quantity);
+    public void deleteProductDiscount(int catalogueID, int quantity) {
+        findContract(catalogueID).deleteDiscount(quantity);
     }
 
     //this function receives an id of a product in the store and finds and searches for a contract for it.

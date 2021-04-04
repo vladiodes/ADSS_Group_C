@@ -47,6 +47,18 @@ public class SupplierTest {
     }
 
     @Test
+    public void addDiscountAbove100(){
+        try {
+            supplier.addDiscount(100,101);
+        }
+        catch (IllegalArgumentException e){
+            assertTrue(true);
+            return;
+        }
+        fail();
+    }
+
+    @Test
     public void addDiscountNegativeDiscountTest(){
         try {
             supplier.addDiscount(150,-12);

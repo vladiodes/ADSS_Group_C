@@ -4,6 +4,7 @@ import BusinessLayer.Order;
 import BusinessLayer.ProductInOrder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class OrderDTO {
     public String toString() {
         StringBuilder builder=new StringBuilder();
         builder.append("Order id: " + orderID);
-        builder.append("\nDate of order: " + dateOfOrder);
+        builder.append("\nDate of order: " + dateOfOrder.format(DateTimeFormatter.ISO_LOCAL_DATE));
         builder.append("\nShippment status: " + shipmentStatus);
         builder.append("\nPrice before discounts: " + priceBeforeDiscount);
         builder.append("\nPrice after discounts: " + priceAfterDiscount);

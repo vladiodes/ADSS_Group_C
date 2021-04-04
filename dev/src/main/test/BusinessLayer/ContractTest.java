@@ -44,4 +44,16 @@ public class ContractTest {
         }
         fail();
     }
+
+    @Test
+    public void testAddDiscountAbove100(){
+        try {
+            contract.addDiscount(100, 101);
+        }
+        catch (IllegalArgumentException e){
+            assertTrue(true);
+            return;
+        }
+        fail();
+    }
 }

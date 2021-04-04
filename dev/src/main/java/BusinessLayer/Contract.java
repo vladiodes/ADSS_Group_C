@@ -43,8 +43,10 @@ public class Contract{
     public void deleteDiscount(int quantity) {
         for (Integer minQuantityForDiscount:
              discountByQuantity.keySet()) {
-            if(minQuantityForDiscount==quantity)
+            if(minQuantityForDiscount==quantity) {
                 discountByQuantity.remove(minQuantityForDiscount);
+                return;
+            }
         }
         throw new IllegalArgumentException("there's no discount starting from the given quantity.");
     }
@@ -65,12 +67,12 @@ public class Contract{
     }
 
     private void setDiscountByQuantity(Map<Integer,Integer> discountByQuantity){
-        if(this.discountByQuantity==null)
+        if(discountByQuantity==null)
             this.discountByQuantity=new HashMap<>();
         else {
             for (Integer quantity :
-                    this.discountByQuantity.keySet()) {
-                if (quantity < 0 | this.discountByQuantity.get(quantity) < 0) {
+                    discountByQuantity.keySet()) {
+                if (quantity < 0 | discountByQuantity.get(quantity) < 0) {
                     throw new IllegalArgumentException("discount by quantity can only have a positive starting quantity and a positive discount percentage.");
                 }
             }
@@ -94,6 +96,8 @@ public class Contract{
     public void addDiscount(int quantity, int discount) {
         if(quantity<0 || discount<0)
             throw new IllegalArgumentException("Can't add a negative discount or a negative quantity");
+        if(discount>100)
+            throw new IllegalArgumentException("Can't add discount above 100%");
         if(discountByQuantity.containsKey(quantity))
             throw new IllegalArgumentException("A discount of this quantity already exists!");
         discountByQuantity.put(quantity,discount);

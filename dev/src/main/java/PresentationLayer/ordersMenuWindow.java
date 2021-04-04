@@ -22,7 +22,7 @@ public class ordersMenuWindow extends menuWindow {
         menu.put(3,"Add an item to an order");
         menu.put(4,"View order details");
         menu.put(5,"Receive order from supplier");
-        menu.put(6,"View all order ids by a given supplier");
+        menu.put(6,"View all order by a given supplier");
         menu.put(7,"Cancel an order");
         menu.put(8,"Delete an item from an order");
         menu.put(9,"Go back to the main menu");
@@ -122,17 +122,18 @@ public class ordersMenuWindow extends menuWindow {
     }
 
     private void createOrder() {
-        facade.openOrder(
+        Response<Integer> response=facade.openOrder(
                 utills.getNonNegativeNumber("\nEnter the supplier id you'd like to order from"),
                 LocalDateTime.now(),
                 getFixed()
         );
+        utills.printMessageOrSuccess(response,"A new order of id " + response.getValue() + " was issued with the given supplier");
     }
 
     private boolean getFixed(){
         System.out.println("\nDo you want this order to be fixed? (A.K.A possible to re-order) 1.Fixed    2.Not fixed");
         int fixed=-1;
-        for(fixed=utills.checkIfInBounds(scanner.nextLine(),3);fixed!=-1;fixed=utills.checkIfInBounds(scanner.nextLine(),3))
+        for(fixed=utills.checkIfInBounds(scanner.nextLine(),3);fixed==-1;fixed=utills.checkIfInBounds(scanner.nextLine(),3))
             System.out.println("\nWrong input, 1.Fixed    2.Not fixed");
         return fixed==1;
     }

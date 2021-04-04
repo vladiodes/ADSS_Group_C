@@ -161,11 +161,11 @@ public interface ISuppliersFacade {
     /**
      * Deletes a product discount
      * @param supplierID - supplier ID
-     * @param productID - product ID
+     * @param catalogueID - catalogue ID
      * @param quantity - quantity of the product from which the discount starts
      * @return true upon success
      */
-    Response<Boolean> deleteProductDiscount(int supplierID, int productID, int quantity);
+    Response<Boolean> deleteProductDiscount(int supplierID, int catalogueID, int quantity);
 
     /**
      * Cancelcs an order (actually deletes it)

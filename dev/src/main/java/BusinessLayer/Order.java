@@ -137,16 +137,13 @@ public class Order{
     public void removeProduct(Contract productContract, Map<Double,Integer> discounts) {
         if(shipmentStatus==ShipmentStatus.Delivered)
             throw new IllegalArgumentException("Can't remove products from already delivered order");
-        for (ProductInOrder pio : productsInOrder) {
-            if (pio.getProduct().getID() == productContract.getProduct().getID()) {
+        ProductInOrder pio=findProductInOrder(productContract.getProduct());
+        if(pio==null)
+            throw new IllegalArgumentException("there is no product with the given id in the order.");
                 productsInOrder.remove(pio);
                 totalQuantity -= pio.getQuantity();
                 priceBeforeDiscount -= pio.getTotalPrice();
                 calculateDiscount(discounts);
-                return;
-            }
-        }
-        throw new IllegalArgumentException("there is no product with the given id in the order.");
     }
 
     //these functions are used to check the validity of the constructor arguments

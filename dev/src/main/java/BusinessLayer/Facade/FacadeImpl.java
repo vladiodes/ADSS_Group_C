@@ -215,9 +215,9 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Boolean> deleteProductDiscount(int supplierID, int productID, int quantity) {
+    public Response<Boolean> deleteProductDiscount(int supplierID, int catalogueID, int quantity) {
         try {
-            suppliersController.deleteProductDiscount(supplierID,productID,quantity);
+            suppliersController.deleteProductDiscount(supplierID,catalogueID,quantity);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){
