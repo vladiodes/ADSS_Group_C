@@ -3,9 +3,9 @@ package BusinessLayer.Facade;
 import BusinessLayer.*;
 import BusinessLayer.Controllers.Inventory;
 import BusinessLayer.Controllers.SuppliersController;
-import DTO.OrderDTO;
-import DTO.ProductDTO;
-import DTO.SupplierDTO;
+import BusinessLayer.DTO.OrderDTO;
+import BusinessLayer.DTO.ProductDTO;
+import BusinessLayer.DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -162,8 +162,8 @@ public class FacadeImpl implements ISuppliersFacade {
     public Response<List<ProductDTO>> getItemsBySupplier(int supplierID) {
         try {
             ArrayList<ProductDTO> list=new ArrayList<>();
-            for(Product p:suppliersController.getItemsBySupplier(supplierID))
-                list.add(new ProductDTO(p));
+            for(Contract c:suppliersController.getItemsBySupplier(supplierID))
+                list.add(new ProductDTO(c));
             return new Response<>(list);
         }
         catch (IllegalArgumentException e){

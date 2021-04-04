@@ -1,6 +1,6 @@
 package BusinessLayer;
 
-import DTO.SupplierDTO;
+import BusinessLayer.DTO.SupplierDTO;
 import org.junit.Before;
 import org.junit.Test;
 

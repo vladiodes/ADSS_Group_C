@@ -1,4 +1,4 @@
-package DTO;
+package BusinessLayer.DTO;
 
 import BusinessLayer.Order;
 import BusinessLayer.ProductInOrder;
@@ -42,9 +42,10 @@ public class OrderDTO {
         builder.append("\nPrice after discounts: " + priceAfterDiscount);
         builder.append("\nTotal quantity of items: " + totalQuantity);
         builder.append("\nFixed order: " + isFixed);
-        builder.append("\nProducts in the order: \n");
+        builder.append("\nProducts in the order:");
         for(String product:productsInOrder)
             builder.append("\n" + product);
+        builder.append("\n");
         return builder.toString();
     }
 }

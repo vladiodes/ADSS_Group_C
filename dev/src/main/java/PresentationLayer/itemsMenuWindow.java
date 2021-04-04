@@ -2,7 +2,7 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
-import DTO.ProductDTO;
+import BusinessLayer.DTO.ProductDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ public class itemsMenuWindow extends menuWindow {
     protected void createMenu() {
         menu=new HashMap<>();
         menu.put(1,"Add item to the store");
-        menu.put(2,"View all items in the contract of a given supplier");
+        menu.put(2,"View supplier's catalogue");
         menu.put(3,"Go back to main menu");
     }
 

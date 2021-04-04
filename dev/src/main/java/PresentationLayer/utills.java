@@ -51,6 +51,11 @@ public class utills {
         }
     }
 
+    /**
+     * Prints the message of the response in case of an exception or a success message
+     * @param response response object
+     * @param successMessage the success message to print
+     */
     public static void printMessageOrSuccess(Response<? extends Object> response, String successMessage) {
         if(response.WasException())
             System.out.println(response.getMessage());
@@ -58,12 +63,18 @@ public class utills {
             System.out.println(successMessage);
     }
 
+    /**
+     * Prints an error message in case of an error issued with the response object
+     * if no error, prints the value issued with the response object
+     * @param response reponse object
+     * @param <T> The type of value the response object wraps
+     */
     public static <T> void printErrorMessageOrListOfValues(Response<List<T>> response) {
         if (response.WasException())
             System.out.println(response.getMessage());
         else {
             for (T elem : response.getValue()) {
-                System.out.println(elem);
+                System.out.println(elem + "\n");
             }
         }
     }

@@ -166,11 +166,10 @@ public class SuppliersController {
     /**
      *
      * @param supplierID
-     * @return returns a list with all the products issued with the supplier
+     * @return returns a list with all the products (contracts) issued with the supplier
      */
-    public List<Product> getItemsBySupplier(int supplierID){
-        Supplier s = search(supplierID);
-        return s.getSuppliedItems();
+    public List<Contract> getItemsBySupplier(int supplierID){
+        return search(supplierID).getSuppliedItems();
     }
 
     /**

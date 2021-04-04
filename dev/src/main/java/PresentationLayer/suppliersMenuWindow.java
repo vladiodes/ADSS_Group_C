@@ -4,7 +4,7 @@ import BusinessLayer.DayOfWeek;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
 import BusinessLayer.PaymentAgreement;
-import DTO.SupplierDTO;
+import BusinessLayer.DTO.SupplierDTO;
 
 import java.util.*;
 
@@ -133,9 +133,10 @@ public class suppliersMenuWindow extends menuWindow {
         return response;
     }
 
-    private void getSupplier(){
-        Response<SupplierDTO> response=getSupplierOrFailureMessage();
-        utills.printMessageOrSuccess(response,response.getValue().toString());
+    private void getSupplier() {
+        Response<SupplierDTO> response = getSupplierOrFailureMessage();
+        if (!response.WasException())
+            utills.printMessageOrSuccess(response, response.getValue().toString());
     }
 
     private void updateSupplierShippingDays() {

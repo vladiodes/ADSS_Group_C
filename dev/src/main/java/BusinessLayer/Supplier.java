@@ -1,6 +1,6 @@
 package BusinessLayer;
 
-import DTO.SupplierDTO;
+import BusinessLayer.DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -15,7 +15,7 @@ public class Supplier{
     private Set<String> categories;
     private Set<String> manufacturers;
     private Map<String,String> contactInfo;
-    private final Map<Double,Integer> discountsByPrice;
+    private Map<Double,Integer> discountsByPrice;
     private final List<Order> ordersFromSupplier;
 
     public List<Contract> getSupplierContracts() {
@@ -24,7 +24,7 @@ public class Supplier{
 
     private final List<Contract> supplierContracts;
 
-    public Supplier(int SupplierID,String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts){
+    public Supplier(int SupplierID,String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts) {
         setSupplierID(SupplierID);
         setSupplierName(supplierName);
         setFixedDays(supplyingDays);
@@ -34,9 +34,23 @@ public class Supplier{
         setCategories(categories);
         setManufacturers(manufactures);
         setContactInfo(contactInfo);
-        this.discountsByPrice=discounts;
-        this.ordersFromSupplier=new LinkedList<>();
-        this.supplierContracts=new LinkedList<>();
+        setDiscountsByPrice(discounts);
+        this.ordersFromSupplier = new LinkedList<>();
+        this.supplierContracts = new LinkedList<>();
+    }
+
+    private void setDiscountsByPrice(Map<Double, Integer> discounts) {
+        if(discounts==null)
+            discountsByPrice=new HashMap<>();
+        else {
+            for(double price:discounts.keySet()){
+                if(price<0)
+                    throw new IllegalArgumentException("Can't enter negative price as discount");
+                if(discounts.get(price)<0)
+                    throw new IllegalArgumentException("Can't enter negative discount");
+            }
+            discountsByPrice=discounts;
+        }
     }
 
     /**
@@ -80,11 +94,10 @@ public class Supplier{
     //orders from sunday to friday and we check that all elements are in the range of 1 to 6 so they will match to
     //week days.
     private void setFixedDays(Set<DayOfWeek> newFixedDays){
-        if(newFixedDays!=null){
-            if(newFixedDays.size()==0){
-                fixedDays=null;
-                return;
-            }
+        if(newFixedDays==null || newFixedDays.size()==0) {
+            fixedDays = new HashSet<>();
+            fixedDays.add(DayOfWeek.None);
+            return;
         }
         fixedDays=newFixedDays;
     }
@@ -248,13 +261,13 @@ public class Supplier{
 
     /**
      *
-     * @return returns a list of all the products supplied by the supplier
+     * @return returns a list of all the products (contracts) supplied by the supplier
      */
-    public List<Product> getSuppliedItems() {
-        List<Product> items = new LinkedList<>();
+    public List<Contract> getSuppliedItems() {
+        List<Contract> contracts = new LinkedList<>();
         for (Contract c : supplierContracts)
-            items.add(c.getProduct());
-        return items;
+            contracts.add(c);
+        return contracts;
     }
 
     /**

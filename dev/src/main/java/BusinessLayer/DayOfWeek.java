@@ -8,7 +8,8 @@ public enum DayOfWeek {
     Tuesday(3,"Tuesday"),
     Wednesday(4,"Wednesday"),
     Thursday(5,"Thursday"),
-    Friday(6,"Friday");
+    Friday(6,"Friday"),
+    None(7,"None");
 
     private int value;
     private String strValue;

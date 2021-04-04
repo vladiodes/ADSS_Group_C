@@ -1,4 +1,4 @@
-package DTO;
+package BusinessLayer.DTO;
 import BusinessLayer.DayOfWeek;
 import BusinessLayer.PaymentAgreement;
 import BusinessLayer.Supplier;
