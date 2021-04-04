@@ -2,10 +2,10 @@ package Business.Objects;
 
 public class Truck {
     private int plateNum;
-    private String model;
-    private int maxWeight;
-    private String type;
-    private int factoryWeight;
+    private String model; // model of the truck
+    private int maxWeight; // the truck can't carry more than this.
+    private String type; // What type it is
+    private int factoryWeight; //used to tell what license you need to drive the truck.
 
     public Truck(int plateNum, String model, int maxWeight, String type, int Fw) {
         setPlateNum(plateNum);

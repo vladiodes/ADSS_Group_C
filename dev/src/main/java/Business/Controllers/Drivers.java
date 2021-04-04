@@ -8,7 +8,7 @@ public class Drivers implements Controller<Driver> {
 
     public Drivers() {
         this.drivers = new HashMap<Integer, Driver>();
-        drivers.put(123123123,new Driver("Yossi Mizrahi", 123123123, 5000));
+        drivers.put(123123123,new Driver("Ami Rozis", 123123123, 5000));
     }
 
     public void addDriver(String name, int license, int id) throws Exception {
