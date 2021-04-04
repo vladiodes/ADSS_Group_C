@@ -9,17 +9,17 @@ public class Product{
         setProductName(productName);
     }
 
-    public boolean equals(Product product){
-        return productName.equals(product.productName) & productID==product.productID;
+    /**
+     * Checks if 2 products are equal, checks if both ids and names are the same
+     * @param product
+     * @return
+     */
+    public boolean equals(Product product) {
+        return product!=null && productName.equals(product.productName) & productID==product.productID;
     }
-
+    //simple getters
     public String getName() {
         return productName;
-    }
-
-    public String toString(){
-        return "product name: "+productName+'\n'+
-                "product id: "+productID;
     }
 
     public int getID() {
@@ -27,7 +27,6 @@ public class Product{
     }
 
     //these functions are private setters for checking the validity of the constructor arguments
-
     private void setProductID(int productID){
         if(productID<0){
             throw new IllegalArgumentException("a product cannot have a negative id.");

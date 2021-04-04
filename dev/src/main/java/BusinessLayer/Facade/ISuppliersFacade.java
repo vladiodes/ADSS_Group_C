@@ -1,6 +1,10 @@
 
 package BusinessLayer.Facade;
-import BusinessLayer.Supplier;
+import BusinessLayer.DayOfWeek;
+import BusinessLayer.PaymentAgreement;
+import DTO.OrderDTO;
+import DTO.ProductDTO;
+import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,9 +25,9 @@ public interface ISuppliersFacade {
      * @param contactInfo - A dictionary of [Name:Phone number]
      * @param discounts - The quantity agreement by price (for a total price of an order)
      *                  A dictionary of the type: [Price:Discount]
-     * @return A response message, if true - than success.
+     * @return A response message, with the id of the added supplier upon success.
      */
-    Response<Boolean> addSupplier(String supplierName, Set<Supplier.DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, Supplier.PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
+    Response<Integer> addSupplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
 
     /**
      * Deletes a supplier from the system
@@ -35,40 +39,23 @@ public interface ISuppliersFacade {
     /**
      * Gets a supplier
      * @param supplierId - the id of the supplier
-     * @return a response message wrapped with a DTO that represents the supplier info
+     * @return a response message wrapped with a dto that represents the supplier info
      *          in case of an error it would contain an appropriate message.
      */
-    Response<BusinessLayer.DTO.Supplier> getSupplier(int supplierId);
+    Response<SupplierDTO> getSupplier(int supplierId);
 
     /**
      * gets all suppliers in the system
-     * @return returns a list of DTO of all suppliers
+     * @return returns a list of all suppliers wrapped in dto"
      */
-    Response<List<BusinessLayer.DTO.Supplier>> getAllSuppliers();
+    Response<List<SupplierDTO>> getAllSuppliers();
 
     /**
-     * updates the fields of a supplier according to the DTO provided
-     * @param supplier - a dto supplier object used to updated the supplier
-     * @return a response with a value true on success, in case of failure the response will contain an appropriate error
-     * message.
+     * Updates the business supplier according to the provided dto
+     * @param dto the dto that contains all the relevant data the user has typed in
+     * @return a response object
      */
-    Response<Boolean> setSupplier(BusinessLayer.DTO.Supplier supplier);
-
-    /**
-     * Updates a supplier's shipping status
-     * @param supplierID - the supplier id
-     * @param selfPickUp - the new status
-     * @return true upon success
-     */
-    Response<Boolean> updateSuppliersShippingStatus(int supplierID, boolean selfPickUp);
-
-    /**
-     * updates the fixed days of the supplier
-     * @param supplierID - supplier's id
-     * @param newFixedDays - the new fixed days
-     * @return true upon success
-     */
-    Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Supplier.DayOfWeek> newFixedDays);
+    Response<Boolean> updateSupplier(SupplierDTO dto);
 
     /**
      * Adds a discount per total price of an order for a specific supplier in the system
@@ -111,10 +98,9 @@ public interface ISuppliersFacade {
      *
      * @param supplierID - the supplier id
      * @param orderID - the order id
-     * @return returns a response with a value containing a DTO representing the wanted order on success, and an appropriate
-     * error message on failure.
+     * @return returns a dto that holds the relevant data for the order object
      */
-    Response<BusinessLayer.DTO.Order> getOrder(int supplierID,int orderID);
+    Response<OrderDTO> getOrder(int supplierID, int orderID);
 
     /**
      * Changes the status of an order to "received"
@@ -127,16 +113,16 @@ public interface ISuppliersFacade {
     /**
      * get all orders by a specific supplier
      * @param supplierId - the supplier id
-     * @return returns a list of all the orders by a specific supplier
+     * @return returns a list of all orders wrapped in dto by a given id of a supplier
      */
-    Response<List<Integer>> getOrderIdsBySupplier(int supplierId);
+    Response<List<OrderDTO>> getOrdersBySupplier(int supplierId);
 
     /**
      * get all products supplied by a specific supplier in the system
      * @param supplierID - the supplier id
      * @return returns a list of all the items supplied by the supplier
      */
-    Response<List<String>> getItemsBySupplier(int supplierID);
+    Response<List<ProductDTO>> getItemsBySupplier(int supplierID);
 
     /**
      * Add an item to the company
@@ -197,4 +183,14 @@ public interface ISuppliersFacade {
      * @return returns true upon success
      */
     Response<Boolean> deleteProductFromOrder(int supplierID,int orderID,int productID);
+
+    /**
+     * Adds a discount to a product supplied by a specific supplier (must be in its contract)
+     * @param supplierID the id of the supplier
+     * @param catalogueID the catalogue id of the product as the supplier identifies it
+     * @param quantity the quantity above the discount is valid
+     * @param discount the discount in percentage
+     * @return a response object, true upon success
+     */
+    Response<Boolean> addDiscountProduct(int supplierID, int catalogueID,int quantity, int discount);
 }

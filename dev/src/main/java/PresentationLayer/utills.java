@@ -58,12 +58,13 @@ public class utills {
             System.out.println(successMessage);
     }
 
-    public static void printErrorMessageOrListOfValues(Response<List<String>> response){
-        if(response.WasException())
+    public static <T> void printErrorMessageOrListOfValues(Response<List<T>> response) {
+        if (response.WasException())
             System.out.println(response.getMessage());
         else {
-            for (String element : response.getValue())
-                System.out.println(element);
+            for (T elem : response.getValue()) {
+                System.out.println(elem);
+            }
         }
     }
 

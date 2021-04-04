@@ -2,6 +2,7 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
+import DTO.ProductDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +41,7 @@ public class itemsMenuWindow extends menuWindow {
     }
 
     private void viewAllItemsBySupplier() {
-        Response<List<String>>response=facade.getItemsBySupplier(utills.getNonNegativeNumber("\nEnter supplier's ID"));
+        Response<List<ProductDTO>>response=facade.getItemsBySupplier(utills.getNonNegativeNumber("\nEnter supplier's ID"));
         utills.printErrorMessageOrListOfValues(response);
     }
 

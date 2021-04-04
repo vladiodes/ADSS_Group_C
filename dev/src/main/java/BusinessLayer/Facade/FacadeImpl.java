@@ -1,11 +1,14 @@
 package BusinessLayer.Facade;
 
+import BusinessLayer.*;
 import BusinessLayer.Controllers.Inventory;
 import BusinessLayer.Controllers.SuppliersController;
-import BusinessLayer.Supplier;
+import DTO.OrderDTO;
+import DTO.ProductDTO;
+import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,12 +27,11 @@ public class FacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Boolean> addSupplier(String supplierName, Set<Supplier.DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, Supplier.PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
+    public Response<Integer> addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
         try {
-             suppliersController.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discounts);
-             return new Response<>(true);
+             return new Response<>(suppliersController.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discounts));
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -40,69 +42,45 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.deleteSupplier(supplierId);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<BusinessLayer.DTO.Supplier> getSupplier(int supplierId) {
+    public Response<SupplierDTO> getSupplier(int supplierId) {
         try {
-             return new Response<>(new BusinessLayer.DTO.Supplier(suppliersController.getSupplier(supplierId)));
-        }
-        catch (Exception e){
+            Supplier supplier = suppliersController.getSupplier(supplierId);
+            return new Response<>(new SupplierDTO(supplier));
+        } catch (IllegalArgumentException e) {
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<List<BusinessLayer.DTO.Supplier>> getAllSuppliers() {
+    public Response<List<SupplierDTO>> getAllSuppliers() {
         try {
-            List<Supplier> suppliers=suppliersController.getAllSuppliers();
-            List<BusinessLayer.DTO.Supplier> supplierList=new LinkedList<>();
-            for (Supplier s:
-                 suppliers) {
-                supplierList.add(new BusinessLayer.DTO.Supplier(s));
-            }
-            return new Response<>(supplierList);
+            ArrayList<SupplierDTO> output=new ArrayList<>();
+            for(Supplier s:suppliersController.getAllSuppliers())
+                output.add(new SupplierDTO(s));
+            return new Response<>(output);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<Boolean> setSupplier(BusinessLayer.DTO.Supplier supplier) {
+    public Response<Boolean> updateSupplier(SupplierDTO dto) {
         try {
-            suppliersController.setSupplier(supplier);
+            suppliersController.getSupplier(dto.getSupplierID()).updateSupplier(dto);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
-    @Override
-    public Response<Boolean> updateSuppliersShippingStatus(int supplierID, boolean selfPickUp) {
-        try {
-            suppliersController.updateSuppliersShippingStatus(supplierID,selfPickUp);
-            return new Response<>(true);
-        }
-        catch (Exception e){
-            return new Response<>(e);
-        }
-    }
-
-    @Override
-    public Response<Boolean> updateSuppliersFixedDays(int supplierID, Set<Supplier.DayOfWeek> newFixedDays) {
-        try {
-            suppliersController.updateSuppliersFixedDays(supplierID,newFixedDays);
-            return new Response<>(true);
-        }
-        catch (Exception e){
-            return new Response<>(e);
-        }
-    }
 
     @Override
     public Response<Boolean> addDiscount(int supplierId, double price, int discountPerecentage) {
@@ -110,7 +88,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.addDiscount(supplierId,price,discountPerecentage);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -120,7 +98,7 @@ public class FacadeImpl implements ISuppliersFacade {
         try {
             return new Response<>(suppliersController.openOrder(supplierId,date,isFixed));
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -130,7 +108,7 @@ public class FacadeImpl implements ISuppliersFacade {
         try {
             return new Response<>(suppliersController.reOrder(supplierID,orderID,date));
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -141,17 +119,17 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.addItemToOrder(supplierId,orderId,quantity,supplierProductId);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<BusinessLayer.DTO.Order> getOrder(int supplierID, int orderID) {
+    public Response<OrderDTO> getOrder(int supplierID, int orderID) {
         try {
-            return new Response<>(new BusinessLayer.DTO.Order(suppliersController.getOrder(supplierID,orderID)));
+            return new Response(new OrderDTO(suppliersController.getOrder(supplierID,orderID)));
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -162,27 +140,33 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.receiveOrder(supplierID,orderID);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<List<Integer>> getOrderIdsBySupplier(int supplierId) {
+    public Response<List<OrderDTO>> getOrdersBySupplier(int supplierId) {
         try {
-            return new Response<>(suppliersController.getOrderIdsBySupplier(supplierId));
+            ArrayList<OrderDTO> list=new ArrayList<>();
+            for(Order o:suppliersController.getOrdersBySupplier(supplierId))
+                list.add(new OrderDTO(o));
+            return new Response<>(list);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
 
     @Override
-    public Response<List<String>> getItemsBySupplier(int supplierID) {
+    public Response<List<ProductDTO>> getItemsBySupplier(int supplierID) {
         try {
-            return new Response<>(suppliersController.getItemsBySupplier(supplierID));
+            ArrayList<ProductDTO> list=new ArrayList<>();
+            for(Product p:suppliersController.getItemsBySupplier(supplierID))
+                list.add(new ProductDTO(p));
+            return new Response<>(list);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -192,7 +176,7 @@ public class FacadeImpl implements ISuppliersFacade {
         try {
             return new Response<>(inventory.addItemToStore(productName));
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -203,7 +187,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.addItemToSupplier(supplierID,inventory.getProductByID(StoreProductID),supplierProductID,price,quantityAgreement);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -214,7 +198,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.deleteItemFromSupplier(supplierID,supplierProductID);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -225,7 +209,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.deleteSupplierDiscount(supplierID,price);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -236,7 +220,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.deleteProductDiscount(supplierID,productID,quantity);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -247,7 +231,7 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.cancelOrder(supplierID,orderID);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
@@ -258,8 +242,19 @@ public class FacadeImpl implements ISuppliersFacade {
             suppliersController.deleteProductFromOrder(supplierID,orderID,productID);
             return new Response<>(true);
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             return  new Response<>(e);
+        }
+    }
+
+    @Override
+    public Response<Boolean> addDiscountProduct(int supplierID, int catalogueID, int quantity, int discount) {
+        try {
+            suppliersController.getSupplier(supplierID).addDiscount(catalogueID,quantity,discount);
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e){
+            return new Response<>(e);
         }
     }
 }

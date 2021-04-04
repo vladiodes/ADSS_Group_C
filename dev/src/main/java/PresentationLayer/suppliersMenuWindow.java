@@ -1,11 +1,12 @@
 package PresentationLayer;
 
+import BusinessLayer.DayOfWeek;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import BusinessLayer.PaymentAgreement;
+import DTO.SupplierDTO;
+
+import java.util.*;
 
 public class suppliersMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
@@ -22,7 +23,7 @@ public class suppliersMenuWindow extends menuWindow {
         menu.put(8,"Delete a quantity agreement from a supplier");
         menu.put(9,"Add an item to a supplier's contract");
         menu.put(10,"Delete an item from a supplier's contract");
-        menu.put(11,"Add a discount to a specific product supplied by a supplier"); //@TODO: Add this function to the facade.
+        menu.put(11,"Add a discount to a specific product supplied by a supplier");
         menu.put(12,"Delete a discount from a specific product by a supplier");
         menu.put(13,"Go back to the main menu");
     }
@@ -94,7 +95,11 @@ public class suppliersMenuWindow extends menuWindow {
     }
 
     private void addDiscountProduct() {
-        //@TODO: Add this function to the facade.
+        Response<Boolean> response = facade.addDiscountProduct(utills.getNonNegativeNumber("\nEnter supplier's id"),
+                utills.getNonNegativeNumber("\nEnter the catalogue id of the product you'd like to add discount to"),
+                utills.getNonNegativeNumber("\nEnter the quantity exceeding it will give discount"),
+                utills.getNonNegativeNumber("\nEnter the percentage of the discount"));
+        utills.printMessageOrSuccess(response, "\nSuccessfully added a discount to the product!");
     }
 
     private void deleteItem() {
@@ -121,26 +126,41 @@ public class suppliersMenuWindow extends menuWindow {
         utills.printMessageOrSuccess(response,"Successfully added a discount");
     }
 
+    private Response<SupplierDTO> getSupplierOrFailureMessage(){
+        Response<SupplierDTO> response=facade.getSupplier(utills.getNonNegativeNumber("\nEnter supplier's ID:"));
+        if(response.WasException())
+            System.out.println(response.getMessage());
+        return response;
+    }
+
+    private void getSupplier(){
+        Response<SupplierDTO> response=getSupplierOrFailureMessage();
+        utills.printMessageOrSuccess(response,response.getValue().toString());
+    }
+
     private void updateSupplierShippingDays() {
-        Response<Boolean> response=facade.updateSuppliersFixedDays(utills.getNonNegativeNumber("\nEnter supplier's ID:"),getFixedDays());
-        utills.printMessageOrSuccess(response,"Successfully updated the supplier's shipping days");
+        Response<SupplierDTO> response=getSupplierOrFailureMessage();
+        if(!response.WasException()) {
+            response.getValue().fixedDays = getFixedDays();
+            Response<Boolean> resp = facade.updateSupplier(response.getValue());
+            utills.printMessageOrSuccess(resp, "Successfully updated the supplier's shipping days");
+        }
     }
 
     private void updateSupplierShipping() {
-        Response<Boolean> response=facade.updateSuppliersShippingStatus(utills.getNonNegativeNumber("\nEnter supplier's ID:"), getSupplierPickUp());
-        utills.printMessageOrSuccess(response,"Successfully updated supplier's shipping policy");
+        Response<SupplierDTO> response=getSupplierOrFailureMessage();
+        if(!response.WasException()) {
+            response.getValue().selfPickUp = getSupplierPickUp();
+            Response<Boolean> resp = facade.updateSupplier(response.getValue());
+            utills.printMessageOrSuccess(resp, "Successfully updated the supplier's pick up policy");
+        }
     }
 
     private void getSuppliers() {
-        Response<List<String>> response=facade.getAllSuppliers();
+        Response<List<SupplierDTO>> response=facade.getAllSuppliers();
         utills.printErrorMessageOrListOfValues(response);
     }
 
-    private void getSupplier() {
-        int supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
-        Response<String> response=facade.getSupplier(supplierID);
-        utills.printMessageOrSuccess(response,response.getValue());
-    }
 
     private void deleteSupplier() {
         int supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
@@ -149,16 +169,14 @@ public class suppliersMenuWindow extends menuWindow {
     }
 
     private void addSupplier() {
-        //@TODO: maybe better not to give the id as a parameter, the system better decide the id
-        int supplierID,paymentMethod=-1;
+        int paymentMethod=-1;
         boolean selfPickup=false;
         String supplierName,bankAccount;
-        List<Integer> supplyingDays=null;
-        ArrayList<String> categories=new ArrayList<>(),manufactures=new ArrayList<>();
+        Set<DayOfWeek> supplyingDays=null;
+        Set<String> categories=new HashSet<>(),manufactures=new HashSet<>();
         HashMap<String,String> contactInfo=new HashMap<>();
         HashMap<Double,Integer>discount=new HashMap<>();
 
-        supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
 
         System.out.println("\nEnter the name of the supplier:");
         supplierName=scanner.nextLine();
@@ -170,7 +188,6 @@ public class suppliersMenuWindow extends menuWindow {
         System.out.println("\nEnter the bank account of the supplier");
         bankAccount=scanner.nextLine();
 
-        //@TODO: change the documentation of the facade regarding the binding of the number of the payment type
         System.out.println("\nPlease enter the payment policy: 1.Monthly    2.Per Order");
         for(paymentMethod= utills.checkPositiveNumber(scanner.nextLine()); paymentMethod<1 || paymentMethod>2; paymentMethod= utills.checkPositiveNumber(scanner.nextLine()))
             System.out.println("Wrong input!    1.Monthly    2.Per Order");
@@ -195,8 +212,8 @@ public class suppliersMenuWindow extends menuWindow {
             System.out.println("to continue press Enter or 'Q' if done");
         }
 
-        Response<Boolean> response=facade.addSupplier(supplierID,supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discount);
-        utills.printMessageOrSuccess(response,"Supplier was added successfully!");
+        Response<Integer> response=facade.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount, PaymentAgreement.valueOf(paymentMethod),categories,manufactures,contactInfo,discount);
+        utills.printMessageOrSuccess(response,"Supplier of id " + response.getValue() + " was added successfully!");
     }
 
     private double getPrice() {
@@ -207,23 +224,23 @@ public class suppliersMenuWindow extends menuWindow {
         return price;
     }
 
-    private List<Integer> getFixedDays() {
-        ArrayList<Integer> supplyingDays=null;
+    private Set<DayOfWeek> getFixedDays() {
+        Set<DayOfWeek> supplyingDays=null;
         System.out.println("\nPlease enter the supplying days, each in a separated line, when finished enter a non-number input");
         printDays();
         for(int day = utills.checkIfInBounds(scanner.nextLine(),7); day!=-1; day= utills.checkIfInBounds(scanner.nextLine(),7)) {
             if (supplyingDays == null)
-                supplyingDays = new ArrayList<>();
-            if (supplyingDays.contains(day))
+                supplyingDays = new HashSet<>();
+            DayOfWeek dayOfWeek=DayOfWeek.valueOf(day);
+            if (supplyingDays.contains(dayOfWeek))
                 System.out.println("You have already entered this day!");
             else
-                supplyingDays.add(day);
+                supplyingDays.add(dayOfWeek);
         }
         return supplyingDays;
     }
 
     private void printDays() {
-        //@TODO:Change facade interface documentation - the number of the days have changed.
         System.out.println("1.Sunday    2.Monday    3.Tuesday    4.Wednesday    5.Thursday    6.Friday");
     }
 
@@ -236,7 +253,6 @@ public class suppliersMenuWindow extends menuWindow {
     }
 
     private Map<Integer, Integer> getQuantityAgreementForProduct() {
-        //@TODO: No discounts, should the map be empty or null?
         HashMap<Integer, Integer> discount = new HashMap<>();
         System.out.println("\nPlease enter discounts this supplier provides for the product, to start press Enter or 'Q' if none");
 

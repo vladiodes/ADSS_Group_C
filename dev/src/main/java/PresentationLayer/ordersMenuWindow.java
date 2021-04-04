@@ -2,12 +2,11 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
+import DTO.OrderDTO;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ordersMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
@@ -82,11 +81,9 @@ public class ordersMenuWindow extends menuWindow {
     }
 
     private void viewOrders() {
-        Response<List<Integer>> response = facade.getOrderIdsBySupplier(
+        Response<List<OrderDTO>> response = facade.getOrdersBySupplier(
                 utills.getNonNegativeNumber("\nEnter supplier's id you'd like to see its orders"));
-        utills.printErrorMessageOrListOfValues(
-                new Response<>(
-                        response.getValue().stream().map((num) -> "Order ID: " + num).collect(Collectors.toList())));
+        utills.printErrorMessageOrListOfValues(response);
     }
 
     private void receiveOrder() {
@@ -97,10 +94,13 @@ public class ordersMenuWindow extends menuWindow {
     }
 
     private void viewOrder() {
-        Response<List<String>> response=facade.getOrder(
+        Response<OrderDTO> response = facade.getOrder(
                 utills.getNonNegativeNumber("\nEnter the supplier's id"),
                 utills.getNonNegativeNumber("\nEnter the id of the order you'd like to see details about"));
-        utills.printErrorMessageOrListOfValues(response);
+        if (response.WasException())
+            utills.printMessageOrSuccess(response, null);
+        else
+            utills.printMessageOrSuccess(response, response.getValue().toString());
     }
 
 
@@ -117,18 +117,24 @@ public class ordersMenuWindow extends menuWindow {
         Response<Integer> response=facade.reOrder(
                 utills.getNonNegativeNumber("\nEnter the id of the supplier you'd like to re order from"),
                 utills.getNonNegativeNumber("\nEnter the id of the original order you'd like to re order"),
-                new Date(LocalDate.now().getYear(),LocalDate.now().getMonth().getValue(),LocalDate.now().getDayOfMonth())
-        );
+                LocalDateTime.now());
         utills.printMessageOrSuccess(response,"Successfully reordered, the id of the new order is " + response.getValue());
     }
 
     private void createOrder() {
-        //@TODO: isFixed param should be decided by the supplier contract and not delivered by parameter from the user
         facade.openOrder(
                 utills.getNonNegativeNumber("\nEnter the supplier id you'd like to order from"),
-                new Date(LocalDate.now().getYear(),LocalDate.now().getMonth().getValue(),LocalDate.now().getDayOfMonth()),
-                true
+                LocalDateTime.now(),
+                getFixed()
         );
+    }
+
+    private boolean getFixed(){
+        System.out.println("\nDo you want this order to be fixed? (A.K.A possible to re-order) 1.Fixed    2.Not fixed");
+        int fixed=-1;
+        for(fixed=utills.checkIfInBounds(scanner.nextLine(),3);fixed!=-1;fixed=utills.checkIfInBounds(scanner.nextLine(),3))
+            System.out.println("\nWrong input, 1.Fixed    2.Not fixed");
+        return fixed==1;
     }
 
     private void terminate(){shouldTerminate=true;}

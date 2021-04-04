@@ -1,20 +1,24 @@
 package BusinessLayer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Contract{
     private double pricePerUnit;
     private int catalogueIDBySupplier;
     private Map<Integer,Integer> discountByQuantity;
-    private Supplier supplier;
     private Product product;
 
-    public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Supplier supplier,Product product){
+    public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Product product){
         setPricePerUnit(pricePerUnit);
         setCatalogueIDBySupplier(catalogueIDBySupplier);
         setDiscountByQuantity(discountByQuantity);
-        setSupplier(supplier);
         setProduct(product);
+    }
+
+    //simple getters
+    public Map<Integer,Integer> getDiscountByQuantity(){
+        return discountByQuantity;
     }
 
     public int getCatalogueIDBySupplier(){
@@ -29,9 +33,13 @@ public class Contract{
         return pricePerUnit;
     }
 
-    //this function receives a quantity which is a minimum buying amount in order to receive some discount according to the
-    //contract. it searches for the map entry which corresponds to the discount mentioned. if it finds it then this discount
-    //(entry) is deleted from the map. otherwise an exception is thrown.
+
+    /**
+     *     this function receives a quantity which is a minimum buying amount in order to receive some discount according to the
+     *     contract. it searches for the map entry which corresponds to the discount mentioned. if it finds it then this discount
+     *     (entry) is deleted from the map. otherwise an exception is thrown.
+     * @param quantity
+     */
     public void deleteDiscount(int quantity) {
         for (Integer minQuantityForDiscount:
              discountByQuantity.keySet()) {
@@ -42,7 +50,6 @@ public class Contract{
     }
 
     //these functions are private setters used to check the validity of the constructor arguments
-
     private void setPricePerUnit(double pricePerUnit){
         if(pricePerUnit<0){
             throw new IllegalArgumentException("a price of a product cannot be negative.");
@@ -58,20 +65,17 @@ public class Contract{
     }
 
     private void setDiscountByQuantity(Map<Integer,Integer> discountByQuantity){
-        for (Integer quantity:
-             this.discountByQuantity.keySet()) {
-            if(quantity<0 | this.discountByQuantity.get(quantity)<0){
-                throw new IllegalArgumentException("discount by quantity can only have a positive starting quantity and a positive discount percentage.");
+        if(this.discountByQuantity==null)
+            this.discountByQuantity=new HashMap<>();
+        else {
+            for (Integer quantity :
+                    this.discountByQuantity.keySet()) {
+                if (quantity < 0 | this.discountByQuantity.get(quantity) < 0) {
+                    throw new IllegalArgumentException("discount by quantity can only have a positive starting quantity and a positive discount percentage.");
+                }
             }
+            this.discountByQuantity = discountByQuantity;
         }
-        this.discountByQuantity=discountByQuantity;
-    }
-
-    private void setSupplier(Supplier supplier){
-        if(supplier==null){
-            throw new IllegalArgumentException("a contract must belong to some supplier. supplier field cannot be Null.");
-        }
-        this.supplier=supplier;
     }
 
     private void setProduct(Product product){
@@ -79,5 +83,19 @@ public class Contract{
             throw new IllegalArgumentException("a contract must be related to some product. product field cannot be Null.");
         }
         this.product=product;
+    }
+
+    /**
+     * Adds a new discount to the contract
+     * throws an exception if added a negative discount or adding a discount that already exists
+     * @param quantity the quantity that the discounts starts from
+     * @param discount the discount in percentage
+     */
+    public void addDiscount(int quantity, int discount) {
+        if(quantity<0 || discount<0)
+            throw new IllegalArgumentException("Can't add a negative discount or a negative quantity");
+        if(discountByQuantity.containsKey(quantity))
+            throw new IllegalArgumentException("A discount of this quantity already exists!");
+        discountByQuantity.put(quantity,discount);
     }
 }

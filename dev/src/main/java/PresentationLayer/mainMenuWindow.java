@@ -1,14 +1,14 @@
 package PresentationLayer;
 
-import BusinessLayer.Facade.ISuppliersFacade;
+import BusinessLayer.Facade.FacadeImpl;
 
 import java.util.HashMap;
 
 public class mainMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
     private menuWindow[] windows;
-    public mainMenuWindow(ISuppliersFacade facade) {
-        super(facade,"Main menu");
+    public mainMenuWindow() {
+        super(new FacadeImpl(),"Main menu");
         windows = new menuWindow[]{
                 new suppliersMenuWindow(facade, "Suppliers menu"),
                 new ordersMenuWindow(facade, "Orders menu"),
