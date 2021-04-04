@@ -154,7 +154,7 @@ public class TransportsMain {
     public static void AddTransport(){
         Scanner in = new Scanner(System.in);
         try {
-            System.out.println("Please enter the date of the transport");
+            System.out.println("Please enter the date of the transport in the following format: dd/MM/yyyy");
             String date = in.next();
             Date transDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
             Date today = new Date();
