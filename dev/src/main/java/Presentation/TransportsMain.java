@@ -15,7 +15,7 @@ public class TransportsMain {
         in = new Scanner(System.in);
         while (true) {
             try {
-                System.out.println("Hello, write the number of the operation you would like to do?");
+                System.out.println("Hello, write the number of the operation you would like to do");
                 System.out.println("1. Add driver");
                 System.out.println("2. Add site");
                 System.out.println("3. Add truck");
