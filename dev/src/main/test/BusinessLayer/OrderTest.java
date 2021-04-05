@@ -133,4 +133,16 @@ public class OrderTest {
         assertFalse(order.checkIfProductExists(product2));
     }
 
+    @Test
+    public void reOrderTest(){
+        Order order1=new Order(LocalDateTime.now(),true,10);
+        Product product = new Product(1, "product");
+        Contract c = new Contract(100, 1, new HashMap<>(), product);
+        order1.addItem(c,10,new HashMap<>());
+        Order order2=new Order(order1,11,LocalDateTime.now());
+        assertEquals(1, order2.getProductsInOrder().size());
+        order1.removeProduct(c,new HashMap<>());
+        assertEquals(1, order2.getProductsInOrder().size());
+    }
+
 }

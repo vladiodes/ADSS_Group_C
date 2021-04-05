@@ -97,6 +97,7 @@ public class Order{
             productsInOrder.add(pio);
         }
         else {
+            priceBeforeDiscount-=pio.getTotalPrice();
             pio.orderMore(quantity,productContract.getPricePerUnit(),productContract.getDiscountByQuantity());
         }
         totalQuantity+=quantity;
@@ -135,15 +136,15 @@ public class Order{
      * @param discounts the discounts of the supplier - used to calculate the discount
      */
     public void removeProduct(Contract productContract, Map<Double,Integer> discounts) {
-        if(shipmentStatus==ShipmentStatus.Delivered)
+        if (shipmentStatus == ShipmentStatus.Delivered)
             throw new IllegalArgumentException("Can't remove products from already delivered order");
-        ProductInOrder pio=findProductInOrder(productContract.getProduct());
-        if(pio==null)
+        ProductInOrder pio = findProductInOrder(productContract.getProduct());
+        if (pio == null)
             throw new IllegalArgumentException("there is no product with the given id in the order.");
-                productsInOrder.remove(pio);
-                totalQuantity -= pio.getQuantity();
-                priceBeforeDiscount -= pio.getTotalPrice();
-                calculateDiscount(discounts);
+        productsInOrder.remove(pio);
+        totalQuantity -= pio.getQuantity();
+        priceBeforeDiscount -= pio.getTotalPrice();
+        calculateDiscount(discounts);
     }
 
     //these functions are used to check the validity of the constructor arguments
