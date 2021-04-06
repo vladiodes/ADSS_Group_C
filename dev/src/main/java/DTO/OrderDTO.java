@@ -1,4 +1,4 @@
-package BusinessLayer.DTO;
+package DTO;
 
 import BusinessLayer.Order;
 import BusinessLayer.ProductInOrder;
@@ -28,7 +28,7 @@ public class OrderDTO {
         isFixed = order.getisFixed();
         productsInOrder = new ArrayList<>();
         for (ProductInOrder pio : order.getProductsInOrder())
-            productsInOrder.add("\nProduct name: " + pio.getProduct().getName() +
+            productsInOrder.add("\nProduct name: " + pio.getContract().getProduct().getName() +
                     "\nQuantity: " + pio.getQuantity() +
                     "\nTotal price after discounts: " + pio.getTotalPrice());
     }

@@ -19,7 +19,7 @@ public class ProductInOrderTest {
 
     @Test
     public void testOrderMore(){
-        pio.orderMore(10,100.0,new HashMap<>());
+        pio.orderMore(10);
         assertEquals(pio.getQuantity(),110);
         assertEquals(pio.getTotalPrice(),100*110,0.0);
     }

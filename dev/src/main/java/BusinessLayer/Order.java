@@ -96,12 +96,9 @@ public class Order{
             pio=new ProductInOrder(quantity,productContract);
             productsInOrder.add(pio);
         }
-        else {
-            priceBeforeDiscount-=pio.getTotalPrice();
-            pio.orderMore(quantity,productContract.getPricePerUnit(),productContract.getDiscountByQuantity());
-        }
+        else
+            pio.orderMore(quantity);
         totalQuantity+=quantity;
-        priceBeforeDiscount+=pio.getTotalPrice();
         calculateDiscount(discountsByPrice);
     }
 
@@ -110,17 +107,18 @@ public class Order{
     private ProductInOrder findProductInOrder(Product product){
         for (ProductInOrder pio:
              productsInOrder) {
-            if(pio.getProduct().equals(product)){
+            if(pio.getContract().getProduct().equals(product)){
                 return pio;
             }
         }
         return null;
     }
 
+
     /**
-     * this function is used when an order is received
-     * simply change the status to received
-     * throws an exception if the order was already in the status of delivered
+     *  this function is used when an order is received
+     *  simply change the status to received and calculates the final price of the order according to the current
+     *  throws an exception if the order was already in the status of delivered
      */
     public void receive() {
         if(shipmentStatus==ShipmentStatus.Delivered)
@@ -143,7 +141,6 @@ public class Order{
             throw new IllegalArgumentException("there is no product with the given id in the order.");
         productsInOrder.remove(pio);
         totalQuantity -= pio.getQuantity();
-        priceBeforeDiscount -= pio.getTotalPrice();
         calculateDiscount(discounts);
     }
 
@@ -173,10 +170,13 @@ public class Order{
      * Calculates the discount for the order - calculates the highest possible discount
      * @param discounts a map of discounts - [price:discount]
      */
-    private void calculateDiscount(Map<Double,Integer> discounts) {
+    public void calculateDiscount(Map<Double,Integer> discounts) {
+        calculateTotalPriceBeforeDiscount();
         int discount=-1;
-        if(discounts==null)
-            priceAfterDiscount=priceBeforeDiscount;
+        if(discounts==null) {
+            priceAfterDiscount = priceBeforeDiscount;
+            return;
+        }
         for(double price:discounts.keySet()){
             if(priceBeforeDiscount>price)
                 discount=Math.max(discount,discounts.get(price));
@@ -189,19 +189,24 @@ public class Order{
             priceAfterDiscount=priceBeforeDiscount;
     }
 
+    //calculates the current price before any discounts
+    private void calculateTotalPriceBeforeDiscount() {
+        priceBeforeDiscount=0;
+        for(ProductInOrder pio:productsInOrder){
+            pio.calculatePrice();
+            priceBeforeDiscount+= pio.getTotalPrice();
+        }
+    }
+
     /**
      * Checks if a given products is part of an order that wasn't delivered yet
-     * @param p
+     * @param p - the product
      * @return true if yes, false otherwise
      */
     public boolean checkIfProductExists(Product p) {
         if(shipmentStatus==ShipmentStatus.Delivered)
             return false;
-        for(ProductInOrder pio:productsInOrder){
-            if(pio.getProduct().equals(p))
-                return true;
-        }
-        return false;
+        return findProductInOrder(p)!=null;
     }
 
     public enum ShipmentStatus{

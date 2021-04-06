@@ -1,4 +1,4 @@
-package BusinessLayer.DTO;
+package DTO;
 
 import BusinessLayer.Contract;
 
@@ -7,7 +7,6 @@ public class ProductDTO {
     public int catalogueID;
     public double pricePerUnit;
     public String productName;
-    //@TODO: need to add a field of the catalogue id by supplier
 
     public ProductDTO(Contract c) {
         storeID=c.getProduct().getID();

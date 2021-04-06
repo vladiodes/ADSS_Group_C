@@ -4,7 +4,7 @@ import BusinessLayer.DayOfWeek;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
 import BusinessLayer.PaymentAgreement;
-import BusinessLayer.DTO.SupplierDTO;
+import DTO.SupplierDTO;
 
 import java.util.*;
 

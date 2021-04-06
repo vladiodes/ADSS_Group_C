@@ -2,7 +2,7 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
-import BusinessLayer.DTO.ProductDTO;
+import DTO.ProductDTO;
 
 import java.util.HashMap;
 import java.util.List;

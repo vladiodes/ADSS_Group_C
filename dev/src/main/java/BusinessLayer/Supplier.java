@@ -1,6 +1,6 @@
 package BusinessLayer;
 
-import BusinessLayer.DTO.SupplierDTO;
+import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,13 +16,13 @@ public class Supplier{
     private Set<String> manufacturers;
     private Map<String,String> contactInfo;
     private Map<Double,Integer> discountsByPrice;
-    private final List<Order> ordersFromSupplier;
+    private List<Order> ordersFromSupplier;
+    private List<Contract> supplierContracts;
 
     public List<Contract> getSupplierContracts() {
         return supplierContracts;
     }
 
-    private final List<Contract> supplierContracts;
 
     public Supplier(int SupplierID,String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts) {
         setSupplierID(SupplierID);
@@ -156,6 +156,16 @@ public class Supplier{
         if(discountsByPrice.containsKey(price))
             throw new IllegalArgumentException("A discount for that price already exists, you should delete it first, and then add a new one");
         discountsByPrice.put(price,discountPerecentage);
+        calculateOrdersPrices();
+    }
+
+    /**
+     *  this method is invoked once a new discount has been added or removed,
+     *  calculates the new updated price for each order
+     */
+    private void calculateOrdersPrices() {
+        for(Order o:ordersFromSupplier)
+            o.calculateDiscount(discountsByPrice);
     }
 
     /**
@@ -324,10 +334,10 @@ public class Supplier{
      * @param price the price the discount starts from
      */
     public void removeDiscount(double price) {
-        for (Double minPriceForDiscount:
-             discountsByPrice.keySet()) {
+        for (Double minPriceForDiscount: discountsByPrice.keySet()) {
             if(minPriceForDiscount==price){
                 discountsByPrice.remove(price);
+                calculateOrdersPrices();
                 return;
             }
         }
@@ -341,17 +351,7 @@ public class Supplier{
      */
     public void deleteProductDiscount(int catalogueID, int quantity) {
         findContract(catalogueID).deleteDiscount(quantity);
-    }
-
-    //this function receives an id of a product in the store and finds and searches for a contract for it.
-    //if no such contract is found an exception is thrown.
-    private Contract findContractByStoreID(int ID){
-        for (Contract contract:
-             supplierContracts) {
-            if(contract.getProduct().getID()==ID)
-                return contract;
-        }
-        throw new IllegalArgumentException("the supplier doesn't have a contract for a product with the given id.");
+        calculateOrdersPrices();
     }
 
     /**
@@ -371,6 +371,7 @@ public class Supplier{
      */
     public void addDiscount(int catalogueID, int quantity, int discount) {
         findContract(catalogueID).addDiscount(quantity,discount);
+        calculateOrdersPrices();
     }
 
     //Following are simple getters

@@ -2,9 +2,9 @@
 package BusinessLayer.Facade;
 import BusinessLayer.DayOfWeek;
 import BusinessLayer.PaymentAgreement;
-import BusinessLayer.DTO.OrderDTO;
-import BusinessLayer.DTO.ProductDTO;
-import BusinessLayer.DTO.SupplierDTO;
+import DTO.OrderDTO;
+import DTO.ProductDTO;
+import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
