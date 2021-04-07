@@ -10,14 +10,6 @@ public class Sites implements Controller<Site> {
     public Sites() {
         this.sites = new HashMap<String, Site>();
         this.sections = new ArrayList<String>();
-        sections.add("North");
-        sections.add("Center");
-        sections.add("South");
-        try {
-            addSite("Nahariyya", 052123123, "Motti", sections.get(0));
-            addSite("Tel-Aviv", 052555555, "Hadar", sections.get(1));
-        } catch (Exception e) {
-        }
     }
 
     public void addSite(String _ad, int _num, String _contact, String _section) throws Exception {

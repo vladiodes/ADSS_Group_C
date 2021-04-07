@@ -1,7 +1,9 @@
 package Presentation;
 
 import Business.Controllers.TransportsFacade;
+import Business.Objects.Driver;
 import Business.Objects.ItemContract;
+import Business.Objects.Truck;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -10,6 +12,7 @@ public class TransportsMain {
     private static TransportsFacade API = new TransportsFacade();
     public static int ICID = 0;
     private static Scanner in;
+    private static Boolean DataInitialized = false;
 
     public static void main(String args[]) {
         in = new Scanner(System.in);
@@ -29,6 +32,8 @@ public class TransportsMain {
                 System.out.println("11. Get transport of driver");
                 System.out.println("12. Get transport by date");
                 System.out.println("13. Quit");
+                if(!DataInitialized)
+                    System.out.println("14. Initialize data from instructions manual");
                 Scanner in = new Scanner(System.in);
                 int option = in.nextInt();
                 in.nextLine();
@@ -70,6 +75,9 @@ public class TransportsMain {
                         break;
                     case 12:
                         GetTransportsByDate();
+                        break;
+                    case 14:
+                            InitializeData();
                         break;
                     default:
                         System.out.println("Please enter a valid number");
@@ -285,6 +293,28 @@ public class TransportsMain {
             String sDate1 = in.nextLine();
             System.out.println(API.getTransportsByDate(new SimpleDateFormat("dd/MM/yyyy").parse(sDate1)));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void InitializeData(){
+        if(DataInitialized)
+        {
+            return;
+        }
+        try
+        {
+            API.addDriver("Ami Rozis", 123123123, 5000);
+            API.addSection("North");
+            API.addSection("Center");
+            API.addSection("South");
+            API.addSite("Nahariyya", 052123123, "Motti", "North");
+            API.addSite("Tel-Aviv", 052555555, "Hadar", "Center");
+            API.addTruck(3212345, "Honda Ridgeline", 5000, "Pickup Truck", 1500);
+            API.addTruck(6942021, "Tesla", 10000, "Smart Car", 1500);
+            DataInitialized = true;
+        }
+        catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
