@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Item {
+    // -- fields
     private int id;
     private int location;
     private String producer;
@@ -16,6 +17,8 @@ public class Item {
     private LocalDateTime expDate;
     private int alertTime;
     private double buyingPrice;
+
+    // -- constructor
 
     public Item(int id, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
         this.id=id;
@@ -87,7 +90,7 @@ public class Item {
     public void updateItem(ItemDTO item)
     {
 
-        if (availableAmount<1)
+        if (availableAmount<0)
             throw new IllegalArgumentException("invalid available amount");
         if (storageAmount<0)
             throw new IllegalArgumentException("invalid storage amount");
@@ -120,6 +123,22 @@ public class Item {
 
     public void setAlertTime(int alertTime) {
         this.alertTime = alertTime;
+    }
+
+    public boolean isFaulty() {
+         if (this.expDate.compareTo(LocalDateTime.now())>0)
+             return true;
+         return false;
+    }
+
+    public boolean isExp() {
+        if (this.expDate.minusDays(alertTime).compareTo(LocalDateTime.now())>0)
+            return true;
+        return false;
+    }
+
+    public boolean isMinAmount() {
+        return this.minAmount>=this.availableAmount;
     }
 }
 

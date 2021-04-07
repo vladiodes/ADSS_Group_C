@@ -27,12 +27,16 @@ public class MainWindow {
         this.menu.put(2,"update item");
         this.menu.put(3,"add category");
         this.menu.put(4,"update category");
-        this.menu.put(5,"show minimum amount items");
-        this.menu.put(6,"show expaired items");
-        this.menu.put(7,"faulty items report");
-        this.menu.put(8,"category items report");
-        this.menu.put(9,"find item by location");
-        this.menu.put(10,"change alert time");
+        this.menu.put(5,"find item by location");
+        this.menu.put(6,"change alert time");
+        this.menu.put(7,"add category discount");
+        this.menu.put(8,"add item discount");
+        this.menu.put(9,"add sale");
+        this.menu.put(10,"get weekly sales report");
+        this.menu.put(11,"show faulty items");
+        this.menu.put(12,"show exp items");
+        this.menu.put(13,"show minimum amount items");
+
     }
     private void printMenu(){
         System.out.println(menu.toString());

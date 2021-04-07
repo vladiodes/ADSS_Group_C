@@ -3,6 +3,7 @@ package BusinessLayer;
 import DTO.CategoryDTO;
 import DTO.ItemDTO;
 import DTO.ReportDTO;
+import DTO.SaleDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,11 @@ public class Facade {
     // singleton
     private RecordController recordController;
     private StockController stockController;
+
+    public Facade(){
+        this.recordController=new RecordController();
+        this.stockController=new StockController();
+    }
 
      public Response<ItemDTO> addItem(int categoryID,int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice) {
          try {
@@ -25,7 +31,6 @@ public class Facade {
     public Response<Boolean> updateItem(ItemDTO itemdto){
         try {
             stockController.updateItem(itemdto);
-
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){
@@ -63,6 +68,7 @@ public class Facade {
             return new Response<>(e);
         }
     }
+
     public Response<CategoryDTO> addCategory(String name,int fatherID){
         try {
             Category c = stockController.addCategory(name, fatherID);
@@ -84,7 +90,6 @@ public class Facade {
 
     }
 
-
     public Response<Boolean> changeAlertTime(int itemID,int daysAmount){
         try {
             stockController.changeAlertTime(itemID,daysAmount);
@@ -95,15 +100,12 @@ public class Facade {
         }
     }
     // record controller
-    public Response<List<ItemDTO>> showExpItems(){
+    public Response<ReportDTO> showExpItems(){
         try
         {
-            List<Item> items = recordController.showExpItems();
-            List<ItemDTO> toReturn = new ArrayList<>();
-            for(Item i: items){
-                toReturn.add((new ItemDTO(i)));
-            }
-            return new Response<>(toReturn);
+            ArrayList<Category> categories = this.stockController.getAllCategories();
+            Report report = recordController.showExpItems(categories);
+            return new Response<>(new ReportDTO(report));
         }
         catch (IllegalArgumentException e)
         {
@@ -112,15 +114,17 @@ public class Facade {
     }
     public Response<ReportDTO> showFaultyItems() {
         try {
-            Report report = recordController.showFaultyItems();
+            ArrayList<Category> categories = this.stockController.getAllCategories();
+            Report report = recordController.showFaultyItems(categories);
             return new Response<>(new ReportDTO(report));
         } catch (IllegalArgumentException e) {
             return new Response<>(e);
         }
 
     }
-
-    public Response<ReportDTO> getWeeklyReport(ArrayList<Integer> categories) {
+    // report by categories
+    public Response<ReportDTO> getWeeklyReport(ArrayList<Integer> categoriesList) {
+        ArrayList<Category> categories = this.stockController.getCategories(categoriesList);
         try {
             Report report = recordController.getWeeklyReport(categories);
             return new Response<>(new ReportDTO(report));
@@ -129,5 +133,26 @@ public class Facade {
         }
     }
 
+    public Response<SaleDTO> addSale(int itemID,double sellingPrice,LocalDateTime saleDate){
+         try {
+             Item item = this.stockController.getItemById(itemID);
+             Sale sale = recordController.addSale(item,sellingPrice,saleDate);
+             return new Response<>(new SaleDTO(sale));
+         }
+         catch (IllegalArgumentException e){
+             return new Response<>(e);
+         }
+    }
 
+
+    public Response<ReportDTO> showMinAmountItems() {
+        try {
+            ArrayList<Category> categories = this.stockController.getAllCategories();
+            Report report = recordController.showMinAmountItems(categories);
+            return new Response<>(new ReportDTO(report));
+        } catch (IllegalArgumentException e) {
+            return new Response<>(e);
+        }
+
+    }
 }
