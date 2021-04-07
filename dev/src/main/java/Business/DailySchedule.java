@@ -61,7 +61,7 @@ public class DailySchedule {
     }
 
     public Shift getShift(TypeOfShift type) { //Assumes that shift already exists
-        int i = getShiftLocation(type);
-        return shifts.get(i);
+        int location = getShiftLocation(type);
+        return shifts.get(location);
     }
 }

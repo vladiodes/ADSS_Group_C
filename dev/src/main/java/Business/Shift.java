@@ -1,7 +1,5 @@
 package Business;
 
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -16,11 +14,18 @@ public class Shift {
     private Map<TypeOfEmployee, Integer> constraints;
     private List<Pair<Employee,TypeOfEmployee>> currentShiftEmployees;
 
-
-    public Shift(TypeOfShift type, Date date, Map<TypeOfEmployee, Integer> constraints, List<Pair<Employee,TypeOfEmployee>> currentShiftEmployees) throws Exception
+    private void shiftValidityCheck (TypeOfShift type, Date date, Map<TypeOfEmployee, Integer> constraints, List<Pair<Employee,TypeOfEmployee>> currentShiftEmployees) throws Exception
     {
-        this.type = type;
-        this.date = date;
+
+        if (date == null)
+        {
+            throw new Exception("date can't be null");
+        }
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m)))
+        {
+            throw new  Exception("date of available shift cant be in the past");
+        }
         if(currentShiftEmployees == null)
         {
             throw new Exception("currentShiftEmployees list is null");
@@ -39,8 +44,14 @@ public class Shift {
             {
                 throw new Exception("Number of shift managers in a shift must be at least 1");
             }
-            this.constraints = constraints;
         }
+    }
+    public Shift(TypeOfShift type, Date date, Map<TypeOfEmployee, Integer> constraints, List<Pair<Employee,TypeOfEmployee>> currentShiftEmployees) throws Exception
+    {
+        shiftValidityCheck(type, date, constraints, currentShiftEmployees);
+        this.type = type;
+        this.date = date;
+        this.constraints = constraints;
         this.currentShiftEmployees = currentShiftEmployees;
 
     }
@@ -73,15 +84,45 @@ public class Shift {
     //--------------------------------------------------------------------------------setters---------------------------------------------------------------------
 
 
-    public void setConstraints(Map<TypeOfEmployee, Integer> constraints) {
+    public void setConstraints(Map<TypeOfEmployee, Integer> constraints) throws Exception
+    {
+        if(constraints == null)
+        {
+            throw new Exception("Constraints list is null");
+        }
+        else
+        {
+            if((!constraints.containsKey(ShiftManager)))
+            {
+                throw new Exception("Shift must contain a shift manager constraint");
+            }
+            else if((constraints.get(ShiftManager)<1))
+            {
+                throw new Exception("Number of shift managers in a shift must be at least 1");
+            }
+        }
         this.constraints = constraints;
     }
 
-    public void setCurrentShiftEmployees(List<Pair<Employee, TypeOfEmployee>> currentShiftEmployees) {
+    public void setCurrentShiftEmployees(List<Pair<Employee, TypeOfEmployee>> currentShiftEmployees) throws Exception {
+        if(currentShiftEmployees == null)
+        {
+            throw new Exception("currentShiftEmployees list is null");
+        }
         this.currentShiftEmployees = currentShiftEmployees;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Date date) throws Exception
+    {
+        if (date == null)
+        {
+            throw new Exception("date can't be null");
+        }
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m)))
+        {
+            throw new  Exception("date of available shift cant be in the past");
+        }
         this.date = date;
     }
 

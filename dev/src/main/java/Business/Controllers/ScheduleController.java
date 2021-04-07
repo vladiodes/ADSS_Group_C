@@ -1,32 +1,27 @@
-package Business;
+package Business.Controllers;
 
+
+import Business.*;
 
 import java.util.*;
 import static Business.TypeOfEmployee.*;
-public class ScheduleController { //Singleton
+public class ScheduleController {
 
 
 
 
     private TypeOfEmployee typeOfLoggedIn;
-    private Map<Date,DailySchedule> schedule;
+    private Map<Date, DailySchedule> schedule;
     private StaffController staffController; //Add to documentation
     private static ScheduleController instance;
 
-    private ScheduleController()
+    public ScheduleController(TypeOfEmployee type, StaffController sc)
     {
+        this.staffController = sc;
+        this.typeOfLoggedIn =type;
         this.schedule = new HashMap<>();
-        this.staffController = StaffController.getInstance();
     }
 
-    public static ScheduleController getInstance()
-    {
-        if(instance == null)
-        {
-            instance = new ScheduleController();
-        }
-        return instance;
-    }
 
     public String addShift(Date date, TypeOfShift type, Map<TypeOfEmployee, Integer> constraints)
     {
