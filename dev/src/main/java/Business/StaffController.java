@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StaffController { //Singleton
+public class StaffController //Singleton
+{
 
 
     //==================================================================Fields=============================================================
     private Map<String, Employee> employees;
+    private TypeOfEmployee typeOfLoggedIn;
     //==================================================================Singleton & Constructor============================================
 
     private static StaffController instance;
@@ -89,6 +91,9 @@ public class StaffController { //Singleton
     {
         throw new NotImplementedException();
     }
+
+
+    //-----------------------------------------------------------getters------------------------------------------------------------
     public List<Pair<Date,TypeOfShift>> getAvailableShifts(String id)
     {
         throw new NotImplementedException();
@@ -99,10 +104,30 @@ public class StaffController { //Singleton
         throw new NotImplementedException();
     }
 
+    public Employee getEmployeeByID(String id)
+    {
+        if(!this.employees.containsKey(id))
+            return null;
+        return this.employees.get(id);
+    }
+
+    public Map<String, Employee> getEmployees() {
+        return employees;
+    }
+
+    public TypeOfEmployee getTypeOfLoggedIn() {
+        return typeOfLoggedIn;
+    }
+    //-------------------------------------------------------------------------setters-----------------------------------------------------
 
 
 
+    public void setEmployees(Map<String, Employee> employees) {
+        this.employees = employees;
+    }
 
-
+    public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
+        this.typeOfLoggedIn = typeOfLoggedIn;
+    }
 
 }

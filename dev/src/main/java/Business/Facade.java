@@ -1,6 +1,7 @@
 package Business;
 
 public class Facade {
+    private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
     private StaffController staffController;
 

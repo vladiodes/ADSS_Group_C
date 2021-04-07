@@ -52,21 +52,140 @@ public class Shift {
         this.constraints = new HashMap<>(); //init
         this.constraints.put(ShiftManager, 1); //Default constraint
     }
+    //-------------------------------------------------------------------------getters-------------------------------------------------------------------------
 
 
-    public void addEmployeeToShift()
-    {
-
-    }
-    private boolean checkConstraints()
-    {
-        throw new NotImplementedException();
+    public Date getDate() {
+        return date;
     }
 
+    public List<Pair<Employee, TypeOfEmployee>> getCurrentShiftEmployees() {
+        return currentShiftEmployees;
+    }
+
+    public Map<TypeOfEmployee, Integer> getConstraints() {
+        return constraints;
+    }
+
+    public TypeOfShift getType() {
+        return type;
+    }
+    //--------------------------------------------------------------------------------setters---------------------------------------------------------------------
 
 
+    public void setConstraints(Map<TypeOfEmployee, Integer> constraints) {
+        this.constraints = constraints;
+    }
+
+    public void setCurrentShiftEmployees(List<Pair<Employee, TypeOfEmployee>> currentShiftEmployees) {
+        this.currentShiftEmployees = currentShiftEmployees;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setType(TypeOfShift type) {
+        this.type = type;
+    }
+
+    //----------------------------------------------------------------------------------methods-----------------------------------------------------------------------
+    public void addEmployeeToShift(Employee toAdd, TypeOfEmployee type) throws Exception
+    {
+        if(toAdd==null)
+        {
+            throw new Exception("employee can not be null");
+        }
+        if (!toAdd.getSkills().contains((type)))
+        {
+            throw new Exception("employee cant be assigned to a skill he doesnt have");
+        }
+        if (!checkConstraints(toAdd, type))
+        {
+            throw new Exception("employee cant be assigned to a skill he doesnt have");
+        }
+        currentShiftEmployees.add((new Pair<Employee, TypeOfEmployee>(toAdd,type)));
+
+    }
+    private boolean checkConstraints(Employee toAdd, TypeOfEmployee type) throws  Exception
+    {
+        if(!this.constraints.containsKey(type))
+        {
+            throw  new Exception("shift does not contain this type of employee");
+        }
+        Integer numOfType = this.constraints.get(type);
+        int counter;
+        if (getNumberOfcurrType(type)>=numOfType)
+        {
+            throw  new Exception(("number of employees of this type is exceeded"));
+        }
+        return  true;
+    }
+    private int getNumberOfcurrType(TypeOfEmployee type) {
+        int ans=0;
+        for (Pair p :currentShiftEmployees) {
+            if (p.second==type)
+            {
+                ans++;
+            }
+        }
+        return  ans;
+    }
 
 
+    public boolean checkFull()
+    {
+        Map <TypeOfEmployee, Integer> numOfEmp = new HashMap<>(); //Counts the number of employees of each type in the current shift
+        for (Pair pair:currentShiftEmployees)
+        {
+            TypeOfEmployee typeOfCurrEmp=(TypeOfEmployee) pair.second; //Type of the current employee
+            if (!numOfEmp.containsKey(typeOfCurrEmp)) //If current type was yet to be found
+            {
+                numOfEmp.put(typeOfCurrEmp,0);
+            }
+            else //Increment number of types found
+            {
+                numOfEmp.put(typeOfCurrEmp, numOfEmp.get(typeOfCurrEmp) + 1);
+            }
 
+        }
+        for (TypeOfEmployee type: constraints.keySet())
+        {
+            if (constraints.get(type)!=numOfEmp.get(type))
+            {
+                return  false; //Found a type of employee in the constraints that isnt satisfied or exceeded maximum value
+            }
 
+        }
+        return  true;
+    }
+
+    public boolean isEmployeeInShift(String id) {
+        for (Pair p: currentShiftEmployees)
+        {
+            Employee currEmp = (Employee)p.first;
+            if(currEmp.getId().equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public void removeEmployee(String id) {
+        Employee toRemove=null;
+        for (Pair p:currentShiftEmployees) {
+            {
+                Employee cur = (Employee)p.first;
+                if (cur.getId()==id)
+                {
+                    toRemove=cur;
+                }
+            }
+
+        }
+        currentShiftEmployees.remove(toRemove);
+
+    }
 }
