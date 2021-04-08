@@ -1,6 +1,8 @@
 package Business;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,20 +15,15 @@ public class DailySchedule {
     {
         shifts=new LinkedList<>();
     }
-    public DailySchedule(Shift shift) throws Exception
+    public DailySchedule(Shift shift)
     {
         shifts=new LinkedList<>();
         addShift(shift);
     }
     //-------------------------------------------------------methods----------------------------------------------------------------------------------
-    public void addShift (Shift shift) throws  Exception
+    public void addShift (Shift shift)
     {
-        if(!shift.checkFull()) //Check if every shift constraint is satisfied
-        {
-            throw new Exception("");
-        }
         this.shifts.add(shift);
-
     }
 
 
@@ -63,5 +60,18 @@ public class DailySchedule {
     public Shift getShift(TypeOfShift type) { //Assumes that shift already exists
         int location = getShiftLocation(type);
         return shifts.get(location);
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        StringBuilder builder=new StringBuilder();
+        builder.append("Daily Schedule: \n\t");
+        for(Shift s :shifts)
+        {
+            builder.append("\n\t" + s.toString());
+        }
+        builder.append("\n");
+        return builder.toString();
     }
 }

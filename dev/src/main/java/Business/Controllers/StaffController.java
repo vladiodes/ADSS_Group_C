@@ -107,7 +107,7 @@ public class StaffController
         try
         {
             Employee e = getEmpIfExists(id);
-            e.setBackAccountNumber(bankAccountNumber);
+            e.setBankAccountNumber(bankAccountNumber);
         }
         catch (Exception e)
         {

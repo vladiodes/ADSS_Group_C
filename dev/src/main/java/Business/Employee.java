@@ -1,5 +1,7 @@
 package Business;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String id;
-    private String backAccountNumber;
+    private String bankAccountNumber;
     private int salary;
     private String empConditions;
     private Date startWorkingDate;
@@ -26,7 +28,7 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
-        this.backAccountNumber = bankAccountNumber;
+        this.bankAccountNumber = bankAccountNumber;
         this.salary = salary;
         this.empConditions = empConditions;
         this.startWorkingDate = startWorkingDate;
@@ -113,8 +115,8 @@ public class Employee {
         return skills;
     }
 
-    public String getBackAccountNumber() {
-        return backAccountNumber;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
     public List<Pair<Date, TypeOfShift>> getAvailableShifts() {
@@ -145,12 +147,12 @@ public class Employee {
         this.availableShifts = availableShifts;
     }
 
-    public void setBackAccountNumber(String bankAccountNumber)throws Exception {
+    public void setBankAccountNumber(String bankAccountNumber)throws Exception {
         if(bankAccountNumber==null || bankAccountNumber.length()<=0)
         {
             throw new Exception("Bank account is empty");
         }
-        this.backAccountNumber = backAccountNumber;
+        this.bankAccountNumber = this.bankAccountNumber;
     }
 
     public void setEmpConditions(String empConditions) throws Exception {
@@ -248,5 +250,33 @@ public class Employee {
             throw new Exception("available shift doesn't exist");
         }
         this.availableShifts.remove(shift);
+    }
+
+
+    public String toString() {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        StringBuilder builder=new StringBuilder();
+        builder.append("Employee: \n\t");
+        builder.append("First Name: " + firstName);
+        builder.append("\nLast Name: " + lastName);
+        builder.append("\nID: " + id);
+        builder.append("\nBank Account Number: " + bankAccountNumber);
+        builder.append("\nSalary: " + salary);
+        builder.append("\nEmployee Conditions: " + empConditions);
+        builder.append("\nStart Working Date: " + dateFormat.format(this.startWorkingDate));
+        builder.append("\nSkills:");
+        for(TypeOfEmployee type:skills)
+            builder.append("\n\t" + type.toString());
+        builder.append("\n");
+        builder.append("\nAvailable Shifts:");
+        for(Pair<Date, TypeOfShift> p:availableShifts)
+        {
+            builder.append("\n\tDate: " + dateFormat.format(p.first));
+            builder.append("\n\tType: " + p.second.toString());
+        }
+        builder.append("\n");
+
+        return builder.toString();
     }
 }

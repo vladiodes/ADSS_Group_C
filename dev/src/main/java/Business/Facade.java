@@ -80,4 +80,24 @@ public class Facade {
     public boolean checkIfEmpExist(String idToEdit) {
         return this.staffController.checkIfEmpExist(idToEdit);
     }
+
+    public String addConstraintToShift(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
+        return this.scheduleController.addConstraint(date, typeOfShift,typeOfEmployee,numOfEmp);
+    }
+
+    public String removeConstraintToShift(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
+        return this.scheduleController.removeConstraint(date, typeOfShift,typeOfEmployee);
+    }
+
+    public String addShift(Date date, TypeOfShift typeOfShift) {
+       return this.scheduleController.addShift(date,typeOfShift);
+    }
+
+    public String removeShift(Date date, TypeOfShift typeOfShift) {
+        return this.scheduleController.removeShift(date,typeOfShift);
+    }
+
+    public String printSchedule() {
+        return this.scheduleController.toString();
+    }
 }

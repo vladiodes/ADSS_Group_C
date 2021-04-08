@@ -3,6 +3,8 @@ package Business.Controllers;
 
 import Business.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import static Business.TypeOfEmployee.*;
 public class ScheduleController {
@@ -13,7 +15,6 @@ public class ScheduleController {
     private TypeOfEmployee typeOfLoggedIn;
     private Map<Date, DailySchedule> schedule;
     private StaffController staffController; //Add to documentation
-    private static ScheduleController instance;
 
     public ScheduleController(TypeOfEmployee type, StaffController sc)
     {
@@ -23,7 +24,7 @@ public class ScheduleController {
     }
 
 
-    public String addShift(Date date, TypeOfShift type, Map<TypeOfEmployee, Integer> constraints)
+    public String addShift(Date date, TypeOfShift type)
     {
         //Only HRManager can add shifts
         if(this.typeOfLoggedIn!=HRManager)
@@ -36,7 +37,7 @@ public class ScheduleController {
         }
         try
         {
-            Shift toAddShift = new Shift(type, date, constraints, new LinkedList<Pair<Employee, TypeOfEmployee>>());
+            Shift toAddShift = new Shift(type, date);
             if(!schedule.containsKey(date))
             {
                 DailySchedule dailySchedule = new DailySchedule(toAddShift);
@@ -121,6 +122,75 @@ public class ScheduleController {
         Shift s = ds.getShift(type);
         return s;
     }
+
+
+    public String addConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
+        if (typeOfLoggedIn!= HRManager)
+        {
+            return "only a HR Manager is allowed to modify number and type of employees in a shift";
+        }
+        try
+        {
+            if (!this.schedule.containsKey(date))
+            {
+                return "no such shift";
+            }
+            DailySchedule dailySchedule=this.schedule.get(date);
+            if (!dailySchedule.isTypeOfShiftExists(typeOfShift))
+            {
+                return "no such shift";
+            }
+            Shift shift = dailySchedule.getShift(typeOfShift);
+            shift.addConstraint(typeOfEmployee, numOfEmp);
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
+        return "constraint added successfully";
+    }
+
+    public String removeConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee)
+    {
+        if (typeOfLoggedIn!= HRManager)
+        {
+            return "only a HR Manager is allowed to modify number and type of employees in a shift";
+        }
+        try
+        {
+            if (!this.schedule.containsKey(date))
+            {
+                return "no such shift";
+            }
+            DailySchedule dailySchedule=this.schedule.get(date);
+            if (!dailySchedule.isTypeOfShiftExists(typeOfShift))
+            {
+                return "no such shift";
+            }
+            Shift shift = dailySchedule.getShift(typeOfShift);
+            shift.removeConstraint(typeOfEmployee);
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
+        return "constraint removed successfully";
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        StringBuilder builder=new StringBuilder();
+
+        for(Date d:schedule.keySet())
+        {
+            builder.append("\nDate Of Daily Schedule: " + dateFormat.format(d));
+            builder.append("\n"+ schedule.get(d).toString());
+        }
+        builder.append("\n");
+        return builder.toString();
+    }
+
     //-----------------------------------------------------getters-----------------------------------------------
 
     public TypeOfEmployee getTypeOfLoggedIn() {
@@ -147,5 +217,7 @@ public class ScheduleController {
     public void setStaffController(StaffController staffController) {
         this.staffController = staffController;
     }
+
+
 
 }

@@ -30,6 +30,12 @@ public class Menus {
     private Map AREmployeeToShift;
     private int AREmployeeToShiftOption;
 
+    private Map ARConstraint ;
+    private int ARConstraintOption;
+
+    private Map ARShift ;
+    private int ARShiftOption;
+
     private Facade facade;
 
     public Menus(Facade facade)
@@ -38,6 +44,7 @@ public class Menus {
     }
     public void start()
     {
+
         Scanner s = new Scanner(System.in);
         String[] employeeFields=new String[7]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions
         initializeAllMenus();
@@ -53,6 +60,7 @@ public class Menus {
                     {
                         case(1): //Add Employee
                         {
+
                             System.out.println("Please Enter First Name");
                             employeeFields[0]=s.nextLine();
                             employeeFields[0]=inValidInputLetters(employeeFields[0]);
@@ -117,6 +125,7 @@ public class Menus {
                     break;
                 }
                 case(2): //Edit Employee details
+
                 {
                     String idToEdit=checkIdExist();
                     this.menuEditOption=printMenu(menuEdit);
@@ -192,6 +201,7 @@ public class Menus {
                     {
 
                         case(1)://Add available shift
+
                         {
                             Date date = getDateFromUser();
                             System.out.println("Please Enter Type Of Shift To Add");
@@ -294,6 +304,7 @@ public class Menus {
                 }
                 case(5): //Add/Remove Employee to shift
                 {
+
                     String idToEdit=checkIdExist();
                     this.AREmployeeToShiftOption=printMenu(AREmployeeToShift);
                     switch (AREmployeeToShiftOption)
@@ -348,10 +359,191 @@ public class Menus {
 
 
                     }
+                    break;
 
 
                 }
-                case(6): //Exit
+                case(6): //Add/Remove constraints
+                {
+
+                    this.ARConstraintOption=printMenu(ARConstraint);
+                    switch (ARConstraintOption)
+                    {
+
+                        case(1)://Add Constraint
+                        {
+
+                            Date date = getDateFromUser();
+                            System.out.println("Enter Type of shift");
+                            String type = s.nextLine();
+                            TypeOfShift typeOfShift;
+                            typeOfShift=parseTypeOfShift(type);
+                            while(typeOfShift==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                type = s.nextLine();
+                                typeOfShift=parseTypeOfShift(type);
+                            }
+                            //get constraints
+                            System.out.println("Enter Type of the employee to restrict in the shift");
+                            String consType = s.nextLine();
+                            TypeOfEmployee typeOfEmployee;
+                            typeOfEmployee= parseTypeOfEmp(consType);
+                            while (typeOfEmployee==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                consType=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(consType);
+                            }
+                            Integer numOfEmp=-1;
+                            System.out.println("Enter amount of employees for this type in the shift");
+                            while (numOfEmp==-1)
+                            {
+                                try
+                                {
+                                    numOfEmp = s.nextInt();
+                                }
+                                catch (Exception e)
+                                {
+                                    System.out.println("Invalid Input, please enter again");
+                                }
+                            }
+
+                            System.out.println(facade.addConstraintToShift(date, typeOfShift, typeOfEmployee, numOfEmp));
+                            break;
+                        }
+                        case(2)://Remove Constraint
+                        {
+
+                            Date date = getDateFromUser();
+                            System.out.println("Enter Type of shift");
+                            String type = s.nextLine();
+                            TypeOfShift typeOfShift;
+                            typeOfShift=parseTypeOfShift(type);
+                            while(typeOfShift==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                type = s.nextLine();
+                                typeOfShift=parseTypeOfShift(type);
+                            }
+                            //get constraints
+                            System.out.println("Enter Type of the employee of the constraint you want to remove");
+                            String consType = s.nextLine();
+                            TypeOfEmployee typeOfEmployee;
+                            typeOfEmployee= parseTypeOfEmp(consType);
+                            while (typeOfEmployee==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                consType=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(consType);
+                            }
+
+                            System.out.println(facade.removeConstraintToShift(date, typeOfShift, typeOfEmployee));
+                            break;
+                        }
+                        case(3)://Back to main menu
+                        {
+                            continue;
+                        }
+
+                    }
+                    break;
+
+                }
+                case(7): //Add/Remove Shift
+                {
+
+                    this.ARShiftOption=printMenu(ARShift);
+                    switch (ARShiftOption)
+                    {
+
+                        case(1)://Add shift
+                        {
+
+                            Date date = getDateFromUser();
+                            System.out.println("Enter Type of shift to add");
+                            String type = s.nextLine();
+                            TypeOfShift typeOfShift;
+                            typeOfShift=parseTypeOfShift(type);
+                            while(typeOfShift==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                type = s.nextLine();
+                                typeOfShift=parseTypeOfShift(type);
+                            }
+                            System.out.println(facade.addShift(date, typeOfShift));
+                            break;
+                        }
+                        case(2)://Remove Shift
+                        {
+                            Date date = getDateFromUser();
+                            System.out.println("Enter Type of shift to remove");
+                            String type = s.nextLine();
+                            TypeOfShift typeOfShift;
+                            typeOfShift=parseTypeOfShift(type);
+                            while(typeOfShift==null)
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                type = s.nextLine();
+                                typeOfShift=parseTypeOfShift(type);
+                            }
+                            System.out.println(facade.removeShift(date, typeOfShift));
+                            break;
+                        }
+                        case(3)://Back to main menu
+                        {
+                            continue;
+                        }
+
+
+                    }
+                    break;
+
+                }
+                case(8): //scenario
+                {
+                    Date date1= null;
+                    Date date2 = null;
+                    try
+                    {
+                        date1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
+                        date2 = new SimpleDateFormat("dd/MM/yyyy").parse("22/04/2022");
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Scenario failed because of date parsing");
+                    }
+                    List<TypeOfEmployee> skillsNeta = new LinkedList<>();
+                    skillsNeta.add(TypeOfEmployee.ShiftManager);
+
+                    List<TypeOfEmployee> skillsBahar = new LinkedList<>();
+                    skillsBahar.add(TypeOfEmployee.BranchManager);
+
+                    List<TypeOfEmployee> skillsOded = new LinkedList<>();
+                    skillsOded.add(TypeOfEmployee.Storage);
+
+                    List<TypeOfEmployee> skillsTom = new LinkedList<>();
+                    skillsTom.add(TypeOfEmployee.Cashier);
+                    this.facade.addEmployee("Neta", "Lavi", "11111111", "132/13", 10000, "Sick Days 5", date1, skillsNeta);
+                    this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 5", date1, skillsBahar);
+                    this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded);
+                    this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 5", date1, skillsTom);
+
+                    this.facade.addShift(date2, TypeOfShift.Morning);
+                    this.facade.addEmployeeToShift("123456789", TypeOfEmployee.ShiftManager,date2,TypeOfShift.Morning);
+
+
+                    System.out.println("Initialized Successfully");
+
+                    break;
+
+                }
+                case(9): //Print schedule
+                {
+                    System.out.println(this.facade.printSchedule());
+                    break;
+                }
+                case(10): //Exit
                 {
                     exit(0);
                 }
@@ -493,6 +685,8 @@ public class Menus {
         createEditMenu();
         createEmployeeToShift();
         createAREmployee();
+        createARConstraint();
+        createARShift();
     }
 
 
@@ -503,7 +697,11 @@ public class Menus {
         menuMain.put(3,"Add/Remove available shift");
         menuMain.put(4,"Add/Remove skills");
         menuMain.put(5,"Add/Remove Employee to shift");
-        menuMain.put(6,"Exit");
+        menuMain.put(6,"Add/Remove Constraint To Existing shift - only HRManger");
+        menuMain.put(7,"Add/Remove Shift");
+        menuMain.put(8,"scenario");
+        menuMain.put(9,"Print Schedule");
+        menuMain.put(10,"Exit");
 
 
     }
@@ -538,6 +736,21 @@ public class Menus {
         ARSkills.put(1,"Add Skill");
         ARSkills.put(2,"Remove Skill");
         ARSkills.put(3,"Back To Main Menu");
+    }
+
+    private void createARConstraint()
+    {
+        ARConstraint=new HashMap<>();
+        ARConstraint.put(1,"Add Constraint");
+        ARConstraint.put(2,"Remove Constraint");
+        ARConstraint.put(3,"Back To Main Menu");
+    }
+    private void createARShift()
+    {
+        ARShift=new HashMap<>();
+        ARShift.put(1,"Add Shift");
+        ARShift.put(2,"Remove Shift");
+        ARShift.put(3,"Back To Main Menu");
     }
 
     private void createEmployeeToShift()
