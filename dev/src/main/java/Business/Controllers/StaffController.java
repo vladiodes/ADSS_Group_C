@@ -37,6 +37,18 @@ public class StaffController
         return this.employees.get(id);
     }
 
+    /**
+     * The check for duplicate id is done before calling this function
+     * @param firstName
+     * @param lastName
+     * @param id Assumes given id doesnt already exist
+     * @param bankAccountNumber
+     * @param salary
+     * @param empConditions
+     * @param startWorkingDate
+     * @param skills
+     * @return
+     */
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills)
     {
         try

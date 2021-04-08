@@ -9,9 +9,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.System.exit;
-import static java.lang.System.setOut;
+
 
 public class Menus {
+    private final int NUMBER_OF_EMPLOYEE_FIELDS =7; //magic number
+
+    //================================================Fields===========================================================
     private Map menuMain ;
     private int menuMainOption;
 
@@ -38,73 +41,84 @@ public class Menus {
 
     private Facade facade;
 
+    //================================================Constructor===========================================================
     public Menus(Facade facade)
     {
         this.facade =facade;
     }
+
+    //================================================Methods===========================================================
+
+
+    /**
+     * Main Function for running all menus and functions in the program
+     */
     public void start()
     {
 
         Scanner s = new Scanner(System.in);
-        String[] employeeFields=new String[7]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions
+        String[] employeeFields=new String[NUMBER_OF_EMPLOYEE_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
         initializeAllMenus();
         while(true)
         {
             this.menuMainOption =  printMenu(menuMain);
             switch (this.menuMainOption)
             {
-                case(1): //Add/Remove Employee
+                case(1): //Add/Remove employee
                 {
                     this.AREmployeeOption = printMenu(AREmployee);
                     switch (this.AREmployeeOption)
                     {
                         case(1): //Add Employee
                         {
-
+                            //First Name
                             System.out.println("Please Enter First Name");
                             employeeFields[0]=s.nextLine();
                             employeeFields[0]=inValidInputLetters(employeeFields[0]);
-
+                            //Last Name
                             System.out.println("Please Enter Last Name");
                             employeeFields[1]=s.nextLine();
                             employeeFields[1]=inValidInputLetters(employeeFields[1]);
 
-
+                            //ID
                             System.out.println("Please Enter ID");
                             employeeFields[2]=s.nextLine();
                             employeeFields[2]=inValidInputDigits(employeeFields[2]);
 
-
+                            //Bank Account Number
                             System.out.println("Please Enter bank Account Number");
                             employeeFields[3]=s.nextLine();
-                            while (!checkBankAccountNumber(employeeFields[3]))
+                            while (!checkBankAccountNumber(employeeFields[3])) //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 employeeFields[3]=s.nextLine();
                             }
 
+                            //Salary
                             System.out.println("Please Enter salary");
                             employeeFields[4]=s.nextLine();
                             employeeFields[4]=inValidInputDigits(employeeFields[4]);
 
-
+                            //Employee Conditions
                             System.out.println("Please Enter Employee conditions");
                             employeeFields[5]=s.nextLine();//free text , no need to check
 
+                            //Skill
                             System.out.println("Please Enter 1 skill of the employee");
                             employeeFields[6]=s.nextLine();
 
-                            //All input from user is ready
+                            //---------All input from user is ready-------------
+
                             List<TypeOfEmployee> l = new LinkedList<>();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null) //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 employeeFields[6]=s.nextLine();
                                 typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
                             }
-                            l.add(typeOfEmployee);
+                            l.add(typeOfEmployee); //Adding the skill to the new list created for the new employee
                             System.out.println(facade.addEmployee(employeeFields[0], employeeFields[1], employeeFields[2], employeeFields[3], Integer.parseInt(employeeFields[4]), employeeFields[5],new Date(System.currentTimeMillis()),l));
 
                             break;
@@ -124,8 +138,7 @@ public class Menus {
                     }
                     break;
                 }
-                case(2): //Edit Employee details
-
+                case(2): //Edit employee details
                 {
                     String idToEdit=checkIdExist();
                     this.menuEditOption=printMenu(menuEdit);
@@ -208,7 +221,7 @@ public class Menus {
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null) //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -242,7 +255,7 @@ public class Menus {
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null) //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -270,7 +283,7 @@ public class Menus {
                             String skill = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 employeeFields[6]=s.nextLine();
@@ -285,7 +298,7 @@ public class Menus {
                             String skill = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 employeeFields[6]=s.nextLine();
@@ -302,7 +315,7 @@ public class Menus {
 
                     break;
                 }
-                case(5): //Add/Remove Employee to shift
+                case(5): //Add/Remove employee to shift
                 {
 
                     String idToEdit=checkIdExist();
@@ -319,7 +332,7 @@ public class Menus {
                             String type = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 employeeFields[6]=s.nextLine();
@@ -327,7 +340,7 @@ public class Menus {
                             }
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -343,7 +356,7 @@ public class Menus {
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -372,24 +385,24 @@ public class Menus {
 
                         case(1)://Add Constraint
                         {
-
+                            //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
                                 typeOfShift=parseTypeOfShift(type);
                             }
-                            //get constraints
+                            //Get constraint from user (TypeOfEmployee and Integer)
                             System.out.println("Enter Type of the employee to restrict in the shift");
                             String consType = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(consType);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 consType=s.nextLine();
@@ -414,24 +427,24 @@ public class Menus {
                         }
                         case(2)://Remove Constraint
                         {
-
+                            //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
                                 typeOfShift=parseTypeOfShift(type);
                             }
-                            //get constraints
+                            //Get constraint from user (TypeOfEmployee only)
                             System.out.println("Enter Type of the employee of the constraint you want to remove");
                             String consType = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(consType);
-                            while (typeOfEmployee==null)
+                            while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 consType=s.nextLine();
@@ -450,7 +463,7 @@ public class Menus {
                     break;
 
                 }
-                case(7): //Add/Remove Shift
+                case(7): //Add/Remove shift
                 {
 
                     this.ARShiftOption=printMenu(ARShift);
@@ -459,13 +472,13 @@ public class Menus {
 
                         case(1)://Add shift
                         {
-
+                            //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
                             System.out.println("Enter Type of shift to add");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -476,12 +489,13 @@ public class Menus {
                         }
                         case(2)://Remove Shift
                         {
+                            //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
                             System.out.println("Enter Type of shift to remove");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
-                            while(typeOfShift==null)
+                            while(typeOfShift==null) //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
                                 type = s.nextLine();
@@ -500,8 +514,9 @@ public class Menus {
                     break;
 
                 }
-                case(8): //scenario
+                case(8): //pre-made scenario
                 {
+                    //Creates 4 employees, a shift, and adds 1 employee to the shift
                     Date date1= null;
                     Date date2 = null;
                     try
@@ -524,13 +539,13 @@ public class Menus {
 
                     List<TypeOfEmployee> skillsTom = new LinkedList<>();
                     skillsTom.add(TypeOfEmployee.Cashier);
-                    this.facade.addEmployee("Neta", "Lavi", "11111111", "132/13", 10000, "Sick Days 5", date1, skillsNeta);
-                    this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 5", date1, skillsBahar);
+                    this.facade.addEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta);
+                    this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar);
                     this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded);
-                    this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 5", date1, skillsTom);
+                    this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom);
 
                     this.facade.addShift(date2, TypeOfShift.Morning);
-                    this.facade.addEmployeeToShift("123456789", TypeOfEmployee.ShiftManager,date2,TypeOfShift.Morning);
+                    this.facade.addEmployeeToShift("111111111", TypeOfEmployee.ShiftManager,date2,TypeOfShift.Morning);
 
 
                     System.out.println("Initialized Successfully");
@@ -543,7 +558,7 @@ public class Menus {
                     System.out.println(this.facade.printSchedule());
                     break;
                 }
-                case(10): //Exit
+                case(10): //Exit The Program
                 {
                     exit(0);
                 }
@@ -552,6 +567,10 @@ public class Menus {
         }
     }
 
+    /**
+     * Asks for ID from the user until valid ID, that exists in the list of employees is inserted
+      * @return Valid ID that exists in the list of employees
+     */
     private String checkIdExist() {
         Scanner s = new Scanner(System.in);
         boolean idExist=false;
@@ -569,6 +588,11 @@ public class Menus {
         return idToEdit;
     }
 
+    /**
+     * Converts a string to a TypeOfShift object with the value of the string
+     * @param type
+     * @return if type is valid TypeOfShift, returns converted TypeOfShift object, else return null
+     */
     private TypeOfShift parseTypeOfShift(String type)
     {
         TypeOfShift typeOfShift;
@@ -583,6 +607,11 @@ public class Menus {
         return typeOfShift;
     }
 
+    /**
+     * Converts a string to a TypeOfEmployee object with the value of the string
+     * @param type
+     * @return if type is valid TypeOfEmployee, returns converted TypeOfEmployee object, else return null
+     */
     private TypeOfEmployee parseTypeOfEmp(String type)
     {
         TypeOfEmployee typeOfEmployee;
@@ -592,14 +621,18 @@ public class Menus {
         }
         catch (Exception e)
         {
-            typeOfEmployee=null;
+            typeOfEmployee=null; //return null if conversion failed
         }
         return typeOfEmployee;
     }
 
+    /**
+     * Asks Valid date from user in a format of dd/MM/yyyy until a valid Date was inserted by the user
+     * @return Valid Date from user
+     */
     private Date getDateFromUser() {
         Scanner s = new Scanner(System.in);
-        System.out.println("Please Enter Date in format xx/xx/xxxx");
+        System.out.println("Please Enter Date in format dd/MM/yyyy");
         String dateOfShift = s.nextLine();
         boolean validDate=false;
         Date date=null;
@@ -621,6 +654,11 @@ public class Menus {
     }
 
 
+    /**
+     * Checks validity of input (Letters only) and keeps asking for a new input until input is valid
+      * @param s
+     * @return Valid input from user
+     */
     private String inValidInputLetters(String s) {
         Scanner scan = new Scanner(System.in);
         while(!checkAllLetters(s))
@@ -630,6 +668,12 @@ public class Menus {
         }
         return s;
     }
+
+    /**
+     * Checks validity of input (Digits only) and keeps asking for a new input until input is valid
+      * @param s
+     * @return Valid input from user
+     */
     private String inValidInputDigits(String s) {
         Scanner scan = new Scanner(System.in);
         while(!checkAllDigits(s))
@@ -640,6 +684,11 @@ public class Menus {
         return s;
     }
 
+    /**
+     * Checks validity of string for a bank account number
+     * @param bankAccountNumber
+     * @return
+     */
     private boolean checkBankAccountNumber(String bankAccountNumber) {
         for (int i=0;i<bankAccountNumber.length();i++)
         {
@@ -653,11 +702,16 @@ public class Menus {
     }
 
 
+    /**
+     * Checks if every character in the given string is representing an English letter
+     * @param s
+     * @return
+     */
     private boolean checkAllLetters(String s) {
         for (int i=0;i<s.length();i++)
         {
             char ch = s.charAt(i);
-            if (!(ch>='a' && ch<='z') && !(ch>='A' && ch<='Z'))
+            if (!(ch>='a' && ch<='z') && !(ch>='A' && ch<='Z')) //is an uppercase letter or lower case letter
             {
                 return false;
             }
@@ -665,18 +719,27 @@ public class Menus {
         return true;
     }
 
+    /**
+     * Checks if every character in the given string is representing a number
+     * @param num
+     * @return
+     */
     private boolean checkAllDigits(String num) {
-        for (int i=0;i<num.length();i++)
+        for (int i=0;i<num.length();i++) //iterating string
         {
             char ch = num.charAt(i);
-            if (ch<'0' || ch>'9' )
+            if (ch<'0' || ch>'9' ) //is a char representing a number
             {
                 return false;
             }
         }
         return true;
     }
+    //Menus Initialization and creations-----------------------
 
+    /**
+     * Initializes all menus so they will be ready for printing and using
+     */
     private  void initializeAllMenus()
     {
         createMenuMain();
@@ -690,16 +753,17 @@ public class Menus {
     }
 
 
+    //Creations
     private void createMenuMain() {
         menuMain=new HashMap<>();
         menuMain.put(1,"Add/Remove Employee");
-        menuMain.put(2,"edit employee details");
+        menuMain.put(2,"Edit employee details");
         menuMain.put(3,"Add/Remove available shift");
         menuMain.put(4,"Add/Remove skills");
         menuMain.put(5,"Add/Remove Employee to shift");
-        menuMain.put(6,"Add/Remove Constraint To Existing shift - only HRManger");
+        menuMain.put(6,"Add/Remove Constraint To Existing shift - Only allowed for HRManger");
         menuMain.put(7,"Add/Remove Shift");
-        menuMain.put(8,"scenario");
+        menuMain.put(8,"Initialize System with pre-made scenario");
         menuMain.put(9,"Print Schedule");
         menuMain.put(10,"Exit");
 
@@ -711,7 +775,6 @@ public class Menus {
         AREmployee.put(2, "Remove Employee");
         AREmployee.put(3, "Back to main menu");
     }
-
     private void createEditMenu()
     {
         menuEdit=new HashMap<>();
@@ -737,7 +800,6 @@ public class Menus {
         ARSkills.put(2,"Remove Skill");
         ARSkills.put(3,"Back To Main Menu");
     }
-
     private void createARConstraint()
     {
         ARConstraint=new HashMap<>();
@@ -752,7 +814,6 @@ public class Menus {
         ARShift.put(2,"Remove Shift");
         ARShift.put(3,"Back To Main Menu");
     }
-
     private void createEmployeeToShift()
     {
         AREmployeeToShift=new HashMap<>();
@@ -761,7 +822,12 @@ public class Menus {
         AREmployeeToShift.put(3,"Back To Main Menu");
     }
 
-
+    //Print
+    /**
+     *
+     * @param menu
+     * @return returns the option that was chosen is the menu
+     */
     private int printMenu(Map<Integer, String> menu)
     {
         Scanner s = new Scanner((System.in));

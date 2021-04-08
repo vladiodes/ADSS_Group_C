@@ -164,8 +164,9 @@ public class Employee {
         this.empConditions = empConditions;
     }
 
-    public void setFirstName(String firstName) {
-        nameValidation(firstName);
+    public void setFirstName(String firstName) throws Exception{
+        if(!nameValidation(firstName))
+            throw new Exception("Invalid First Name");
         this.firstName = firstName;
     }
 

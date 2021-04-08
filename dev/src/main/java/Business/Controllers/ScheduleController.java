@@ -9,12 +9,12 @@ import java.util.*;
 import static Business.TypeOfEmployee.*;
 public class ScheduleController {
 
-
-
-
+    //========================================================Fields====================================================
     private TypeOfEmployee typeOfLoggedIn;
     private Map<Date, DailySchedule> schedule;
-    private StaffController staffController; //Add to documentation
+    private StaffController staffController;
+
+    //========================================================Constructor====================================================
 
     public ScheduleController(TypeOfEmployee type, StaffController sc)
     {
@@ -22,12 +22,20 @@ public class ScheduleController {
         this.typeOfLoggedIn =type;
         this.schedule = new HashMap<>();
     }
+    //========================================================Methods====================================================
 
 
+    /**
+     * Creates and adds a new shift to the and daily schedule and adds the new daily schedule to the schedule
+     * Only an HRManager can add shifts
+     * @param date
+     * @param type
+     * @return Success/Fail message
+     */
     public String addShift(Date date, TypeOfShift type)
     {
-        //Only HRManager can add shifts
-        if(this.typeOfLoggedIn!=HRManager)
+
+        if(this.typeOfLoggedIn!=HRManager)//Only HRManager can add shifts
         {
             return "Only HRManager can add shifts";
         }
@@ -65,10 +73,17 @@ public class ScheduleController {
 
     }
 
+    /**
+     * Removes the shift at date "date" and of type "type" from the schedule
+     * Only a HRManager can remove shifts
+     * @param date
+     * @param type
+     * @return Success/Fail message
+     */
     public String removeShift(Date date, TypeOfShift type)
     {
-        //Only HRManager can remove shifts
-        if(this.typeOfLoggedIn!=HRManager)
+
+        if(this.typeOfLoggedIn!=HRManager)//Only HRManager can remove shifts
         {
             return "Only HRManager can remove shifts";
         }
@@ -82,11 +97,19 @@ public class ScheduleController {
     }
 
 
+    /**
+     * Adds employee with id "id" to the shift with date "date" and of type "type"
+     * @param id
+     * @param toSkill
+     * @param date
+     * @param type
+     * @return Success/Fail message
+     */
     public String addEmployeeToShift(String id,TypeOfEmployee toSkill, Date date, TypeOfShift type)
     {
-        if(!isShiftExists(date, type))
+        if(!isShiftExists(date, type)) //Cant add an employee to a shift that doesn't exist
         {
-            return "Shift doesnt exist";
+            return "Shift doesn't exist";
         }
         try
         {
@@ -101,11 +124,18 @@ public class ScheduleController {
         return "Employee added successfully to shift";
     }
 
+    /**
+     * Remove employee with id "id" from shift with date "date" and of type "type"
+      * @param id
+     * @param date
+     * @param type
+     * @return Success/Fail message
+     */
     public String removeEmployeeFromShift(String id,Date date, TypeOfShift type)
     {
         if(!isShiftExists(date,type))
         {
-            return "Shift doesnt exist";
+            return "Shift doesn't exist";
         }
         Shift s= getShift(date,type);
         if(!s.isEmployeeInShift(id)) //Check if the employee is in the shift
@@ -116,6 +146,7 @@ public class ScheduleController {
         s.removeEmployee(id);
         return "employee removed successfully from shift";
     }
+
     public Shift getShift(Date date,TypeOfShift type)
     {
         DailySchedule ds = schedule.get(date);
@@ -124,6 +155,15 @@ public class ScheduleController {
     }
 
 
+    /**
+     * Adds a constraint to a specific shift
+     * Only HRManager can add constraints
+     * @param date
+     * @param typeOfShift
+     * @param typeOfEmployee
+     * @param numOfEmp
+     * @return Success/Fail message
+     */
     public String addConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
         if (typeOfLoggedIn!= HRManager)
         {

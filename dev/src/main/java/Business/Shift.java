@@ -1,6 +1,7 @@
 package Business;
 
 
+import java.rmi.server.ExportException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -233,16 +234,25 @@ public class Shift {
         {
             throw new Exception("amount of Employees must be positive");
         }
+        if(typeOfEmployee == ShiftManager && numOfEmp<=0)
+        {
+            throw new Exception("Constraint of type ShiftManager must be 1 or greater");
+        }
         this.constraints.put(typeOfEmployee, numOfEmp);
         isSealed=sealShift();
 
     }
 
     public void removeConstraint(TypeOfEmployee typeOfEmployee)throws Exception {
+        if (typeOfEmployee == ShiftManager)
+        {
+            throw new Exception("Number of ShiftManagers in a shift must be restricted");
+        }
         if (this.constraints.remove(typeOfEmployee)==null)
         {
             throw new Exception("no such restriction");
         }
+
         isSealed=sealShift();
 
     }
