@@ -57,7 +57,6 @@ public class Menus {
     {
 
         Scanner s = new Scanner(System.in);
-        String[] employeeFields=new String[NUMBER_OF_EMPLOYEE_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
         initializeAllMenus();
         while(true)
         {
@@ -71,6 +70,7 @@ public class Menus {
                     {
                         case(1): //Add Employee
                         {
+                            String[] employeeFields=new String[NUMBER_OF_EMPLOYEE_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
                             //First Name
                             System.out.println("Please Enter First Name");
                             employeeFields[0]=s.nextLine();
@@ -282,12 +282,12 @@ public class Menus {
                             System.out.println("Please Enter new skill");
                             String skill = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
-                            typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                            typeOfEmployee= parseTypeOfEmp(skill);
                             while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
-                                employeeFields[6]=s.nextLine();
-                                typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                                skill=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(skill);
                             }
                             System.out.println(facade.addSkill(idToEdit, typeOfEmployee));
                             break;
@@ -297,12 +297,12 @@ public class Menus {
                             System.out.println("Please Enter skill to remove");
                             String skill = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
-                            typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                            typeOfEmployee= parseTypeOfEmp(skill);
                             while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
-                                employeeFields[6]=s.nextLine();
-                                typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                                skill=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(skill);
                             }
                             System.out.println(facade.removeSkill(idToEdit, typeOfEmployee));
                             break;
@@ -331,12 +331,12 @@ public class Menus {
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
-                            typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                            typeOfEmployee= parseTypeOfEmp(type);
                             while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
-                                employeeFields[6]=s.nextLine();
-                                typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
+                                type=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(type);
                             }
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
@@ -558,7 +558,14 @@ public class Menus {
                     System.out.println(this.facade.printSchedule());
                     break;
                 }
-                case(10): //Exit The Program
+                case(10): //Print Employee's Personal Details
+                {
+                    String idToPrint=checkIdExist();
+                    System.out.println(this.facade.printPresonalDetails(idToPrint));
+                    break;
+                }
+
+                case(11): //Exit The Program
                 {
                     exit(0);
                 }
@@ -765,7 +772,8 @@ public class Menus {
         menuMain.put(7,"Add/Remove Shift");
         menuMain.put(8,"Initialize System with pre-made scenario");
         menuMain.put(9,"Print Schedule");
-        menuMain.put(10,"Exit");
+        menuMain.put(10,"Print Employee Personal Details");
+        menuMain.put(11,"Exit");
 
 
     }

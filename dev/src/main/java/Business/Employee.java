@@ -8,7 +8,8 @@ import java.util.List;
 
 
 public class Employee {
-    final int IDLENGTH = 9;//magic number
+    final int ID_LENGTH = 9;//magic number
+    //======================================================Fields=================================================================
     private String firstName;
     private String lastName;
     private String id;
@@ -19,9 +20,7 @@ public class Employee {
     private List<TypeOfEmployee> skills;
     private List<Pair<Date,TypeOfShift>> availableShifts;
 
-
-
-    //Constructor---------------------------------------------------------------------------------------------------------------------------
+    //======================================================Constructor=================================================================
     public Employee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) throws Exception
     {
         validityCheckEmp(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills);//Checks validity and throws exception if found invalid field
@@ -36,9 +35,14 @@ public class Employee {
         this.availableShifts = new LinkedList<>();
     }
 
-     //methods----------------------------------------------------------------------------------------------------------------------
-     //https://stackoverflow.com/questions/46326822/java-regex-first-name-validation
-     private  boolean nameValidation(String name){
+     //======================================================Methods=================================================================
+
+    /**
+     * Regex taken from https://stackoverflow.com/questions/46326822/java-regex-first-name-validation
+     * @param name
+     * @return
+     */
+    private  boolean nameValidation(String name){
 
          return name!=null && name.matches("(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){1,25}$");
      }
@@ -46,7 +50,7 @@ public class Employee {
     private boolean isValidId(String id)
     {
 
-        if (id==null ||id.length()!=IDLENGTH)
+        if (id==null ||id.length()!= ID_LENGTH)
         {
             return  false;
         }
@@ -62,9 +66,22 @@ public class Employee {
     }
 
 
+    /**
+     * Check validity of fields for employee (parameters)
+     * Throws exception for each invalid field
+     * @param firstName
+     * @param lastName
+     * @param id
+     * @param bankAccountNumber
+     * @param salary
+     * @param empConditions
+     * @param startWorkingDate
+     * @param skills
+     * @throws Exception
+     */
     private void validityCheckEmp(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) throws Exception
     {
-        // maybe add valid check for salary , bankaccount, start working date
+        // maybe add valid check for salary , bank account, start working date
         if(!nameValidation(firstName))
         {
             throw new Exception("first name is not valid");
@@ -100,6 +117,84 @@ public class Employee {
         {
             throw new  Exception("Date was not inserted");
         }
+    }
+
+
+    public void addSkill(TypeOfEmployee type) throws Exception
+    {
+        if(this.skills.contains(type))
+        {
+            throw new Exception("Skill already exists");
+        }
+        this.skills.add(type);
+    }
+
+    public void removeSkill(TypeOfEmployee type) throws  Exception {
+        if (this.skills.size()<=1) //Cant have an employee without skills
+        {
+            throw new Exception("Employee only has 1 skill and it cannot be removed");
+        }
+        if(!this.skills.contains(type))
+        {
+            throw new Exception("Skill doesn't exist");
+        }
+        this.skills.remove(type);
+    }
+
+    /**
+     * Adds an available shift to the employee by ID
+     * Shift's date cant be in the past
+     * @param shift
+     * @throws Exception
+     */
+    public void addAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception{
+        Date date = shift.first;
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m))) //An employee cant request a shift in the past
+        {
+            throw new  Exception("date of available shift cant be in the past");
+        }
+        if (this.availableShifts.contains(shift))
+        {
+            throw new  Exception("available shift already exist");
+        }
+        this.availableShifts.add(shift);
+    }
+
+    public void removeAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception {
+        if (!this.availableShifts.contains(shift))
+        {
+            throw new Exception("available shift doesn't exist");
+        }
+        this.availableShifts.remove(shift);
+    }
+
+
+    public String toString() {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        StringBuilder builder=new StringBuilder();
+        builder.append("Employee: \n\t");
+        builder.append("First Name: " + firstName);
+        builder.append("\nLast Name: " + lastName);
+        builder.append("\nID: " + id);
+        builder.append("\nBank Account Number: " + bankAccountNumber);
+        builder.append("\nSalary: " + salary);
+        builder.append("\nEmployee Conditions: " + empConditions);
+        builder.append("\nStart Working Date: " + dateFormat.format(this.startWorkingDate));
+        builder.append("\nSkills:");
+        for(TypeOfEmployee type:skills)
+            builder.append("\n\t" + type.toString());
+        builder.append("\n");
+        builder.append("\nAvailable Shifts:");
+        for(Pair<Date, TypeOfShift> p:availableShifts)
+        {
+            builder.append("\n\tDate: " + dateFormat.format(p.first));
+            builder.append("\n\tType: " + p.second.toString());
+        }
+        builder.append("\n");
+
+        return builder.toString();
     }
     //-----------------------------------------------------------------getters----------------------------------------------------------
 
@@ -179,8 +274,9 @@ public class Employee {
         this.id = id;
     }
 
-    public void setLastName(String lastName) {
-        nameValidation(lastName);
+    public void setLastName(String lastName) throws Exception{
+        if(!nameValidation(lastName))
+            throw new Exception("Invalid Last Name");
         this.lastName = lastName;
     }
 
@@ -209,75 +305,7 @@ public class Employee {
         this.startWorkingDate = startWorkingDate;
     }
 
-    public void addSkill(TypeOfEmployee type) throws Exception
-    {
-        if(this.skills.contains(type))
-        {
-            throw new Exception("Skill already exists");
-        }
-        this.skills.add(type);
-    }
-
-    public void removeSkill(TypeOfEmployee type) throws  Exception {
-        if (this.skills.size()<=1)
-        {
-            throw new Exception("sole skill cant be removed");
-        }
-        if(!this.skills.contains(type))
-        {
-            throw new Exception("Skill doesn't exists");
-        }
-        this.skills.remove(type);
-
-    }
-
-    public void addAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception{
-        Date date = shift.first;
-        long m = System.currentTimeMillis();
-        if (date.before(new Date(m)))
-        {
-            throw new  Exception("date of available shift cant be in the past");
-        }
-        if (this.availableShifts.contains(shift))
-        {
-            throw new  Exception("available shift already exist");
-        }
-        this.availableShifts.add(shift);
-    }
-
-    public void removeAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception {
-        if (!this.availableShifts.contains(shift))
-        {
-            throw new Exception("available shift doesn't exist");
-        }
-        this.availableShifts.remove(shift);
-    }
 
 
-    public String toString() {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        StringBuilder builder=new StringBuilder();
-        builder.append("Employee: \n\t");
-        builder.append("First Name: " + firstName);
-        builder.append("\nLast Name: " + lastName);
-        builder.append("\nID: " + id);
-        builder.append("\nBank Account Number: " + bankAccountNumber);
-        builder.append("\nSalary: " + salary);
-        builder.append("\nEmployee Conditions: " + empConditions);
-        builder.append("\nStart Working Date: " + dateFormat.format(this.startWorkingDate));
-        builder.append("\nSkills:");
-        for(TypeOfEmployee type:skills)
-            builder.append("\n\t" + type.toString());
-        builder.append("\n");
-        builder.append("\nAvailable Shifts:");
-        for(Pair<Date, TypeOfShift> p:availableShifts)
-        {
-            builder.append("\n\tDate: " + dateFormat.format(p.first));
-            builder.append("\n\tType: " + p.second.toString());
-        }
-        builder.append("\n");
-
-        return builder.toString();
-    }
 }

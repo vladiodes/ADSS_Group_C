@@ -147,16 +147,8 @@ public class ScheduleController {
         return "employee removed successfully from shift";
     }
 
-    public Shift getShift(Date date,TypeOfShift type)
-    {
-        DailySchedule ds = schedule.get(date);
-        Shift s = ds.getShift(type);
-        return s;
-    }
-
-
     /**
-     * Adds a constraint to a specific shift
+     * Adds a constraint/Edits an existing constraint to a specific shift
      * Only HRManager can add constraints
      * @param date
      * @param typeOfShift
@@ -190,6 +182,13 @@ public class ScheduleController {
         return "constraint added successfully";
     }
 
+    /**
+     * Removes a constraint from a specific shift
+     * @param date
+     * @param typeOfShift
+     * @param typeOfEmployee
+     * @return Success/Fail message
+     */
     public String removeConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee)
     {
         if (typeOfLoggedIn!= HRManager)
@@ -244,6 +243,13 @@ public class ScheduleController {
     public Map<Date,DailySchedule> getSchedule()
     {
         return this.schedule;
+    }
+
+    public Shift getShift(Date date,TypeOfShift type)
+    {
+        DailySchedule ds = schedule.get(date);
+        Shift s = ds.getShift(type);
+        return s;
     }
     //---------------------------------------------------setters--------------------------------------------------
     public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {

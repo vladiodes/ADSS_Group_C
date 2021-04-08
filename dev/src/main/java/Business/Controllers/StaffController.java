@@ -18,7 +18,7 @@ public class StaffController
     //==================================================================Fields=============================================================
     private Map<String, Employee> employees;
     private TypeOfEmployee typeOfLoggedIn;
-    //==================================================================Singleton & Constructor============================================
+    //==================================================================Constructor============================================
 
 
     public StaffController(TypeOfEmployee type)
@@ -28,16 +28,10 @@ public class StaffController
     }
 
     //===================================================================Methods===========================================================
-    private Employee getEmpIfExists(String id) throws Exception
-    {
-        if(!this.employees.containsKey(id))
-        {
-            throw new Exception("Not such employee");
-        }
-        return this.employees.get(id);
-    }
+
 
     /**
+     * Adds a new Employee
      * The check for duplicate id is done before calling this function
      * @param firstName
      * @param lastName
@@ -47,7 +41,7 @@ public class StaffController
      * @param empConditions
      * @param startWorkingDate
      * @param skills
-     * @return
+     * @return Success/Fail Message
      */
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills)
     {
@@ -63,6 +57,11 @@ public class StaffController
         return "Employee added successfully";
     }
 
+    /**
+     * Removes an existing employee
+     * @param id
+     * @return Success/Fail Message
+     */
     public String removeEmployee(String id)
     {
         if(employees.remove(id)==null)
@@ -70,6 +69,12 @@ public class StaffController
         return "Employee removed successfully";
     }
 
+    /**
+     * Edit First Name of employee by ID
+     * @param id
+     * @param firstName
+     * @return Success/Fail Message
+     */
     public String editFirstName(String id, String firstName)
     {
         try
@@ -84,6 +89,12 @@ public class StaffController
         return "First Name was edited successfully";
     }
 
+    /**
+     * Edit Last Name of employee by ID
+     * @param id
+     * @param lastName
+     * @return Success/Fail Message
+     */
     public String editLastName(String id, String lastName)
     {
         try
@@ -98,6 +109,13 @@ public class StaffController
         return "Last Name was edited successfully";
     }
 
+
+    /**
+     * Edit ID of employee by ID
+     * @param oldId
+     * @param newId
+     * @return Success/Fail Message
+     */
     public String editID(String oldId, String newId)
     {
         try
@@ -114,6 +132,12 @@ public class StaffController
         return "ID was edited successfully";
     }
 
+    /**
+     * Edit Bank Account Number of employee by ID
+     * @param id
+     * @param bankAccountNumber
+     * @return Success/Fail Message
+     */
     public String editBankAccountNumber(String id, String bankAccountNumber)
     {
         try
@@ -130,6 +154,12 @@ public class StaffController
         return "bank Account Name was edited successfully";
     }
 
+    /**
+     * Edit Salary of employee by ID
+     * @param id
+     * @param salary
+     * @return Success/Fail Message
+     */
     public String editSalary(String id, int salary)
     {
         try
@@ -147,6 +177,12 @@ public class StaffController
 
     }
 
+    /**
+     * Edit Employee Conditions employee by ID
+     * @param id
+     * @param empConditions
+     * @return Success/Fail Message
+     */
     public String editEmpConditions(String id, String empConditions)
     {
         try
@@ -163,6 +199,13 @@ public class StaffController
 
     }
 
+
+    /**
+     * Adds a skill to the employee by id
+     * @param id
+     * @param type
+     * @return Success/Fail Message
+     */
     public String addSkill(String id, TypeOfEmployee type)
     {
         try
@@ -178,6 +221,13 @@ public class StaffController
         return "skill added successfully";
     }
 
+
+    /**
+     * Removes a skill from the employee by id
+     * @param id
+     * @param type
+     * @return Success/Fail Message
+     */
     public String removeSkill(String id, TypeOfEmployee type)
     {
         try
@@ -191,6 +241,14 @@ public class StaffController
         }
         return "skill was removed successfully";
     }
+
+
+    /**
+     * Adds a shift to the list of available shifts for the user by id
+     * @param id
+     * @param shift
+     * @return Success/Fail Message
+     */
     public String addAvailableShift(String id, Pair<Date, TypeOfShift> shift)
     {
         try
@@ -204,6 +262,13 @@ public class StaffController
         }
         return "available shift added successfully";
     }
+
+    /**
+     * Removes a shift from the list of available shifts for the user by id
+     * @param id
+     * @param shift
+     * @return Success/Fail Message
+     */
     public String removeAvailableShift(String id, Pair<Date, TypeOfShift> shift)
     {
         try
@@ -222,6 +287,15 @@ public class StaffController
     //-----------------------------------------------------------getters------------------------------------------------------------
 
 
+    private Employee getEmpIfExists(String id) throws Exception
+    {
+        if(!this.employees.containsKey(id))
+        {
+            throw new Exception("No such employee");
+        }
+        return this.employees.get(id);
+    }
+
     public Employee getEmployeeByID(String id)
     {
         if(!this.employees.containsKey(id))
@@ -236,7 +310,7 @@ public class StaffController
     public TypeOfEmployee getTypeOfLoggedIn() {
         return typeOfLoggedIn;
     }
-    //-------------------------------------------------------------------------setters-----------------------------------------------------
+    //------------------------------------------------------------setters------------------------------------------------------------
 
 
 
@@ -250,5 +324,16 @@ public class StaffController
 
     public boolean checkIfEmpExist(String idToEdit) {
         return this.employees.containsKey(idToEdit);
+    }
+
+    public String printPersonalDetails(String idToPrint) {
+        try
+        {
+            return this.employees.get(idToPrint).toString();
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
     }
 }

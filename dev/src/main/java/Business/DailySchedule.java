@@ -1,26 +1,31 @@
 package Business;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static Business.TypeOfShift.Morning;
 
 public class DailySchedule {
+    //==========================================================Fields===========================================================
+
     private List<Shift> shifts;
+
+    //==========================================================Constructor===========================================================
+
     public  DailySchedule()
     {
         shifts=new LinkedList<>();
     }
+
     public DailySchedule(Shift shift)
     {
         shifts=new LinkedList<>();
         addShift(shift);
     }
-    //-------------------------------------------------------methods----------------------------------------------------------------------------------
+
+    //==========================================================Methods===========================================================
     public void addShift (Shift shift)
     {
         this.shifts.add(shift);
@@ -39,6 +44,11 @@ public class DailySchedule {
         return  false;
     }
 
+    /**
+     * Doesnt do anything if shift doesn't exist
+     * @param date
+     * @param type
+     */
     public void removeShift(Date date, TypeOfShift type) {
         int loc = getShiftLocation(type);
         if(loc!=-1)
@@ -47,6 +57,11 @@ public class DailySchedule {
         }
     }
 
+    /**
+     * Returns -1 if shift doesn't exist
+     * @param type
+     * @return shift's location or -1
+     */
     private int getShiftLocation( TypeOfShift type)
     {
         for(int i=0; i<shifts.size(); i++)

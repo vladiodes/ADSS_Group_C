@@ -6,6 +6,11 @@ import Business.Controllers.StaffController;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This class calls functions from scheduleController and staffController
+ * Functions that refer/modify employees are called from staffController
+ * Functions that refer/modify shifts and schedule are called from scheduleController
+ */
 public class Facade {
     private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
@@ -99,5 +104,9 @@ public class Facade {
 
     public String printSchedule() {
         return this.scheduleController.toString();
+    }
+
+    public String printPresonalDetails(String idToPrint) {
+        return this.staffController.printPersonalDetails(idToPrint);
     }
 }

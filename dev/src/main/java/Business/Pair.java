@@ -2,7 +2,7 @@ package Business;
 
 
 
-//Code for Pair implemantation from StackOverflow
+//Code for Pair implementation from StackOverflow
 import java.util.Objects;
 
 /**
