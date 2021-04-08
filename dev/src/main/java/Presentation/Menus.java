@@ -328,16 +328,16 @@ public class Menus {
                             System.out.println("Enter skill of the employee");
                             String skill = s.nextLine();
                             Date date = getDateFromUser();
-                            System.out.println("Enter Type of shift");
-                            String type = s.nextLine();
                             TypeOfEmployee typeOfEmployee;
-                            typeOfEmployee= parseTypeOfEmp(type);
+                            typeOfEmployee= parseTypeOfEmp(skill);
                             while (typeOfEmployee==null)  //Ask for valid input until received
                             {
                                 System.out.println("Invalid Input, please enter again");
-                                type=s.nextLine();
-                                typeOfEmployee= parseTypeOfEmp(type);
+                                skill=s.nextLine();
+                                typeOfEmployee= parseTypeOfEmp(skill);
                             }
+                            System.out.println("Enter Type of shift");
+                            String type = s.nextLine();
                             TypeOfShift typeOfShift;
                             typeOfShift=parseTypeOfShift(type);
                             while(typeOfShift==null)  //Ask for valid input until received
@@ -838,12 +838,37 @@ public class Menus {
      */
     private int printMenu(Map<Integer, String> menu)
     {
+        System.out.println("\n------------------------------------\n");
+        boolean flag = false;
+        int choose=-1;
         Scanner s = new Scanner((System.in));
         for(int i=1;i<=menu.keySet().size();i++)
         {
             System.out.println(i+") "+menu.get(i));
         }
-        int choose = s.nextInt();
+        while(!flag)
+        {
+            try
+            {
+                 flag=false;
+                 choose = s.nextInt();
+                 flag = isWithinBounds(choose, menu.size());
+            }
+            catch (Exception e)
+            {
+                System.out.println("Invalid Input, please enter again");
+                flag=true;
+            }
+        }
+
         return choose;
+    }
+
+    private boolean isWithinBounds(int choose, int bound) throws Exception{
+        if(choose<1 || choose > bound) {
+            System.out.println("Option chosen is out of bounds, please enter again");
+            return false;
+        }
+        return true;
     }
 }

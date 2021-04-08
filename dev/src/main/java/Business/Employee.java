@@ -174,17 +174,17 @@ public class Employee {
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder=new StringBuilder();
-        builder.append("Employee: \n\t");
-        builder.append("First Name: " + firstName);
-        builder.append("\nLast Name: " + lastName);
-        builder.append("\nID: " + id);
-        builder.append("\nBank Account Number: " + bankAccountNumber);
-        builder.append("\nSalary: " + salary);
-        builder.append("\nEmployee Conditions: " + empConditions);
-        builder.append("\nStart Working Date: " + dateFormat.format(this.startWorkingDate));
-        builder.append("\nSkills:");
+        builder.append("Employee: ");
+        builder.append("\n\tFirst Name: " + firstName);
+        builder.append("\n\tLast Name: " + lastName);
+        builder.append("\n\tID: " + id);
+        builder.append("\n\tBank Account Number: " + bankAccountNumber);
+        builder.append("\n\tSalary: " + salary);
+        builder.append("\n\tEmployee Conditions: " + empConditions);
+        builder.append("\n\tStart Working Date: " + dateFormat.format(this.startWorkingDate));
+        builder.append("\n\tSkills:");
         for(TypeOfEmployee type:skills)
-            builder.append("\n\t" + type.toString());
+            builder.append("\n\t\t" + type.toString());
         builder.append("\n");
         builder.append("\nAvailable Shifts:");
         for(Pair<Date, TypeOfShift> p:availableShifts)
