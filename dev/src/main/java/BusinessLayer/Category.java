@@ -103,4 +103,15 @@ public class Category {
         }
         this.subCategories.add(toAdd);
     }
+
+    public boolean containsItem(int itemID)
+    {
+        return items.containsKey(itemID);
+    }
+    public void deleteItem(int itemID)
+    {
+        if(items.containsKey(itemID))
+            items.remove(itemID);
+        throw new IllegalArgumentException("Item does not exists in this category");
+    }
 }

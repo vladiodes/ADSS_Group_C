@@ -10,7 +10,9 @@ import DTO.SaleDTO;
 
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -44,7 +46,8 @@ public class MainWindow {
         this.menu.put(11,"11) show faulty items");
         this.menu.put(12,"12) show exp items");
         this.menu.put(13,"13) show minimum amount items");
-        this.menu.put(14,"14) end proccess");
+        this.menu.put(14,"14) delete item");
+        this.menu.put(15,"15) end");
 
     }
     private void printMenu(){
@@ -82,12 +85,17 @@ public class MainWindow {
                 case 13:
                     this.minAmountItems();
                 case 14:
+                    this.deleteItem();
+                case 15:
                     this.shouldTerminate=true;
                     System.out.println("bye bye");
 
             }
         }
     }
+
+
+
     public static void printMessage(Response<? extends Object> response, String successMessage) {
         if(response.WasException())
             System.out.println(response.getMessage());
@@ -100,7 +108,6 @@ public class MainWindow {
         else
             System.out.println(response.getValue().toString());
     }
-
     private void addItem () {
         System.out.println("please enter category id : ");
         int categoryID = myObj.nextInt();
@@ -119,7 +126,7 @@ public class MainWindow {
         System.out.println("please enter minimum amount : ");
         int minAmount = myObj.nextInt();
         System.out.println("please enter experation date : ");
-        LocalDateTime expDate = new LocalDateTime();
+        LocalDateTime expDate = this.getDateFromUser();
         System.out.println("please enter buying price : ");
         double buyingPrice = myObj.nextDouble();
 
@@ -144,7 +151,7 @@ public class MainWindow {
         System.out.println("please enter minimum amount : ");
         int minAmount = myObj.nextInt();
         System.out.println("please enter experation date : ");
-        LocalDateTime expDate = new LocalDateTime();
+        LocalDateTime expDate = this.getDateFromUser();
         System.out.println("please enter buying price : ");
         double buyingPrice = myObj.nextDouble();
 
@@ -209,7 +216,7 @@ public class MainWindow {
         int itemID = myObj.nextInt();
         System.out.println("please enter item id : ");
         double sellingPrice = myObj.nextDouble();
-        LocalDateTime saleDate=LocalDateTime.now();
+        LocalDateTime saleDate=this.getDateFromUser();
         Response<SaleDTO> response = this.facade.addSale(itemID,sellingPrice,saleDate);
         this.printMessage(response,"Successfully added sale");
 
@@ -232,8 +239,26 @@ public class MainWindow {
         Response<ReportDTO> response = this.facade.showMinAmountItems();
         this.printReport(response);
     }
+    private void deleteItem() {
+        System.out.println("please enter item id : ");
+        int itemID = myObj.nextInt();
+        Response<Boolean> response = this.facade.deleteItem(itemID);
+        this.printMessage(response,"Successfully deleted item");
 
 
+    }
+
+    private LocalDateTime getDateFromUser() {
+        System.out.println("please enter day :");
+        int day = myObj.nextInt();
+        System.out.println("please enter month :");
+        int month = myObj.nextInt();
+        System.out.println("please enter year :");
+        int year = myObj.nextInt();
+        LocalDate date = LocalDate.of(year, month, day);
+        LocalTime time = LocalTime.MIDNIGHT;
+        return LocalDateTime.of(date,time);
+    }
 
 
 }

@@ -162,4 +162,16 @@ public class Facade {
         }
 
     }
+    public Response<Boolean> deleteItem(int itemID)
+    {
+        try
+        {
+            this.stockController.deleteItem(itemID);
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return new Response<>(e);
+        }
+    }
 }

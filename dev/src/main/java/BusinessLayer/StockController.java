@@ -160,4 +160,12 @@ public class StockController {
         }
         return toReturn;
     }
+
+    public void deleteItem(int itemID) {
+        for(Category cat : categories.values())
+        {
+            if(cat.containsItem(itemID))
+                cat.deleteItem(itemID);
+        }
+    }
 }
