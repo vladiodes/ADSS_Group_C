@@ -3,9 +3,11 @@ package DTO;
 import BusinessLayer.Item;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ItemDTO {
     private int id;
+    private String itemName;
     private int location;
     private String producer;
     private int availableAmount;
@@ -17,6 +19,7 @@ public class ItemDTO {
 
     public ItemDTO(Item i){
         this.id=i.getId();
+        this.itemName = i.getName();
         this.setLocation(i.getLocation());
         this.setProducer(i.getProducer());
         this.setAvailableAmount(i.getAvailableAmount());
@@ -29,16 +32,18 @@ public class ItemDTO {
 
     @Override
     public String toString() {
-        return "itemDTO{" +
-                "id=" + id +
-                ", location=" + getLocation() +
-                ", producer='" + getProducer() + '\'' +
-                ", availableAmount=" + getAvailableAmount() +
-                ", storageAmount=" + getStorageAmount() +
-                ", shelfAmount=" + getShelfAmount() +
-                ", minAmount=" + getMinAmount() +
-                ", expDate=" + getExpDate() +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("Item ID: "+ this.id + "\n");
+        builder.append("Item Name: " + this.itemName + "\n");
+        builder.append("Item Location: "+ this.location + "\n");
+        builder.append("Item Producer: "+ this.producer + "\n");
+        builder.append("Item Available Amount: "+ this.availableAmount + "\n");
+        builder.append("Item Storage Amount: "+ this.storageAmount + "\n");
+        builder.append("Item Shelf Amount: "+ this.shelfAmount + "\n");
+        builder.append("Item Minimum Amount: "+ this.minAmount + "\n");
+        builder.append("Item Expiration Date: "+ this.expDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "\n");
+        builder.append("Item Alert Time: "+ this.alertTime);
+        return builder.toString();
     }
 
     public int getLocation() {
@@ -107,5 +112,9 @@ public class ItemDTO {
 
     public int getAlertTime() {
         return this.alertTime;
+    }
+
+    public String getName() {
+        return this.itemName;
     }
 }

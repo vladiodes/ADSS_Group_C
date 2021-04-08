@@ -4,13 +4,15 @@ import java.time.LocalDateTime;
 
 public class Sale {
     private int saleID;
+    private String itemName;
     private int itemID;
     private double buyingPrice;
     private double sellingPrice;
     private LocalDateTime saleDate;
 
-    public Sale(int saleID,int itemID,double buyingPrice,double sellingPrice,LocalDateTime saleDate){
+    public Sale(int saleID,int itemID,String itemName,double buyingPrice,double sellingPrice,LocalDateTime saleDate){
         this.saleID=saleID;
+        this.itemName = itemName;
         this.itemID=itemID;
         this.buyingPrice=buyingPrice;
         this.sellingPrice=sellingPrice;
@@ -41,6 +43,9 @@ public class Sale {
 
     public LocalDateTime getSaleDate() {
         return saleDate;
+    }
+    public String getItemName(){
+        return this.itemName;
     }
 
     public int getSaleID() {

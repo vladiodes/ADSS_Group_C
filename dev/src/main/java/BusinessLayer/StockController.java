@@ -11,42 +11,48 @@ import java.util.Set;
 
 public class StockController {
     // -- fields
+    private static StockController stockControllerInstance = null;
     private int categoryID;
     private int itemID; // by father category
     private HashMap<Integer,Category> categories;
 
     // -- constructor
-    public StockController()
+    private StockController()
     {
         this.categoryID =0;
         this.itemID=0;
         this.categories = new HashMap<>();
     }
 
+    public static StockController getInstance(){
+        if(stockControllerInstance == null)
+            stockControllerInstance = new StockController();
+        return stockControllerInstance;
+    }
+
 
     // -- public methods
 
-    public Item addItem(int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,int categoryID,double buyingPrice) {
+    public Item addItem(int location,String name, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,int categoryID,double buyingPrice) {
 
 
         if (categoryID>=this.categoryID | categoryID<0)
             throw new IllegalArgumentException("invalid category id");
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already token");
-        Item toReturn = this.categories.get(categoryID).addItem(location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,itemID,buyingPrice);
+        Item toReturn = this.categories.get(categoryID).addItem(location,name,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,itemID,buyingPrice);
         itemID++;
         return toReturn;
     }
 
-    public void updateItem(ItemDTO itemDTO){
+    public void updateItem(int itemID,String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
 
-        this.getItemByID(itemDTO.getID()).updateItem(itemDTO);
+        this.getItemByID(itemID).updateItem(name,location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,buyingPrice);
     }
 
-    public void updateCategory(CategoryDTO categoryDTO){
-        this.categories.get(categoryDTO.getID()).updateCategory(categoryDTO);
+    public void updateCategory(int categoryID,String categoryName){
+        this.categories.get(categoryID).updateCategory(categoryName);
     }
-
     public void addCategoryDiscount(int categoryID,double discount){
 
         if (categoryID>=this.categoryID | categoryID<0)
@@ -68,9 +74,14 @@ public class StockController {
     public Category addCategory(String name,int fatherID){
         // checks - father id = 0 -> no father category
         // check that the father ID exists
+        Category FatherCategory;
         if (fatherID<0 | fatherID>this.categoryID)
             throw new IllegalArgumentException("invalid father category");
-        Category toAdd = new Category(name,this.categoryID);
+        if (fatherID==0)
+            FatherCategory = null;
+        else
+            FatherCategory = this.categories.get(fatherID);
+        Category toAdd = new Category(name,this.categoryID,FatherCategory);
         this.categories.put(this.categoryID,toAdd);
         this.categoryID++;
         return toAdd;

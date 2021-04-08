@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class RecordController {
     // -- fields
+    private static RecordController recordControllerInstance = null;
     private HashMap<Integer,Sale> sales;
     private int salesKey;
     private HashMap<Integer,Report> reports;
@@ -18,13 +19,20 @@ public class RecordController {
     private HashMap<Integer,Item> faultyItems;
 
     // -- constructor
-    public RecordController() {
+    private RecordController() {
         this.sales=new HashMap<>();
         this.reports=new HashMap<>();
         this.reportsKey=0;
         this.salesKey=0;
         this.faultyItems=new HashMap<>();
     }
+
+    public static RecordController getInstance(){
+        if(recordControllerInstance == null)
+            recordControllerInstance = new RecordController();
+        return recordControllerInstance;
+    }
+
 
 
     public Report showExpItems(ArrayList<Category> categories){
@@ -89,7 +97,7 @@ public class RecordController {
 
 
     public Sale addSale(Item item, double sellingPrice, LocalDateTime saleDate){
-        Sale sale = new Sale(this.salesKey,item.getId(),item.getBuyingPrice(),sellingPrice,saleDate);
+        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getBuyingPrice(),sellingPrice,saleDate);
         this.sales.put(salesKey,sale);
         this.salesKey++;
         return sale;

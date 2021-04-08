@@ -8,6 +8,7 @@ import java.util.Date;
 public class Item {
     // -- fields
     private int id;
+    private String name;
     private int location;
     private String producer;
     private int availableAmount;
@@ -20,8 +21,9 @@ public class Item {
 
     // -- constructor
 
-    public Item(int id, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
+    public Item(int id,String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
         this.id=id;
+        this.name=name;
         this.location=location;
         this.producer=producer;
         this.availableAmount=availableAmount;
@@ -87,9 +89,22 @@ public class Item {
         return producer;
     }
 
-    public void updateItem(ItemDTO item)
-    {
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void updateItem(String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice)
+    {
+        if(name == null || name == "")
+            throw new IllegalArgumentException("invalid item name");
+        if(location < 0)
+            throw new IllegalArgumentException("invalid item location");
+        if(producer == null || producer == "")
+            throw new IllegalArgumentException("invalid producer name");
         if (availableAmount<0)
             throw new IllegalArgumentException("invalid available amount");
         if (storageAmount<0)
@@ -103,14 +118,14 @@ public class Item {
         if (buyingPrice<0)
             throw new IllegalArgumentException("invalid buying price");
 
-        this.location=item.getLocation();
-        this.producer=item.getProducer();
-        this.availableAmount=item.getAvailableAmount();
-        this.storageAmount=item.getStorageAmount();
-        this.shelfAmount=item.getShelfAmount();
-        this.minAmount=item.getMinAmount();
-        this.expDate=item.getExpDate();
-        this.alertTime=item.getAlertTime();
+        this.name = name;
+        this.location=location;
+        this.producer=producer;
+        this.availableAmount=availableAmount;
+        this.storageAmount=storageAmount;
+        this.shelfAmount=shelfAmount;
+        this.minAmount=minAmount;
+        this.expDate=expDate;
     }
 
     public void addDiscount(double discount) {
@@ -122,6 +137,8 @@ public class Item {
     }
 
     public void setAlertTime(int alertTime) {
+        if(alertTime < 0)
+            throw new IllegalArgumentException("invalid alert time");
         this.alertTime = alertTime;
     }
 

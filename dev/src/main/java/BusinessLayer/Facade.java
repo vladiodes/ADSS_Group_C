@@ -10,27 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Facade {
+    private static Facade facadeInstance = null;
     // singleton
     private RecordController recordController;
     private StockController stockController;
 
-    public Facade(){
-        this.recordController=new RecordController();
-        this.stockController=new StockController();
+    private Facade(){
+        this.recordController= RecordController.getInstance();
+        this.stockController= StockController.getInstance();
     }
 
-     public Response<ItemDTO> addItem(int categoryID,int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice) {
+    public static Facade getInstance()
+    {
+        if(facadeInstance == null)
+            facadeInstance = new Facade();
+        return facadeInstance;
+    }
+
+     public Response<ItemDTO> addItem(int categoryID,int location,String name, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice) {
          try {
-             Item item = stockController.addItem(location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,categoryID,buyingPrice);
+             Item item = stockController.addItem(location,name,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,categoryID,buyingPrice);
              return new Response<ItemDTO>(new ItemDTO(item));
          } catch (IllegalArgumentException e) {
              return new Response<>(e);
          }
      }
 
-    public Response<Boolean> updateItem(ItemDTO itemdto){
+    public Response<Boolean> updateItem(int itemID,String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
         try {
-            stockController.updateItem(itemdto);
+            stockController.updateItem(itemID,name,location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,buyingPrice);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){
@@ -39,16 +47,15 @@ public class Facade {
 
     }
 
-    public Response<Boolean> updateCategory(CategoryDTO categoryDTO){
+    public Response<Boolean> updateCategory(int categoryID,String categoryName){
         try {
-            stockController.updateCategory(categoryDTO);
+            stockController.updateCategory(categoryID,categoryName);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){
             return new Response<>(e);
         }
     }
-
     public Response<Boolean> addCategoryDiscount(int categoryID,double discount){
         try {
             stockController.addCategoryDiscount(categoryID,discount);
