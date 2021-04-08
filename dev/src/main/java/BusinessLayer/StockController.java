@@ -83,6 +83,7 @@ public class StockController {
             FatherCategory = this.categories.get(fatherID);
         Category toAdd = new Category(name,this.categoryID,FatherCategory);
         this.categories.put(this.categoryID,toAdd);
+        FatherCategory.addSubCategory(toAdd);
         this.categoryID++;
         return toAdd;
     }

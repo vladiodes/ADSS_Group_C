@@ -95,4 +95,12 @@ public class Category {
     public void updateCategory(String name) {
         this.name=name;
     }
+    public void addSubCategory(Category toAdd){
+        // go over sub categories and see if the category already exists
+        for(Category cat : subCategories){
+            if(cat.getID() == toAdd.getID())
+                throw new IllegalArgumentException("Sub Category Already Exists");
+        }
+        this.subCategories.add(toAdd);
+    }
 }
