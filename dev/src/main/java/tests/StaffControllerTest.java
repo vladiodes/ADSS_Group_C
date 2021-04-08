@@ -5,6 +5,7 @@ import Business.Controllers.StaffController;
 import Business.Pair;
 import Business.TypeOfEmployee;
 import Business.TypeOfShift;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +29,12 @@ public class StaffControllerTest {
         mainSkills=new LinkedList<>();
         mainSkills.add(TypeOfEmployee.HRManager);
         this.staffController.addEmployee("Tom","Nisim", "209012384", "777/23", 13000, "Sick days :0", new Date(),mainSkills );
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        staffController = new StaffController(TypeOfEmployee.HRManager);
+        scheduleController = new ScheduleController(TypeOfEmployee.HRManager, staffController);
     }
 
     private Date getDate()
@@ -61,9 +68,10 @@ public class StaffControllerTest {
 
         skills=new LinkedList<>();
         skills.add(TypeOfEmployee.HRManager);
+        int sizeOfEmp = this.staffController.getEmployees().size();
         this.staffController.addEmployee("Ofri","Arad", "123456789", "777/23", 12000, "Sick days :6", new Date(),skills );
         //check if new employee was added to the hash map
-        assertEquals(1, this.staffController.getEmployees().size());
+        assertEquals(sizeOfEmp, this.staffController.getEmployees().size()-1);
 
     }
 

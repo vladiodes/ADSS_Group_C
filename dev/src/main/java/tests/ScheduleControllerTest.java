@@ -31,6 +31,8 @@ public class ScheduleControllerTest {
 
     @After
     public void tearDown() throws Exception {
+        staffController = new StaffController(TypeOfEmployee.HRManager);
+        scheduleController = new ScheduleController(TypeOfEmployee.HRManager, staffController);
     }
 
     private Date getDate()
