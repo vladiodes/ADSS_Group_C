@@ -3,6 +3,7 @@ package BusinessLayer;
 import DTO.CategoryDTO;
 import DTO.ItemDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class Category {
         this.id=id;
         this.fatherCategory=fatherCategory;
         this.subCategories=new ArrayList<>();
+        this.items=new HashMap<>();
 
     }
 
@@ -40,7 +42,7 @@ public class Category {
     public void addDiscount(double discount) {
         for (Map.Entry<Integer, Item> entry : this.items.entrySet()) {
             Item value = entry.getValue();
-            value.setBuyingPrice(value.getBuyingPrice() - value.getBuyingPrice() * discount / 100);
+            value.setSellingPrice(value.getSellingPrice() - value.getSellingPrice() * discount / 100);
 
         }
     }
@@ -64,21 +66,23 @@ public class Category {
     public List<Category> getSubCategories() {
         return subCategories;
     }
-    public Item addItem(int location,String name, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,int itemID,double buyingPrice) {
-        if (availableAmount<0)
-            throw new IllegalArgumentException("invalid available amount");
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int itemID, double buyingPrice,double sellingPrice) {
         if (storageAmount<0)
             throw new IllegalArgumentException("invalid storage amount");
         if (shelfAmount<0)
             throw new IllegalArgumentException("invalid shelf amount");
         if (minAmount<0)
             throw new IllegalArgumentException("invalid minimum amount");
-        if (expDate.compareTo(LocalDateTime.now())<0)
+
+        if (expDate.compareTo(LocalDate.now())<0)
             throw new IllegalArgumentException("invalid exp date");
+
+
         if (buyingPrice<0)
+
             throw new IllegalArgumentException("invalid buying price");
 
-        Item toAdd = new Item(itemID,name,location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,buyingPrice);
+        Item toAdd = new Item(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
         this.items.put(itemID, toAdd);
         return toAdd;
     }
@@ -112,6 +116,7 @@ public class Category {
     {
         if(items.containsKey(itemID))
             items.remove(itemID);
-        throw new IllegalArgumentException("Item does not exists in this category");
+        else
+            throw new IllegalArgumentException("Item does not exists in this category");
     }
 }

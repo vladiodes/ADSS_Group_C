@@ -3,6 +3,7 @@ package BusinessLayer;
 import DTO.ItemDTO;
 import DTO.ReportDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +23,8 @@ public class RecordController {
     private RecordController() {
         this.sales=new HashMap<>();
         this.reports=new HashMap<>();
-        this.reportsKey=0;
-        this.salesKey=0;
+        this.reportsKey=1;
+        this.salesKey=1;
         this.faultyItems=new HashMap<>();
     }
 
@@ -46,8 +47,8 @@ public class RecordController {
         }
         Report toReturn = new Report(reportsKey);
         toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDateTime.now());
-        toReturn.setEndDate(LocalDateTime.now());
+        toReturn.setStartDate(LocalDate.now());
+        toReturn.setEndDate(LocalDate.now());
         reports.put(reportsKey,toReturn);
         this.reportsKey++;
         return toReturn;
@@ -64,8 +65,8 @@ public class RecordController {
         }
         Report toReturn = new Report(reportsKey);
         toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDateTime.now());
-        toReturn.setEndDate(LocalDateTime.now());
+        toReturn.setStartDate(LocalDate.now());
+        toReturn.setEndDate(LocalDate.now());
         reports.put(reportsKey,toReturn);
         this.reportsKey++;
         return toReturn;
@@ -74,21 +75,18 @@ public class RecordController {
     // sales weekly report - by category/ies
     public Report getWeeklyReport(ArrayList<Category> categories){
 
-        // maybe have to bring the items from sales
-
         List itemsInReport = new ArrayList();
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
-                // if the sale is from the last week
                 itemsInReport.add(value);
              }
-            }
+        }
         Report toReturn = new Report(reportsKey);
         toReturn.setItems(itemsInReport);
         // today, one week ago
-        toReturn.setStartDate(LocalDateTime.now().minusWeeks(1));
-        toReturn.setEndDate(LocalDateTime.now());
+        toReturn.setStartDate(LocalDate.now().minusWeeks(1));
+        toReturn.setEndDate(LocalDate.now());
         reports.put(reportsKey,toReturn);
         this.reportsKey++;
         return toReturn;
@@ -96,8 +94,8 @@ public class RecordController {
         }
 
 
-    public Sale addSale(Item item, double sellingPrice, LocalDateTime saleDate){
-        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getBuyingPrice(),sellingPrice,saleDate);
+    public Sale addSale(Item item,int quantity){
+        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getBuyingPrice(),item.getSellingPrice(),LocalDate.now(),quantity);
         this.sales.put(salesKey,sale);
         this.salesKey++;
         return sale;
@@ -114,11 +112,43 @@ public class RecordController {
         }
         Report toReturn = new Report(reportsKey);
         toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDateTime.now());
-        toReturn.setEndDate(LocalDateTime.now());
+        toReturn.setStartDate(LocalDate.now());
+        toReturn.setEndDate(LocalDate.now());
         reports.put(reportsKey,toReturn);
         this.reportsKey++;
         return toReturn;
 
+    }
+
+    public SaleReport getSalesReport(ArrayList<Category> categories, LocalDate startDate, LocalDate endDate) {
+        ArrayList<Sale> salesInReport = new ArrayList();
+        for (Category c: categories) {
+            for(Sale sale : sales.values())
+            {
+                if(c.containsItem(sale.getItemID()) && sale.getSaleDate().compareTo(startDate) >=0 && sale.getSaleDate().compareTo(endDate) <=0){
+                    salesInReport.add(sale);
+                }
+            }
+
+        }
+        SaleReport toReturn = new SaleReport(reportsKey,salesInReport);
+        toReturn.setStartDate(startDate);
+        toReturn.setEndDate(endDate);
+        reports.put(reportsKey,toReturn);
+        reportsKey++;
+        return toReturn;
+    }
+
+    public ArrayList<Sale> getSales(ArrayList<Integer> categories) {
+        ArrayList<Sale> salesList = new ArrayList<>(sales.values());
+        return salesList;
+    }
+
+    public void clear() {
+        this.reportsKey=1;
+        this.salesKey=1;
+        this.sales=new HashMap<>();
+        this.reports=new HashMap<>();
+        this.faultyItems=new HashMap<>();
     }
 }

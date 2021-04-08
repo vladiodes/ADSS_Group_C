@@ -1,10 +1,8 @@
 package BusinessLayer;
 
-import DTO.CategoryDTO;
-import DTO.ItemDTO;
-import DTO.ReportDTO;
-import DTO.SaleDTO;
+import DTO.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +25,18 @@ public class Facade {
         return facadeInstance;
     }
 
-     public Response<ItemDTO> addItem(int categoryID,int location,String name, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice) {
+     public Response<ItemDTO> addItem(int categoryID,int location,String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double buyingPrice,double sellingPrice) {
          try {
-             Item item = stockController.addItem(location,name,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,categoryID,buyingPrice);
+             Item item = stockController.addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,categoryID,buyingPrice,sellingPrice);
              return new Response<ItemDTO>(new ItemDTO(item));
          } catch (IllegalArgumentException e) {
              return new Response<>(e);
          }
      }
 
-    public Response<Boolean> updateItem(int itemID,String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
+    public Response<Boolean> updateItem(int itemID,String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double buyingPrice,double sellingPrice){
         try {
-            stockController.updateItem(itemID,name,location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,buyingPrice);
+            stockController.updateItem(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){
@@ -107,43 +105,44 @@ public class Facade {
         }
     }
     // record controller
-    public Response<ReportDTO> showExpItems(){
+    public Response<defactReportDTO> showExpItems(){
         try
         {
             ArrayList<Category> categories = this.stockController.getAllCategories();
             Report report = recordController.showExpItems(categories);
-            return new Response<>(new ReportDTO(report));
+            return new Response<>(new defactReportDTO(report));
         }
         catch (IllegalArgumentException e)
         {
             return new Response<>(e);
         }
     }
-    public Response<ReportDTO> showFaultyItems() {
+    public Response<defactReportDTO> showFaultyItems() {
         try {
             ArrayList<Category> categories = this.stockController.getAllCategories();
             Report report = recordController.showFaultyItems(categories);
-            return new Response<>(new ReportDTO(report));
+            return new Response<>(new defactReportDTO(report));
         } catch (IllegalArgumentException e) {
             return new Response<>(e);
         }
 
     }
     // report by categories
-    public Response<ReportDTO> getWeeklyReport(ArrayList<Integer> categoriesList) {
+    public Response<amountReportDTO> getWeeklyReport(ArrayList<Integer> categoriesList) {
         ArrayList<Category> categories = this.stockController.getCategories(categoriesList);
         try {
             Report report = recordController.getWeeklyReport(categories);
-            return new Response<>(new ReportDTO(report));
+            return new Response<>(new amountReportDTO(report));
         } catch (IllegalArgumentException e) {
             return new Response<>(e);
         }
     }
 
-    public Response<SaleDTO> addSale(int itemID,double sellingPrice,LocalDateTime saleDate){
+    public Response<SaleDTO> addSale(int itemID,int quantity){
          try {
              Item item = this.stockController.getItemById(itemID);
-             Sale sale = recordController.addSale(item,sellingPrice,saleDate);
+             this.stockController.sellItem(itemID,quantity);
+             Sale sale = recordController.addSale(item,quantity);
              return new Response<>(new SaleDTO(sale));
          }
          catch (IllegalArgumentException e){
@@ -152,11 +151,11 @@ public class Facade {
     }
 
 
-    public Response<ReportDTO> showMinAmountItems() {
+    public Response<amountReportDTO> showMinAmountItems() {
         try {
             ArrayList<Category> categories = this.stockController.getAllCategories();
             Report report = recordController.showMinAmountItems(categories);
-            return new Response<>(new ReportDTO(report));
+            return new Response<>(new amountReportDTO(report));
         } catch (IllegalArgumentException e) {
             return new Response<>(e);
         }
@@ -168,6 +167,18 @@ public class Facade {
         {
             this.stockController.deleteItem(itemID);
             return new Response<>(true);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return new Response<>(e);
+        }
+    }
+
+    public Response<SaleReportDTO> showSalesReport(LocalDate startDate, LocalDate endDate, ArrayList<Integer> categoriesList) {
+        ArrayList<Category> categories = this.stockController.getCategories(categoriesList);
+        try {
+            SaleReport report = recordController.getSalesReport(categories,startDate,endDate);
+            return new Response<SaleReportDTO>(new SaleReportDTO(report));
         }
         catch (IllegalArgumentException e)
         {

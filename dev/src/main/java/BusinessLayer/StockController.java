@@ -3,6 +3,7 @@ package BusinessLayer;
 import DTO.CategoryDTO;
 import DTO.ItemDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,8 @@ public class StockController {
     // -- constructor
     private StockController()
     {
-        this.categoryID =0;
-        this.itemID=0;
+        this.categoryID =1;
+        this.itemID=1;
         this.categories = new HashMap<>();
     }
 
@@ -33,21 +34,21 @@ public class StockController {
 
     // -- public methods
 
-    public Item addItem(int location,String name, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,int categoryID,double buyingPrice) {
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double buyingPrice,double sellingPrice) {
 
 
         if (categoryID>=this.categoryID | categoryID<0)
             throw new IllegalArgumentException("invalid category id");
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already token");
-        Item toReturn = this.categories.get(categoryID).addItem(location,name,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,itemID,buyingPrice);
+        Item toReturn = this.categories.get(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,itemID,buyingPrice,sellingPrice);
         itemID++;
         return toReturn;
     }
 
-    public void updateItem(int itemID,String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDateTime expDate,double buyingPrice){
+    public void updateItem(int itemID,String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double buyingPrice,double sellingPrice){
 
-        this.getItemByID(itemID).updateItem(name,location,producer,availableAmount,storageAmount,shelfAmount,minAmount,expDate,buyingPrice);
+        this.getItemByID(itemID).updateItem(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
     }
 
     public void updateCategory(int categoryID,String categoryName){
@@ -83,7 +84,8 @@ public class StockController {
             FatherCategory = this.categories.get(fatherID);
         Category toAdd = new Category(name,this.categoryID,FatherCategory);
         this.categories.put(this.categoryID,toAdd);
-        FatherCategory.addSubCategory(toAdd);
+        if (FatherCategory!=null)
+            FatherCategory.addSubCategory(toAdd);
         this.categoryID++;
         return toAdd;
     }
@@ -167,5 +169,22 @@ public class StockController {
             if(cat.containsItem(itemID))
                 cat.deleteItem(itemID);
         }
+    }
+
+    public void sellItem(int itemID,int quantity) {
+
+        Item item = findItem(itemID);
+        if (quantity<1)
+            throw new IllegalArgumentException("invalid quantity");
+        if(item.getAvailableAmount()<quantity)
+            throw new IllegalArgumentException("No Available items for sale");
+        item.SaleItem(quantity);
+    }
+
+    public void clear() {
+        this.categories=new HashMap<>();
+        this.categoryID=1;
+        this.itemID=1;
+
     }
 }

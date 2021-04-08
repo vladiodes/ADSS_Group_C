@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Sale {
@@ -8,15 +9,17 @@ public class Sale {
     private int itemID;
     private double buyingPrice;
     private double sellingPrice;
-    private LocalDateTime saleDate;
+    private LocalDate saleDate;
+    private int quantity;
 
-    public Sale(int saleID,int itemID,String itemName,double buyingPrice,double sellingPrice,LocalDateTime saleDate){
+    public Sale(int saleID, int itemID, String itemName, double buyingPrice, double sellingPrice, LocalDate saleDate,int quantity){
         this.saleID=saleID;
         this.itemName = itemName;
         this.itemID=itemID;
         this.buyingPrice=buyingPrice;
         this.sellingPrice=sellingPrice;
         this.saleDate=saleDate;
+        this.quantity=quantity;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class Sale {
         return itemID;
     }
 
-    public LocalDateTime getSaleDate() {
+    public LocalDate getSaleDate() {
         return saleDate;
     }
     public String getItemName(){
@@ -50,6 +53,10 @@ public class Sale {
 
     public int getSaleID() {
         return saleID;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
     }
 }
 

@@ -24,7 +24,10 @@ public class CategoryDTO {
         {
             this.subCategories.add(cat.getName());
         }
-        this.fatherCategory=c.getFatherCategory().getName();
+        if (this.fatherCategory!=null)
+            this.fatherCategory=c.getFatherCategory().getName();
+        else
+            this.fatherCategory=null;
         this.items = new ArrayList<>();
         for(String name : c.getItemNames())
         {

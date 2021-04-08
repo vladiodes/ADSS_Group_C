@@ -2,6 +2,7 @@ package DTO;
 
 import BusinessLayer.Item;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ public class ItemDTO {
     private int storageAmount;
     private int shelfAmount;
     private int minAmount;
-    private LocalDateTime expDate;
+    private LocalDate expDate;
     private int alertTime;
 
     public ItemDTO(Item i){
@@ -94,11 +95,11 @@ public class ItemDTO {
         this.minAmount = minAmount;
     }
 
-    public LocalDateTime getExpDate() {
+    public LocalDate getExpDate() {
         return expDate;
     }
 
-    public void setExpDate(LocalDateTime expDate) {
+    public void setExpDate(LocalDate expDate) {
         this.expDate = expDate;
     }
 
