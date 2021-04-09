@@ -33,23 +33,23 @@ public class MainWindow {
     }
 
     private void buildMenu(){
-        this.menu.put(1," add item");
-        this.menu.put(2," update item");
-        this.menu.put(3," add category");
-        this.menu.put(4," update category");
-        this.menu.put(5," find item by location");
-        this.menu.put(6," change alert time");
-        this.menu.put(7,"add category discount");
-        this.menu.put(8,"add item discount");
-        this.menu.put(9,"add sale");
-        this.menu.put(10,"get weekly sales report");
-        this.menu.put(11,"show faulty items");
-        this.menu.put(12,"show exp items");
-        this.menu.put(13,"show minimum amount items");
-        this.menu.put(14,"Show Sales Report");
-        this.menu.put(15, "delete item");
-        this.menu.put(16, "run scenario");
-        this.menu.put(17,"end");
+        this.menu.put(1," add item\n");
+        this.menu.put(2," update item\n");
+        this.menu.put(3," add category\n");
+        this.menu.put(4," update category\n");
+        this.menu.put(5," find item by location\n");
+        this.menu.put(6," change alert time\n");
+        this.menu.put(7,"add category discount\n");
+        this.menu.put(8,"add item discount\n");
+        this.menu.put(9,"add sale\n");
+        this.menu.put(10,"get weekly sales report\n");
+        this.menu.put(11,"show faulty items\n");
+        this.menu.put(12,"show exp items\n");
+        this.menu.put(13,"show minimum amount items\n");
+        this.menu.put(14,"Show Sales Report\n");
+        this.menu.put(15, "delete item\n");
+        this.menu.put(16, "run scenario\n");
+        this.menu.put(17,"end\n");
 
     }
     private void printMenu(){
