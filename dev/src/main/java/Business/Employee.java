@@ -152,11 +152,11 @@ public class Employee {
         long m = System.currentTimeMillis();
         if (date.before(new Date(m))) //An employee cant request a shift in the past
         {
-            throw new  Exception("date of available shift cant be in the past");
+            throw new  Exception("Date of available shift cant be in the past");
         }
         if (this.availableShifts.contains(shift))
         {
-            throw new  Exception("available shift already exist");
+            throw new  Exception("Available shift already exist");
         }
         this.availableShifts.add(shift);
     }
@@ -164,7 +164,7 @@ public class Employee {
     public void removeAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception {
         if (!this.availableShifts.contains(shift))
         {
-            throw new Exception("available shift doesn't exist");
+            throw new Exception("Available shift doesn't exist");
         }
         this.availableShifts.remove(shift);
     }
@@ -186,11 +186,11 @@ public class Employee {
         for(TypeOfEmployee type:skills)
             builder.append("\n\t\t" + type.toString());
         builder.append("\n");
-        builder.append("\nAvailable Shifts:");
+        builder.append("\n\tAvailable Shifts:");
         for(Pair<Date, TypeOfShift> p:availableShifts)
         {
-            builder.append("\n\tDate: " + dateFormat.format(p.first));
-            builder.append("\n\tType: " + p.second.toString());
+            builder.append("\n\t\tDate: " + dateFormat.format(p.first));
+            builder.append("\n\t\tType: " + p.second.toString()+"\n");
         }
         builder.append("\n");
 
@@ -247,7 +247,7 @@ public class Employee {
         {
             throw new Exception("Bank account is empty");
         }
-        this.bankAccountNumber = this.bankAccountNumber;
+        this.bankAccountNumber = bankAccountNumber;
     }
 
     public void setEmpConditions(String empConditions) throws Exception {

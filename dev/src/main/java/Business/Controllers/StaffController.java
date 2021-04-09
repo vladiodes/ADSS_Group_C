@@ -1,9 +1,6 @@
 package Business.Controllers;
 
-import Business.Employee;
-import Business.Pair;
-import Business.TypeOfEmployee;
-import Business.TypeOfShift;
+import Business.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -62,10 +59,16 @@ public class StaffController
      * @param id
      * @return Success/Fail Message
      */
-    public String removeEmployee(String id)
+    public String removeEmployee(String id, ScheduleController scheduleController)
     {
         if(employees.remove(id)==null)
             return "Employee not found";
+        //remove the employee from all of its shifts
+        List<Shift> shiftWithEmp = scheduleController.getShiftWithEmp(id);
+        for (Shift s:shiftWithEmp) {
+            s.removeEmployee(id);
+
+        }
         return "Employee removed successfully";
     }
 
@@ -151,7 +154,7 @@ public class StaffController
         }
 
 
-        return "bank Account Name was edited successfully";
+        return "Bank Account number was edited successfully";
     }
 
     /**
@@ -260,7 +263,7 @@ public class StaffController
         {
             return e.getMessage();
         }
-        return "available shift added successfully";
+        return "Available shift added successfully";
     }
 
     /**
@@ -280,7 +283,7 @@ public class StaffController
         {
             return e.getMessage();
         }
-        return "available shift was removed successfully";
+        return "Available shift was removed successfully";
     }
 
 

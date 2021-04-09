@@ -175,7 +175,11 @@ public class Menus {
                         {
                             System.out.println("Enter new Bank Account Number");
                             String newBankAccountNumber = s.nextLine();
-                            newBankAccountNumber=inValidInputLetters(newBankAccountNumber);
+                            while (!checkBankAccountNumber(newBankAccountNumber)) //Ask for valid input until received
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                newBankAccountNumber=s.nextLine();
+                            }
                             System.out.println(facade.editBankAccountNumber(idToEdit, newBankAccountNumber));
                             break;
 
@@ -184,7 +188,7 @@ public class Menus {
                         {
                             System.out.println("Enter new Salary");
                             String newSalary = s.nextLine();
-                            newSalary=inValidInputLetters(newSalary);
+                            newSalary=inValidInputDigits(newSalary);
                             System.out.println(facade.editSalary(idToEdit, Integer.parseInt(newSalary)));
                             break;
 
@@ -193,7 +197,6 @@ public class Menus {
                         {
                             System.out.println("Enter new Employee Conditions");
                             String newEmpConditions = s.nextLine();
-                            newEmpConditions=inValidInputLetters(newEmpConditions);
                             System.out.println(facade.editEmpConditions(idToEdit, newEmpConditions));
                             break;
 
@@ -233,7 +236,7 @@ public class Menus {
                         }
                         case(2)://Remove available shift
                         {
-                            System.out.println("Please Enter Date Of Shift To Remove Like xx/xx/xxxx");
+                            System.out.println("Please Enter Date Of Shift To Remove in format dd/mm/yyyy");
                             String dateOfShift = s.nextLine();
                             boolean validDate=false;
                             Date date=null;
@@ -327,7 +330,6 @@ public class Menus {
                         {
                             System.out.println("Enter skill of the employee");
                             String skill = s.nextLine();
-                            Date date = getDateFromUser();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(skill);
                             while (typeOfEmployee==null)  //Ask for valid input until received
@@ -336,6 +338,7 @@ public class Menus {
                                 skill=s.nextLine();
                                 typeOfEmployee= parseTypeOfEmp(skill);
                             }
+                            Date date = getDateFromUser();
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -400,7 +403,7 @@ public class Menus {
                             //Get constraint from user (TypeOfEmployee and Integer)
                             System.out.println("Enter Type of the employee to restrict in the shift");
                             String consType = s.nextLine();
-                            TypeOfEmployee typeOfEmployee;
+                            TypeOfEmployee typeOfEmployee=null;
                             typeOfEmployee= parseTypeOfEmp(consType);
                             while (typeOfEmployee==null)  //Ask for valid input until received
                             {
@@ -408,13 +411,14 @@ public class Menus {
                                 consType=s.nextLine();
                                 typeOfEmployee= parseTypeOfEmp(consType);
                             }
-                            Integer numOfEmp=-1;
+                            int numOfEmp=-1;
                             System.out.println("Enter amount of employees for this type in the shift");
+
                             while (numOfEmp==-1)
                             {
                                 try
                                 {
-                                    numOfEmp = s.nextInt();
+                                    numOfEmp=Integer.parseInt(inValidInputDigits(s.nextLine()));
                                 }
                                 catch (Exception e)
                                 {
@@ -516,13 +520,17 @@ public class Menus {
                 }
                 case(8): //pre-made scenario
                 {
+                    TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
+                    this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
                     //Creates 4 employees, a shift, and adds 1 employee to the shift
                     Date date1= null;
                     Date date2 = null;
+                    Date date3 = null;
                     try
                     {
                         date1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
                         date2 = new SimpleDateFormat("dd/MM/yyyy").parse("22/04/2022");
+                        date3 = new SimpleDateFormat("dd/MM/yyyy").parse("25/04/2022");
                     }
                     catch (Exception e)
                     {
@@ -534,20 +542,26 @@ public class Menus {
                     List<TypeOfEmployee> skillsBahar = new LinkedList<>();
                     skillsBahar.add(TypeOfEmployee.BranchManager);
 
+
                     List<TypeOfEmployee> skillsOded = new LinkedList<>();
                     skillsOded.add(TypeOfEmployee.Storage);
 
+
                     List<TypeOfEmployee> skillsTom = new LinkedList<>();
                     skillsTom.add(TypeOfEmployee.Cashier);
-                    this.facade.addEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta);
-                    this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar);
-                    this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded);
-                    this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom);
+                    System.out.println(this.facade.addEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta));
+                    System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Storage));
+                    System.out.println(this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar));
+                    System.out.println(this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded));
+                    System.out.println(this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom));
 
-                    this.facade.addShift(date2, TypeOfShift.Morning);
-                    this.facade.addEmployeeToShift("111111111", TypeOfEmployee.ShiftManager,date2,TypeOfShift.Morning);
+                    System.out.println(this.facade.addShift(date2, TypeOfShift.Morning));
+                    System.out.println(this.facade.addConstraintToShift(date2, TypeOfShift.Morning, TypeOfEmployee.Cashier, 1));
+                    System.out.println(this.facade.addEmployeeToShift("444444444", TypeOfEmployee.Cashier, date2, TypeOfShift.Morning));//22/04/2022
+                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.ShiftManager,date2,TypeOfShift.Morning));
 
-
+                    System.out.println(this.facade.addAvailableShift("111111111",date3, TypeOfShift.Evening));//25/04/2022
+                    this.facade.setTypeOfLoggedIn(loggedIn);
                     System.out.println("Initialized Successfully");
 
                     break;
@@ -561,7 +575,7 @@ public class Menus {
                 case(10): //Print Employee's Personal Details
                 {
                     String idToPrint=checkIdExist();
-                    System.out.println(this.facade.printPresonalDetails(idToPrint));
+                    System.out.println(this.facade.printPersonalDetails(idToPrint));
                     break;
                 }
 
@@ -581,7 +595,7 @@ public class Menus {
     private String checkIdExist() {
         Scanner s = new Scanner(System.in);
         boolean idExist=false;
-        System.out.println("Enter ID Of The Employee To Edit");
+        System.out.println("Enter ID Of The Employee");
         String idToEdit=s.nextLine();
         idToEdit=inValidInputDigits(idToEdit);
         idExist=facade.checkIfEmpExist(idToEdit);
@@ -697,6 +711,8 @@ public class Menus {
      * @return
      */
     private boolean checkBankAccountNumber(String bankAccountNumber) {
+        if(bankAccountNumber.length()<=0)
+            return false;
         for (int i=0;i<bankAccountNumber.length();i++)
         {
             char ch = bankAccountNumber.charAt(i);
@@ -715,6 +731,8 @@ public class Menus {
      * @return
      */
     private boolean checkAllLetters(String s) {
+        if(s.length()<=0)
+            return false;
         for (int i=0;i<s.length();i++)
         {
             char ch = s.charAt(i);
@@ -732,6 +750,8 @@ public class Menus {
      * @return
      */
     private boolean checkAllDigits(String num) {
+        if(num.length()<=0)
+            return false;
         for (int i=0;i<num.length();i++) //iterating string
         {
             char ch = num.charAt(i);
@@ -769,7 +789,7 @@ public class Menus {
         menuMain.put(4,"Add/Remove skills");
         menuMain.put(5,"Add/Remove Employee to shift");
         menuMain.put(6,"Add/Remove Constraint To Existing shift - Only allowed for HRManger");
-        menuMain.put(7,"Add/Remove Shift");
+        menuMain.put(7,"Add/Remove Shift - Only allowed for HRManger");
         menuMain.put(8,"Initialize System with pre-made scenario");
         menuMain.put(9,"Print Schedule");
         menuMain.put(10,"Print Employee Personal Details");

@@ -89,7 +89,7 @@ public class ScheduleController {
         }
         if(!isShiftExists(date,type))
         {
-            return "Shift doesnt exist";
+            return "Shift doesn't exist";
         }
         DailySchedule dailySchedule = this.schedule.get(date);
         dailySchedule.removeShift(date,type);
@@ -140,11 +140,14 @@ public class ScheduleController {
         Shift s= getShift(date,type);
         if(!s.isEmployeeInShift(id)) //Check if the employee is in the shift
         {
-            return "shift doesn't contain this employee";
+            return "Shift doesn't contain this employee";
         }
 
-        s.removeEmployee(id);
-        return "employee removed successfully from shift";
+        if (!s.removeEmployee(id))
+        {
+            return "Employee was not removed from shift";
+        }
+        return "Employee removed successfully from shift";
     }
 
     /**
@@ -159,18 +162,18 @@ public class ScheduleController {
     public String addConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
         if (typeOfLoggedIn!= HRManager)
         {
-            return "only a HR Manager is allowed to modify number and type of employees in a shift";
+            return "Only a HR Manager is allowed to modify number and type of employees in a shift";
         }
         try
         {
             if (!this.schedule.containsKey(date))
             {
-                return "no such shift";
+                return "No such shift";
             }
             DailySchedule dailySchedule=this.schedule.get(date);
             if (!dailySchedule.isTypeOfShiftExists(typeOfShift))
             {
-                return "no such shift";
+                return "No such shift";
             }
             Shift shift = dailySchedule.getShift(typeOfShift);
             shift.addConstraint(typeOfEmployee, numOfEmp);
@@ -179,7 +182,7 @@ public class ScheduleController {
         {
             return e.getMessage();
         }
-        return "constraint added successfully";
+        return "Constraint added successfully";
     }
 
     /**
@@ -265,5 +268,19 @@ public class ScheduleController {
     }
 
 
+    public List<Shift> getShiftWithEmp(String id) {
+        List<Shift> toReturn = new LinkedList<>();
 
+        for (Date d:schedule.keySet()) {
+            DailySchedule daily = schedule.get(d);
+            for (Shift s:daily.getShifts()) {
+                if (s.isEmployeeInShift(id))
+                {
+                    toReturn.add(s);
+                }
+            }
+
+        }
+        return toReturn;
+    }
 }

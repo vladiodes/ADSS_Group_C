@@ -31,7 +31,7 @@ public class Facade {
     }
 
     public String RemoveEmployee(String id) {
-        return staffController.removeEmployee(id);
+        return staffController.removeEmployee(id, scheduleController);
     }
 
     public String editFirstName(String idToEdit, String firstName) {
@@ -106,7 +106,17 @@ public class Facade {
         return this.scheduleController.toString();
     }
 
-    public String printPresonalDetails(String idToPrint) {
+    public String printPersonalDetails(String idToPrint) {
         return this.staffController.printPersonalDetails(idToPrint);
+    }
+
+    public TypeOfEmployee getTypeOfLoggedIn() {
+        return typeOfLoggedIn;
+    }
+
+    public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
+        this.typeOfLoggedIn = typeOfLoggedIn;
+        this.scheduleController.setTypeOfLoggedIn(typeOfLoggedIn);
+        this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
     }
 }

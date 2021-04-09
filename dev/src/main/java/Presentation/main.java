@@ -30,7 +30,8 @@ public class main {
                 System.out.println(counter + ") "+type);
                 counter++;
             }
-            int choose = s.nextInt();
+            int choose;
+            choose=Integer.parseInt(inValidInputDigits(s.nextLine()));
             if (choose<1 || choose > TypeOfEmployee.values().length)
             {
                 System.out.println("employee type chosen is invalid");
@@ -41,6 +42,31 @@ public class main {
             }
         }
     }
+    private static String inValidInputDigits(String s) {
+        Scanner scan = new Scanner(System.in);
+        while(!checkAllDigits(s))
+        {
+            System.out.println("Invalid Input, please enter again");
+            s=scan.nextLine();
+        }
+        return s;
+    }
+    private static boolean checkAllDigits(String num) {
+        if(num.length()<=0)
+        {
+            return false;
+        }
+        for (int i=0;i<num.length();i++) //iterating string
+        {
+            char ch = num.charAt(i);
+            if (ch<'0' || ch>'9' ) //is a char representing a number
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
 

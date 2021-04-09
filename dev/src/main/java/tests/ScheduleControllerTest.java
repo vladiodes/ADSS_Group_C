@@ -57,103 +57,64 @@ public class ScheduleControllerTest {
         constraints.put(TypeOfEmployee.ShiftManager, 1);
         this.scheduleController.addShift(date,type);
         assertEquals(1, scheduleController.getSchedule().size());
+    }
 
-        //add existing shift
-        try
-        {
-            this.scheduleController.addShift(date,type);
-        }
-        catch (Exception e)
-        {
-            assertEquals("Shift already exists", e.getMessage());
-        }
-
-
+    @Test
+    public void addExistingShift() {
+        Date date=getDate();
+        TypeOfShift type = TypeOfShift.Morning;
+        Map<TypeOfEmployee, Integer> constraints= new HashMap<>();
+        constraints.put(TypeOfEmployee.ShiftManager, 1);
+        this.scheduleController.addShift(date,type);
+        String expected = "Shift already exists";
+        String actual = this.scheduleController.addShift(date,type);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void removeShift_doesntExist() {
-        try
-        {
-            this.scheduleController.removeShift(getDate(), TypeOfShift.Evening);
-        }
-        catch (Exception e)
-        {
-            assertEquals("Shift doesnt exist", e.getMessage());
-        }
-
+        String expected = "Shift doesn't exist";
+        String actual = this.scheduleController.removeShift(getDate(),TypeOfShift.Evening);
+        assertEquals(expected, actual);
     }
 
-    @Test
-    public void addEmployeeToShift() {
-    }
+
 
     @Test
     public void removeEmployeeFromShift() {
-
-        try
-        {
-            this.scheduleController.removeEmployeeFromShift("209012384", getDate(), TypeOfShift.Evening);
-        }
-        catch (Exception e)
-        {
-            assertEquals("shift doesn't contain this employee", e.getMessage());
-        }
+            String expected = "Shift doesn't exist";
+            String actual = this.scheduleController.removeEmployeeFromShift("209012384", getDate(), TypeOfShift.Evening);
+            assertEquals(expected, actual);
     }
 
     @Test
     public void addConstraint_NegativeConstraint() {
-
         //generate shift
         this.scheduleController.addShift(getDate(), TypeOfShift.Morning);
-        try
-        {
-            this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning,TypeOfEmployee.Cashier, -1 );
-        }
-        catch (Exception e)
-        {
-            assertEquals("amount of Employees must be positive", e.getMessage());
-        }
+        String expected = "Amount of Employees must be positive";
+        String actual = this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning,TypeOfEmployee.Cashier, -1 );
+        assertEquals(expected, actual);
     }
 
     @Test
     public void addConstraint_shiftDoesntExist() {
-        try
-        {
-            this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.Storage, 5);
-        }
-        catch (Exception e)
-        {
-            assertEquals("no such shift", e.getMessage());
-        }
-
+        String expected = "No such shift";
+        String actual = this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.Storage, 5);
+        assertEquals(expected, actual);
     }
     @Test
     public void addConstraint_shiftManagerConstraint() {
-
         this.scheduleController.addShift(getDate(), TypeOfShift.Morning);
-        try
-        {
-            this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.ShiftManager, 0);
-        }
-        catch (Exception e)
-        {
-            assertEquals("Constraint of type ShiftManager must be 1 or greater", e.getMessage());
-        }
-
+        String expected = "Constraint of type ShiftManager must be 1 or greater";
+        String actual = this.scheduleController.addConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.ShiftManager, 0);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void removeConstraint() {
-
         this.scheduleController.addShift(getDate(), TypeOfShift.Morning);
-        try
-        {
-            this.scheduleController.removeConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.ShiftManager);
-        }
-        catch (Exception e)
-        {
-            assertEquals("Number of ShiftManagers in a shift must be restricted", e.getMessage());
-        }
+        String expected = "Number of ShiftManagers in a shift must be restricted";
+        String actual = this.scheduleController.removeConstraint(getDate(), TypeOfShift.Morning, TypeOfEmployee.ShiftManager);
+        assertEquals(expected, actual);
     }
 }

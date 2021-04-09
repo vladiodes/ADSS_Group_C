@@ -75,10 +75,6 @@ public class StaffControllerTest {
 
     }
 
-    @Test
-    public void removeEmployee() {
-
-    }
 
     @Test
     public void editFirstName() {
@@ -87,71 +83,22 @@ public class StaffControllerTest {
         // add new Employee
         this.staffController.addEmployee("Leo","Messi", "101010101", "777/23", 12000, "Sick days :6", new Date(),skills );
         //try edit wrong first name - sole letter name
-        try
-        {
-            this.staffController.editFirstName("101010101", "C");
-        }
-        catch (Exception e)
-        {
-            assertEquals("Invalid First Name", e.getMessage());
-        }
-
+        String expected = "Invalid First Name";
+        String actual = this.staffController.editFirstName("101010101", "C");
+        assertEquals(expected, actual);
     }
 
-    @Test
-    public void editLastName() {
-    }
-
-    @Test
-    public void editID() {
-    }
-
-    @Test
-    public void editBankAccountNumber() {
-    }
-
-    @Test
-    public void editSalary() {
-    }
-
-    @Test
-    public void editEmpConditions() {
-    }
-
-    @Test
-    public void addSkill() {
-    }
-
-    @Test
-    public void removeSkill() {
-    }
-
-    @Test
-    public void addAvailableShift() {
-    }
 
     @Test
     public void removeAvailableShift_DoesntExist() {
-        try
-        {
-            this.staffController.removeAvailableShift("209012384", new Pair<Date, TypeOfShift>(getDate(), TypeOfShift.Morning));
-        }
-        catch (Exception e)
-        {
-            assertEquals("available shift already exist", e.getMessage());
-        }
-
+        String expected = "Available shift doesn't exist";
+        String actual = this.staffController.removeAvailableShift("209012384", new Pair<Date, TypeOfShift>(getDate(), TypeOfShift.Morning));
+        assertEquals(expected, actual);
     }
     @Test
-    public void removeAvailableShift_WrongDate() {
-        try
-        {
-            this.staffController.removeAvailableShift("209012384", new Pair<Date, TypeOfShift>(getWrongDate(), TypeOfShift.Morning));
-        }
-        catch (Exception e)
-        {
-            assertEquals("date of available shift cant be in the past", e.getMessage());
-        }
-
+    public void addAvailableShift_WrongDate() {
+        String expected = "Date of available shift cant be in the past";
+        String actual = this.staffController.addAvailableShift("209012384", new Pair<Date, TypeOfShift>(getWrongDate(), TypeOfShift.Morning));
+        assertEquals(expected, actual);
     }
 }

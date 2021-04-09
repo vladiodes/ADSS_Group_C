@@ -151,20 +151,25 @@ public class Shift {
 
     }
 
-    public void removeEmployee(String id) {
-        Employee toRemove=null;
+    public boolean removeEmployee(String id) {
+        Pair toRemove=null;
         for (Pair p:currentShiftEmployees) {
             {
                 Employee cur = (Employee)p.first;
-                if (cur.getId()==id)
+                if (cur.getId().equals(id))
                 {
-                    toRemove=cur;
+                    toRemove=p;
+                    break;
                 }
             }
 
         }
-        currentShiftEmployees.remove(toRemove);
+        if (!currentShiftEmployees.remove(toRemove))
+        {
+            return false;
+        }
         isSealed=sealShift();
+        return true;
 
     }
 
@@ -177,7 +182,7 @@ public class Shift {
     public void addConstraint(TypeOfEmployee typeOfEmployee, Integer numOfEmp) throws Exception{
         if (numOfEmp<0)
         {
-            throw new Exception("amount of Employees must be positive");
+            throw new Exception("Amount of Employees must be positive");
         }
         if(typeOfEmployee == ShiftManager && numOfEmp<=0)
         {
@@ -215,35 +220,32 @@ public class Shift {
     }
 
     public boolean sealShift() {
-        if(!this.isSealed)
-        {
-            this.isSealed= this.checkFull();
-        }
-        return this.isSealed;
+
+        return this.checkFull();
     }
 
     public String toString() {
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder=new StringBuilder();
-        builder.append("Shift: \n\t");
-        builder.append("Type: " + type);
-        builder.append("\n\tShift Date: " + dateFormat.format(date));
-        builder.append("\n\tConstraints:");
+        builder.append("Shift: \n");
+        builder.append("\t\tType: " + type);
+        builder.append("\n\t\tShift Date: " + dateFormat.format(date));
+        builder.append("\n\t\tConstraints:");
         for(TypeOfEmployee type:constraints.keySet())
         {
-            builder.append("\n\t\tType Of Employee: " + type.toString());
-            builder.append("\n\t\tAmount: " + constraints.get(type).toString());
+            builder.append("\n\t\t\tType Of Employee: " + type.toString());
+            builder.append("\n\t\t\tAmount: " + constraints.get(type).toString());
         }
         builder.append("\n");
-        builder.append("\n\tCurrent Shift Employees:");
+        builder.append("\n\t\tCurrent Shift Employees:");
         for(Pair<Employee, TypeOfEmployee> p:currentShiftEmployees)
         {
-            builder.append("\n\t\tName: " + p.first.getFirstName() +" "+ p.first.getLastName());
-            builder.append("\n\t\tType: " + p.second.toString());
+            builder.append("\n\t\t\tName: " + p.first.getFirstName() +" "+ p.first.getLastName());
+            builder.append("\n\t\t\tType: " + p.second.toString());
 
             List<TypeOfEmployee> currentEmpSkills = p.first.getSkills();
-            builder.append("\nSkills: \n");
+            builder.append("\n\t\t\tSkills: \n\t\t\t\t");
             for(TypeOfEmployee type:currentEmpSkills)
             {
 
@@ -251,7 +253,7 @@ public class Shift {
             }
             builder.append("\n");
         }
-        builder.append("\n\tShift status: " + printStatus());
+        builder.append("\n\t\tShift status: " + printStatus());
         builder.append("\n");
 
         return builder.toString();

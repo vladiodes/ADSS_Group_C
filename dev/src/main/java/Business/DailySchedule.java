@@ -77,6 +77,10 @@ public class DailySchedule {
         return shifts.get(location);
     }
 
+    public List<Shift> getShifts() {
+        return shifts;
+    }
+
     @Override
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
