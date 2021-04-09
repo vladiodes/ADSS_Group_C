@@ -24,7 +24,7 @@ public class CategoryDTO {
         {
             this.subCategories.add(cat.getName());
         }
-        if (this.fatherCategory!=null)
+        if (c.getFatherCategory()!=null)
             this.fatherCategory=c.getFatherCategory().getName();
         else
             this.fatherCategory=null;
@@ -38,16 +38,30 @@ public class CategoryDTO {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Category Name:" + this.name + "\n");
-        builder.append("Category Father Category: "+ this.fatherCategory + "\n");
-        builder.append("Category Sub Categories:\n");
-        for(String catName : this.subCategories){
-            builder.append(catName + " ");
+        builder.append("Category ID: " + this.id + "\n");
+        builder.append("Category Name: " + this.name + "\n");
+        if(this.fatherCategory != null)
+            builder.append("Category Father Category: "+ this.fatherCategory + "\n");
+        else
+            builder.append("Category Has No Father Category\n");
+        if(this.subCategories.size() > 0)
+        {
+            builder.append("Category Sub Categories:\n");
+            for(String catName : this.subCategories){
+                builder.append(catName + " ");
+            }
         }
-        builder.append("\nCategory Items:\n");
-        for(String itemName : items){
-            builder.append(itemName +" ");
+        else
+            builder.append("Category Has No Sub Categories\n");
+        if(this.items.size() > 0)
+        {
+            builder.append("\nCategory Items:\n");
+            for(String itemName : items){
+                builder.append(itemName +" ");
+            }
         }
+        else
+            builder.append("Category Has No Items\n");
         return builder.toString();
     }
 

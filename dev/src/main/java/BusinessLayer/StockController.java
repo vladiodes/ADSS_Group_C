@@ -52,13 +52,16 @@ public class StockController {
     }
 
     public void updateCategory(int categoryID,String categoryName){
-        this.categories.get(categoryID).updateCategory(categoryName);
+        if(this.categories.containsKey(categoryID))
+            this.categories.get(categoryID).updateCategory(categoryName);
+        else
+            throw new IllegalArgumentException("Invalid category ID");
     }
     public void addCategoryDiscount(int categoryID,double discount){
 
         if (categoryID>=this.categoryID | categoryID<0)
             throw new IllegalArgumentException("invalid category id");
-        if (discount<0)
+        if (discount<0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
         this.categories.get(categoryID).addDiscount(discount);
     }
@@ -66,8 +69,8 @@ public class StockController {
     public void addItemDiscount(int itemID,double discount){
 
         if (itemID>=this.itemID | itemID<0)
-            throw new IllegalArgumentException("invalid category id");
-        if (discount<0)
+            throw new IllegalArgumentException("invalid Item id");
+        if (discount<0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
         findItem(itemID).addDiscount(discount);
     }
@@ -76,6 +79,10 @@ public class StockController {
         // checks - father id = 0 -> no father category
         // check that the father ID exists
         Category FatherCategory;
+        if(this.categoryID == 1 && fatherID == 1)
+        {
+            throw new IllegalArgumentException("No Categories yet , Cannot add father category 1");
+        }
         if (fatherID<0 | fatherID>this.categoryID)
             throw new IllegalArgumentException("invalid father category");
         if (fatherID==0)
@@ -84,8 +91,8 @@ public class StockController {
             FatherCategory = this.categories.get(fatherID);
         Category toAdd = new Category(name,this.categoryID,FatherCategory);
         this.categories.put(this.categoryID,toAdd);
-        if (FatherCategory!=null)
-            FatherCategory.addSubCategory(toAdd);
+        if (toAdd.getFatherCategory()!=null)
+            toAdd.getFatherCategory().addSubCategory(toAdd);
         this.categoryID++;
         return toAdd;
     }
@@ -164,11 +171,16 @@ public class StockController {
     }
 
     public void deleteItem(int itemID) {
+        boolean deleted = false;
         for(Category cat : categories.values())
         {
-            if(cat.containsItem(itemID))
+            if(cat.containsItem(itemID)) {
                 cat.deleteItem(itemID);
+                deleted = true;
+            }
         }
+        if(!deleted)
+            throw new IllegalArgumentException("Item ID does not exist");
     }
 
     public void sellItem(int itemID,int quantity) {
