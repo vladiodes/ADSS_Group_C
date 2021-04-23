@@ -1,9 +1,8 @@
 package DTO;
 
-import BusinessLayer.Item;
+import BusinessLayer.InventoryModule.Item;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ItemDTO {

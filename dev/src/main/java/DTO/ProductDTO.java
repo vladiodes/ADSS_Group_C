@@ -1,6 +1,6 @@
 package DTO;
 
-import BusinessLayer.Contract;
+import BusinessLayer.SuppliersModule.Contract;
 
 public class ProductDTO {
     public int storeID;

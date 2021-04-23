@@ -1,9 +1,9 @@
 package PresentationLayer;
 
-import BusinessLayer.DayOfWeek;
+import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
-import BusinessLayer.PaymentAgreement;
+import BusinessLayer.SuppliersModule.PaymentAgreement;
 import DTO.SupplierDTO;
 
 import java.util.*;

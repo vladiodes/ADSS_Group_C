@@ -1,7 +1,7 @@
 
 package BusinessLayer.Facade;
-import BusinessLayer.DayOfWeek;
-import BusinessLayer.PaymentAgreement;
+import BusinessLayer.SuppliersModule.DayOfWeek;
+import BusinessLayer.SuppliersModule.PaymentAgreement;
 import DTO.OrderDTO;
 import DTO.ProductDTO;
 import DTO.SupplierDTO;

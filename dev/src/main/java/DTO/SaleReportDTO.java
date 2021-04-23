@@ -1,8 +1,7 @@
 package DTO;
 
-import BusinessLayer.Sale;
-import BusinessLayer.SaleReport;
-import DTO.ReportDTO;
+import BusinessLayer.InventoryModule.Sale;
+import BusinessLayer.InventoryModule.SaleReport;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

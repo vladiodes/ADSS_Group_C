@@ -1,6 +1,6 @@
 package DTO;
 
-import BusinessLayer.Report;
+import BusinessLayer.InventoryModule.Report;
 
 import java.time.format.DateTimeFormatter;
 

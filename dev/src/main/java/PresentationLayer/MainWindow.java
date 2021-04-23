@@ -1,22 +1,17 @@
 package PresentationLayer;
 
-import BusinessLayer.Facade;
-import BusinessLayer.Response;
-import BusinessLayer.StockController;
+import BusinessLayer.Facade.InventoryFacade;
+import BusinessLayer.Facade.Response;
 import DTO.*;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class MainWindow {
     private HashMap<Integer,String> menu;
-    private Facade facade;
+    private InventoryFacade inventoryFacade;
     private Scanner myObj;
     private boolean shouldTerminate;
     private boolean scenario;
@@ -26,7 +21,7 @@ public class MainWindow {
         this.shouldTerminate=false;
         this.myObj = new Scanner(System.in);
 
-        this.facade=Facade.getInstance();
+        this.inventoryFacade = InventoryFacade.getInstance();
         this.menu=new HashMap<Integer, String>();
         this.buildMenu();
 
@@ -169,7 +164,7 @@ public class MainWindow {
         myObj.nextLine();
 
 
-        Response<ItemDTO> response=this.facade.addItem(categoryID,location,name,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+        Response<ItemDTO> response=this.inventoryFacade.addItem(categoryID,location,name,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
         this.printMessage(response,"Successfully added item\n");
     }
     private void updateItem () {
@@ -202,7 +197,7 @@ public class MainWindow {
         double sellingPrice = myObj.nextDouble();
         myObj.nextLine();
 
-        Response<Boolean> response=this.facade.updateItem(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+        Response<Boolean> response=this.inventoryFacade.updateItem(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
 
         this.printMessage(response,"Successfully update item : \n");
     }
@@ -214,7 +209,7 @@ public class MainWindow {
         myObj.nextLine();
 
 
-        Response<CategoryDTO> response=this.facade.addCategory(name,fatherID);
+        Response<CategoryDTO> response=this.inventoryFacade.addCategory(name,fatherID);
         this.printMessage(response,"Successfully added category : \n");
     }
     private void updateCategory () {
@@ -225,14 +220,14 @@ public class MainWindow {
         myObj.nextLine();
 
 
-        Response<Boolean> response=this.facade.updateCategory(categoryID,name);
+        Response<Boolean> response=this.inventoryFacade.updateCategory(categoryID,name);
         this.printMessage(response,"Successfully update category\n");
     }
     private void findItemByLocation(){
         System.out.println("please enter item location : ");
         int location = myObj.nextInt();
         myObj.nextLine();
-        Response<ItemDTO> response=this.facade.getItemByLocation(location);
+        Response<ItemDTO> response=this.inventoryFacade.getItemByLocation(location);
         this.printMessage(response,"Successfully finding item : \n");
     }
     private void changeAlertTime(){
@@ -242,7 +237,7 @@ public class MainWindow {
         System.out.println("please enter new days amount of alert : ");
         int daysAmount = myObj.nextInt();
         myObj.nextLine();
-        Response<Boolean> response=this.facade.changeAlertTime(itemID,daysAmount);
+        Response<Boolean> response=this.inventoryFacade.changeAlertTime(itemID,daysAmount);
         this.printMessage(response,"Successfully changing item alert time\n");
 
     }
@@ -253,7 +248,7 @@ public class MainWindow {
         System.out.println("please enter discount % : ");
         double discount = myObj.nextDouble();
         myObj.nextLine();
-        Response<Boolean> response = this.facade.addCategoryDiscount(categoryID,discount);
+        Response<Boolean> response = this.inventoryFacade.addCategoryDiscount(categoryID,discount);
         this.printMessage(response,"Successfully added discount\n");
 
     }
@@ -264,7 +259,7 @@ public class MainWindow {
         System.out.println("please enter discount % : ");
         double discount = myObj.nextDouble();
         myObj.nextLine();
-        Response<Boolean> response = this.facade.addItemDiscount(itemID,discount);
+        Response<Boolean> response = this.inventoryFacade.addItemDiscount(itemID,discount);
         this.printMessage(response,"Successfully added discount\n");
 
     }
@@ -276,7 +271,7 @@ public class MainWindow {
         int quantity = myObj.nextInt();
         myObj.nextLine();
         LocalDate saleDate=LocalDate.now();
-        Response<SaleDTO> response = this.facade.addSale(itemID,quantity);
+        Response<SaleDTO> response = this.inventoryFacade.addSale(itemID,quantity);
         this.printMessage(response,"Successfully added sale\n");
 
     }
@@ -293,18 +288,18 @@ public class MainWindow {
             else
                 break;
         }
-        Response<amountReportDTO> response = this.facade.getWeeklyReport(categoriesList);
+        Response<amountReportDTO> response = this.inventoryFacade.getWeeklyReport(categoriesList);
         this.printReport(response);
     }
     private void faultyItems(){
-        Response<defactReportDTO> response = this.facade.showFaultyItems();
+        Response<defactReportDTO> response = this.inventoryFacade.showFaultyItems();
         this.printReport(response);
     }
     private void expItems(){
-        Response<defactReportDTO> response = this.facade.showExpItems();
+        Response<defactReportDTO> response = this.inventoryFacade.showExpItems();
         this.printReport(response);    }
     private void minAmountItems(){
-        Response<amountReportDTO> response = this.facade.showMinAmountItems();
+        Response<amountReportDTO> response = this.inventoryFacade.showMinAmountItems();
         this.printReport(response);
     }
 
@@ -329,7 +324,7 @@ public class MainWindow {
         System.out.println("please enter end date: ");
         LocalDate endDate = this.getDateFromUser();
 
-        Response<SaleReportDTO> response = this.facade.showSalesReport(startDate,endDate,categoriesList);
+        Response<SaleReportDTO> response = this.inventoryFacade.showSalesReport(startDate,endDate,categoriesList);
         this.printReport(response);
     }
 
@@ -337,7 +332,7 @@ public class MainWindow {
         System.out.println("please enter item id : ");
         int itemID = myObj.nextInt();
         myObj.nextLine();
-        Response<Boolean> response = this.facade.deleteItem(itemID);
+        Response<Boolean> response = this.inventoryFacade.deleteItem(itemID);
         this.printMessage(response,"Successfully deleted item\n");
 
 
@@ -378,18 +373,18 @@ public class MainWindow {
         return date;
     }
     public void scenario1(){
-        Response<CategoryDTO> response1=this.facade.addCategory("sweets",0);
+        Response<CategoryDTO> response1=this.inventoryFacade.addCategory("sweets",0);
         this.printMessage(response1,"Successfully added category\n");
 
-        Response<ItemDTO> response2=this.facade.addItem(response1.getValue().getID(),2,"chocolate","nutela",15,20,5,LocalDate.of(2021,06,15),14.90,16.90);
+        Response<ItemDTO> response2=this.inventoryFacade.addItem(response1.getValue().getID(),2,"chocolate","nutela",15,20,5,LocalDate.of(2021,06,15),14.90,16.90);
         this.printMessage(response2,"Successfully added item\n");
 
-        Response<SaleDTO> response3 = this.facade.addSale(response2.getValue().getID(),1);
+        Response<SaleDTO> response3 = this.inventoryFacade.addSale(response2.getValue().getID(),1);
         this.printMessage(response3,"successfully sale\n");
 
         ArrayList categoriesList = new ArrayList();
         categoriesList.add(response1.getValue().getID());
-        Response<ReportDTO> response4 = this.facade.getWeeklyReport(categoriesList);
+        Response<ReportDTO> response4 = this.inventoryFacade.getWeeklyReport(categoriesList);
         this.printReport(response4);
 
     }

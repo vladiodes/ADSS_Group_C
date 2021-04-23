@@ -1,11 +1,9 @@
 package DTO;
 
-import BusinessLayer.Item;
-import BusinessLayer.Report;
+import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.InventoryModule.Report;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 

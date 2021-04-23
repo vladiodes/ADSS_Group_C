@@ -1,7 +1,7 @@
 package DTO;
 
-import BusinessLayer.Order;
-import BusinessLayer.ProductInOrder;
+import BusinessLayer.SuppliersModule.Order;
+import BusinessLayer.SuppliersModule.ProductInOrder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

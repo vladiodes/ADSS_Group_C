@@ -1,11 +1,9 @@
 package DTO;
 
-import BusinessLayer.Sale;
+import BusinessLayer.InventoryModule.Sale;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class SaleDTO {
     private int itemID;

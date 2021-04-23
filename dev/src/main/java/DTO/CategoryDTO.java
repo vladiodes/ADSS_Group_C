@@ -1,10 +1,8 @@
 package DTO;
 
-import BusinessLayer.Category;
+import BusinessLayer.InventoryModule.Category;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.List;
 
 public class CategoryDTO {

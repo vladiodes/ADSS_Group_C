@@ -1,8 +1,8 @@
 package PresentationLayer;
 
-import BusinessLayer.DayOfWeek;
-import BusinessLayer.Facade.FacadeImpl;
-import BusinessLayer.PaymentAgreement;
+import BusinessLayer.SuppliersModule.DayOfWeek;
+import BusinessLayer.Facade.SupplierFacadeImpl;
+import BusinessLayer.SuppliersModule.PaymentAgreement;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class mainMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
     private menuWindow[] windows;
     public mainMenuWindow() {
-        super(new FacadeImpl(),"Main menu");
+        super(new SupplierFacadeImpl(),"Main menu");
         initWindows();
     }
 

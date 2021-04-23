@@ -1,7 +1,7 @@
 package DTO;
-import BusinessLayer.DayOfWeek;
-import BusinessLayer.PaymentAgreement;
-import BusinessLayer.Supplier;
+import BusinessLayer.SuppliersModule.DayOfWeek;
+import BusinessLayer.SuppliersModule.PaymentAgreement;
+import BusinessLayer.SuppliersModule.Supplier;
 
 import java.util.Map;
 import java.util.Set;
