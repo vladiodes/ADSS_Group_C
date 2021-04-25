@@ -308,10 +308,10 @@ public class TransportsMain {
             API.addSection("North");
             API.addSection("Center");
             API.addSection("South");
-            API.addSite("Nahariyya", 052123123, "Motti", "North");
+            API.addSite("Nahariyya", 052123123, "Ilay", "North");
             API.addSite("Tel-Aviv", 052555555, "Hadar", "Center");
             API.addTruck(3212345, "Honda Ridgeline", 5000, "Pickup Truck", 1500);
-            API.addTruck(6942021, "Tesla", 10000, "Smart Car", 1500);
+            API.addTruck(6942021, "Tesla", 10000, "Smart Car", 7500);
             DataInitialized = true;
         }
         catch (Exception e){
