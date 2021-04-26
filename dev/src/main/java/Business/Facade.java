@@ -78,7 +78,7 @@ public class Facade {
         return this.scheduleController.addEmployeeToShift(idToEdit,typeEmp, date, typeShift);
     }
 
-    public String removeEmployeeToShift(String idToEdit, Date date, TypeOfShift typeShift) {
+    public String removeEmployeeFromShift(String idToEdit, Date date, TypeOfShift typeShift) {
         return this.scheduleController.removeEmployeeFromShift(idToEdit, date, typeShift);
     }
 
@@ -111,6 +111,7 @@ public class Facade {
     }
 
     public TypeOfEmployee getTypeOfLoggedIn() {
+<<<<<<< Updated upstream
         return typeOfLoggedIn;
     }
 
@@ -118,5 +119,12 @@ public class Facade {
         this.typeOfLoggedIn = typeOfLoggedIn;
         this.scheduleController.setTypeOfLoggedIn(typeOfLoggedIn);
         this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
+=======
+        return this.typeOfLoggedIn;
+    }
+
+    public void setTypeOfLoggedIn(TypeOfEmployee type) {
+        this.typeOfLoggedIn=type;
+>>>>>>> Stashed changes
     }
 }

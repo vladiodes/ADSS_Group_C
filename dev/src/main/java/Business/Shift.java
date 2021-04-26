@@ -68,7 +68,7 @@ public class Shift {
         {
             throw new Exception("employee cant be assigned to a skill he doesnt have");
         }
-        if (!checkConstraints(toAdd, type))
+        if (!checkConstraints(type))
         {
             throw new Exception("employee cant be assigned to a skill he doesnt have");
         }
@@ -79,12 +79,11 @@ public class Shift {
 
     /**
      * Check numbers of employees in the shift doesn't exceed the requested number of employees
-     * @param toAdd
      * @param type
      * @return
      * @throws Exception
      */
-    private boolean checkConstraints(Employee toAdd, TypeOfEmployee type) throws  Exception
+    private boolean checkConstraints( TypeOfEmployee type) throws  Exception
     {
         if(this.constraints.containsKey(type))
         {

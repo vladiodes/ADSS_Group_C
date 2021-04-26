@@ -285,6 +285,19 @@ public class StaffController
         }
         return "Available shift was removed successfully";
     }
+    public boolean checkIfEmpExist(String idToEdit) {
+        return this.employees.containsKey(idToEdit);
+    }
+    public String printPersonalDetails(String idToPrint) {
+        try
+        {
+            return this.employees.get(idToPrint).toString();
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
+    }
 
 
     //-----------------------------------------------------------getters------------------------------------------------------------
@@ -325,18 +338,7 @@ public class StaffController
         this.typeOfLoggedIn = typeOfLoggedIn;
     }
 
-    public boolean checkIfEmpExist(String idToEdit) {
-        return this.employees.containsKey(idToEdit);
-    }
 
-    public String printPersonalDetails(String idToPrint) {
-        try
-        {
-            return this.employees.get(idToPrint).toString();
-        }
-        catch (Exception e)
-        {
-            return e.getMessage();
-        }
-    }
+
+
 }

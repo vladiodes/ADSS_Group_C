@@ -365,7 +365,7 @@ public class Menus {
                                 type = s.nextLine();
                                 typeOfShift=parseTypeOfShift(type);
                             }
-                            System.out.println(facade.removeEmployeeToShift(idToEdit, date, typeOfShift));
+                            System.out.println(facade.removeEmployeeFromShift(idToEdit, date, typeOfShift));
                             break;
                         }
                         case(3)://Back to main menu
@@ -520,8 +520,14 @@ public class Menus {
                 }
                 case(8): //pre-made scenario
                 {
+<<<<<<< Updated upstream
                     TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
                     this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
+=======
+                    TypeOfEmployee temp = this.facade.getTypeOfLoggedIn();
+                    this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
+
+>>>>>>> Stashed changes
                     //Creates 4 employees, a shift, and adds 1 employee to the shift
                     Date date1= null;
                     Date date2 = null;
@@ -563,7 +569,7 @@ public class Menus {
                     System.out.println(this.facade.addAvailableShift("111111111",date3, TypeOfShift.Evening));//25/04/2022
                     this.facade.setTypeOfLoggedIn(loggedIn);
                     System.out.println("Initialized Successfully");
-
+                    this.facade.setTypeOfLoggedIn(temp);
                     break;
 
                 }
