@@ -1,11 +1,10 @@
 package BusinessLayer.SuppliersModule;
 
-import BusinessLayer.SuppliersModule.Contract;
-import BusinessLayer.SuppliersModule.Product;
-import BusinessLayer.SuppliersModule.ProductInOrder;
+import BusinessLayer.InventoryModule.Item;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -15,7 +14,8 @@ public class ProductInOrderTest {
 
     @Before
     public void setUp() {
-        Product p=new Product(1,"product");
+        Item p=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         Contract c=new Contract(100.0,1,new HashMap<>(),p);
         pio=new ProductInOrder(100,c);
     }

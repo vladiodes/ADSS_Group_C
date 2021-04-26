@@ -1,10 +1,11 @@
 package BusinessLayer.Facade;
 
+import BusinessLayer.InventoryModule.StockController;
 import BusinessLayer.SuppliersModule.*;
-import BusinessLayer.SuppliersModule.Controllers.Inventory;
 import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
+import DTO.ContractDTO;
+import DTO.ItemDTO;
 import DTO.OrderDTO;
-import DTO.ProductDTO;
 import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
@@ -17,12 +18,10 @@ import java.util.Set;
 //inventory depending on the method and returns an appropriate response object based on the success or failure of the operation.
 
 public class SupplierFacadeImpl implements ISuppliersFacade {
-    private Inventory inventory;
     private SuppliersController suppliersController;
 
 
     public SupplierFacadeImpl(){
-        inventory=new Inventory();
         suppliersController=new SuppliersController();
     }
 
@@ -159,22 +158,12 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<List<ProductDTO>> getItemsBySupplier(int supplierID) {
+    public Response<List<ContractDTO>> getItemsBySupplier(int supplierID) {
         try {
-            ArrayList<ProductDTO> list=new ArrayList<>();
+            ArrayList<ContractDTO> list=new ArrayList<>();
             for(Contract c:suppliersController.getItemsBySupplier(supplierID))
-                list.add(new ProductDTO(c));
+                list.add(new ContractDTO(c));
             return new Response<>(list);
-        }
-        catch (IllegalArgumentException e){
-            return new Response<>(e);
-        }
-    }
-
-    @Override
-    public Response<Integer> addItemToStore(String productName) {
-        try {
-            return new Response<>(inventory.addItemToStore(productName));
         }
         catch (IllegalArgumentException e){
             return new Response<>(e);
@@ -184,7 +173,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     @Override
     public Response<Boolean> addItemToSupplier(int supplierID, int StoreProductID, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement) {
         try {
-            suppliersController.addItemToSupplier(supplierID,inventory.getProductByID(StoreProductID),supplierProductID,price,quantityAgreement);
+            suppliersController.addItemToSupplier(supplierID, StockController.getInstance().getItemById(StoreProductID),supplierProductID,price,quantityAgreement);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){

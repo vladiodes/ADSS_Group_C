@@ -2,8 +2,9 @@
 package BusinessLayer.Facade;
 import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.SuppliersModule.PaymentAgreement;
+import DTO.ContractDTO;
+import DTO.ItemDTO;
 import DTO.OrderDTO;
-import DTO.ProductDTO;
 import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
@@ -122,14 +123,8 @@ public interface ISuppliersFacade {
      * @param supplierID - the supplier id
      * @return returns a list of all the items supplied by the supplier
      */
-    Response<List<ProductDTO>> getItemsBySupplier(int supplierID);
+    Response<List<ContractDTO>> getItemsBySupplier(int supplierID);
 
-    /**
-     * Add an item to the company
-     * @param productName - the name of the new product
-     * @return returns the id of the product id in the store
-     */
-    Response<Integer> addItemToStore(String productName);
 
     /**
      * Adds a new item to a suppliers contract

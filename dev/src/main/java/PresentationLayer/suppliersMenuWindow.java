@@ -10,6 +10,7 @@ import java.util.*;
 
 public class suppliersMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
+    private ISuppliersFacade facade;
 
     protected void createMenu() {
         menu=new HashMap();
@@ -29,7 +30,8 @@ public class suppliersMenuWindow extends menuWindow {
     }
 
     public suppliersMenuWindow(ISuppliersFacade facade, String description) {
-        super(facade,description);
+        super(description);
+        this.facade=facade;
     }
     public void start() {
         printDescription();

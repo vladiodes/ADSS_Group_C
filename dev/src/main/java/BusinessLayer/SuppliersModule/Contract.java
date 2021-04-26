@@ -1,5 +1,7 @@
 package BusinessLayer.SuppliersModule;
 
+import BusinessLayer.InventoryModule.Item;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,9 +9,9 @@ public class Contract{
     private double pricePerUnit;
     private int catalogueIDBySupplier;
     private Map<Integer,Integer> discountByQuantity;
-    private Product product;
+    private Item product;
 
-    public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Product product){
+    public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Item product){
         setPricePerUnit(pricePerUnit);
         setCatalogueIDBySupplier(catalogueIDBySupplier);
         setDiscountByQuantity(discountByQuantity);
@@ -25,7 +27,7 @@ public class Contract{
         return catalogueIDBySupplier;
     }
 
-    public Product getProduct() {
+    public Item getProduct() {
         return product;
     }
 
@@ -80,7 +82,7 @@ public class Contract{
         }
     }
 
-    private void setProduct(Product product){
+    private void setProduct(Item product){
         if(product==null){
             throw new IllegalArgumentException("a contract must be related to some product. product field cannot be Null.");
         }

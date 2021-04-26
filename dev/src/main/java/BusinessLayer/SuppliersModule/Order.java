@@ -1,5 +1,7 @@
 package BusinessLayer.SuppliersModule;
 
+import BusinessLayer.InventoryModule.Item;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -104,7 +106,7 @@ public class Order{
 
     //this functions receives a product and searches for a productInOrder matching to that product.
     //if one is found we return it. otherwise return null.
-    private ProductInOrder findProductInOrder(Product product){
+    private ProductInOrder findProductInOrder(Item product){
         for (ProductInOrder pio:
              productsInOrder) {
             if(pio.getContract().getProduct().equals(product)){
@@ -203,7 +205,7 @@ public class Order{
      * @param p - the product
      * @return true if yes, false otherwise
      */
-    public boolean checkIfProductExists(Product p) {
+    public boolean checkIfProductExists(Item p) {
         if(shipmentStatus==ShipmentStatus.Delivered)
             return false;
         return findProductInOrder(p)!=null;

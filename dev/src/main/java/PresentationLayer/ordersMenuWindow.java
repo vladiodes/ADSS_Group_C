@@ -10,8 +10,10 @@ import java.util.List;
 
 public class ordersMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
+    private ISuppliersFacade facade;
     public ordersMenuWindow(ISuppliersFacade facade, String description) {
-        super(facade,description);
+        super(description);
+        this.facade=facade;
     }
 
     @Override

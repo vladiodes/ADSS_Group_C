@@ -7,12 +7,10 @@ import java.util.Scanner;
 
 public abstract class menuWindow {
     protected Scanner scanner=utills.scanner;
-    protected ISuppliersFacade facade;
     protected String description;
     protected HashMap<Integer,String> menu;
 
-    public menuWindow(ISuppliersFacade facade, String description){
-        this.facade=facade;
+    public menuWindow(String description){
         this.description=description;
         createMenu();
     }

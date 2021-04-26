@@ -1,6 +1,6 @@
 package BusinessLayer.SuppliersModule;
 
-import BusinessLayer.SuppliersModule.*;
+import BusinessLayer.InventoryModule.Item;
 import DTO.SupplierDTO;
 
 import java.time.LocalDateTime;
@@ -291,7 +291,7 @@ public class Supplier{
      * @param price the price the supplier sells it
      * @param quantityAgreement a quantity agreement that describes the discounts given by the supplier
      */
-    public void addContract(Product product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement) {
+    public void addContract(Item product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement) {
         for(Contract c:supplierContracts) {
             if (c.getCatalogueIDBySupplier() == supplierProductID)
                 throw new IllegalArgumentException("There's already a contract issued with the given catalogue id");

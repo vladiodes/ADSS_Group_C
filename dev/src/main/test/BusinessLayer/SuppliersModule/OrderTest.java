@@ -1,11 +1,10 @@
 package BusinessLayer.SuppliersModule;
 
-import BusinessLayer.SuppliersModule.Contract;
-import BusinessLayer.SuppliersModule.Order;
-import BusinessLayer.SuppliersModule.Product;
+import BusinessLayer.InventoryModule.Item;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -21,7 +20,7 @@ public class OrderTest {
 
     @Test
     public void addItemToDeliveredOrder(){
-        Product product=new Product(1,"product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
         Contract c=new Contract(100,1,new HashMap<>(),product);
         order.receive();
         try {
@@ -37,7 +36,7 @@ public class OrderTest {
 
     @Test
     public void addItemTest(){
-        Product product=new Product(1,"product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
         Contract c=new Contract(100,1,new HashMap<>(),product);
         order.addItem(c,10,new HashMap<>());
         assertEquals(1, order.getProductsInOrder().size());
@@ -48,7 +47,8 @@ public class OrderTest {
 
     @Test
     public void addItemWithDiscountsTest(){
-        Product product=new Product(1,"product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(500.0,10);
         Contract c=new Contract(100,1,new HashMap<>(),product);
@@ -61,7 +61,8 @@ public class OrderTest {
 
     @Test
     public void addItemWith2DiscountsTest(){
-        Product product=new Product(1,"product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(500.0,10);
         discounts.put(600.0,20);
@@ -75,7 +76,8 @@ public class OrderTest {
 
     @Test
     public void addItemWithDiscountsNotExceedingPriceTest(){
-        Product product=new Product(1,"product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(5000.0,10);
         discounts.put(6000.0,20);
@@ -104,7 +106,8 @@ public class OrderTest {
 
     @Test
     public void removeProductFromDeliveredOrderTest() {
-        Product product = new Product(1, "product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c, 10, new HashMap<>());
         order.receive();
@@ -119,7 +122,8 @@ public class OrderTest {
 
     @Test
     public void removeProductTest(){
-        Product product = new Product(1, "product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c,10,new HashMap<>());
         order.removeProduct(c,new HashMap<>());
@@ -128,8 +132,10 @@ public class OrderTest {
     }
 
     @Test public void checkIfProductExistsTest(){
-        Product product = new Product(1, "product");
-        Product product2=new Product(2,"product2");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
+        Item product2=new Item(2,"product2",2,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c,10,new HashMap<>());
         assertTrue(order.checkIfProductExists(product));
@@ -139,7 +145,8 @@ public class OrderTest {
     @Test
     public void reOrderTest(){
         Order order1=new Order(LocalDateTime.now(),true,10);
-        Product product = new Product(1, "product");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order1.addItem(c,10,new HashMap<>());
         Order order2=new Order(order1,11,LocalDateTime.now());

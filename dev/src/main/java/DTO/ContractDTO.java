@@ -2,14 +2,14 @@ package DTO;
 
 import BusinessLayer.SuppliersModule.Contract;
 
-public class ProductDTO {
+public class ContractDTO {
     public int storeID;
     public int catalogueID;
     public double pricePerUnit;
     public String productName;
 
-    public ProductDTO(Contract c) {
-        storeID=c.getProduct().getID();
+    public ContractDTO(Contract c) {
+        storeID=c.getProduct().getId();
         productName=c.getProduct().getName();
         pricePerUnit=c.getPricePerUnit();
         catalogueID=c.getCatalogueIDBySupplier();

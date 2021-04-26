@@ -1,13 +1,11 @@
 package BusinessLayer.SuppliersModule;
 
-import BusinessLayer.SuppliersModule.DayOfWeek;
-import BusinessLayer.SuppliersModule.PaymentAgreement;
-import BusinessLayer.SuppliersModule.Product;
-import BusinessLayer.SuppliersModule.Supplier;
+import BusinessLayer.InventoryModule.Item;
 import DTO.SupplierDTO;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -125,7 +123,8 @@ public class SupplierTest {
 
     @Test
     public void addContractTest(){
-        Product product=new Product(1,"product1");
+        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product,1,150.0,new HashMap<>());
         assertEquals(1, supplier.getSupplierContracts().size());
         try {
@@ -141,8 +140,10 @@ public class SupplierTest {
 
     @Test
     public void addContractSameID(){
-        Product product1=new Product(1,"product1");
-        Product product2=new Product(2,"product2");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
+        Item product2=new Item(2,"product2",2,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1,1,150.0,new HashMap<>());
         try {
             supplier.addContract(product2,1,150.0,new HashMap<>());
@@ -156,7 +157,8 @@ public class SupplierTest {
 
     @Test
     public void addContractSameProductTest(){
-        Product product1=new Product(1,"product1");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1,1,150.0,new HashMap<>());
         try {
             supplier.addContract(product1,2,150.0,new HashMap<>());
@@ -182,7 +184,8 @@ public class SupplierTest {
 
     @Test
     public void removeContractTest2(){
-        Product product1=new Product(1,"product1");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1,1,150.0,new HashMap<>());
         supplier.removeContract(1);
         assertEquals(0, supplier.getSupplierContracts().size());
@@ -190,7 +193,8 @@ public class SupplierTest {
 
     @Test
     public void removeContractTest3(){
-        Product product1=new Product(1,"product1");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1,1,150.0,new HashMap<>());
         try {
             supplier.removeContract(2);
@@ -204,7 +208,8 @@ public class SupplierTest {
 
     @Test
     public void removeContractInOrderTest(){
-        Product product1=new Product(1,"product1");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1,1,150.0,new HashMap<>());
         supplier.addOrder(LocalDateTime.now(),true,1);
         supplier.addItemToOrder(1,1,1);
@@ -220,7 +225,8 @@ public class SupplierTest {
 
     @Test
     public void removeContractInDeliveredOrderTest() {
-        Product product1 = new Product(1, "product1");
+        Item product1=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2.2);
+
         supplier.addContract(product1, 1, 150.0, new HashMap<>());
         supplier.addOrder(LocalDateTime.now(), true, 1);
         supplier.addItemToOrder(1, 1, 1);

@@ -3,6 +3,7 @@ package BusinessLayer.SuppliersModule.Controllers;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.SuppliersModule.*;
 
 
@@ -179,7 +180,7 @@ public class SuppliersController {
      * @param price
      * @param quantityAgreement
      */
-    public void addItemToSupplier(int supplierID, Product product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement){
+    public void addItemToSupplier(int supplierID, Item product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement){
         Supplier s = search(supplierID);
         s.addContract(product,supplierProductID,price,quantityAgreement);
     }
