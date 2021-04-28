@@ -176,6 +176,10 @@ public class StockController {
         }
         if(!deleted)
             throw new IllegalArgumentException("Item ID does not exist");
+
+        //@TODO: check if there's an expected order that arrives with the given id
+        //@TODO: a deleted item from the store is represented with id of -1
+
     }
 
     public void sellItem(int itemID,int quantity) {
@@ -185,7 +189,9 @@ public class StockController {
             throw new IllegalArgumentException("invalid quantity");
         if(item.getAvailableAmount()<quantity)
             throw new IllegalArgumentException("No Available items for sale");
+        //@TODO sale item should return true/false upon missing items
         item.SaleItem(quantity);
+        //@TODO open a new order for the low quantity item
     }
 
     public void clear() {

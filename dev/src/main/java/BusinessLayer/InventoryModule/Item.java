@@ -1,10 +1,7 @@
 package BusinessLayer.InventoryModule;
 
-import DTO.ItemDTO;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 
 public class Item {
     // -- fields
@@ -20,6 +17,12 @@ public class Item {
     private int alertTime;
     private double buyingPrice;
     private double sellingPrice;
+    //@TODO: add contract lists as a field
+
+    //@TODO: at the end - change the class to flyweight pattern
+
+    //@TODO: ask rami about the automatic orders regarding expired items
+
 
     // -- constructor
 
@@ -183,7 +186,13 @@ public class Item {
                 storageAmount=storageAmount-quantity;
         this.availableAmount=this.shelfAmount+this.storageAmount;
 
+        //@TODO: check if need to make an order (min quantity, etc..)
 
+        //@TODO: nice to have: add a field that maintains if there are products that are expected to arrive
     }
+
+    //@TODO: functions that get the cheapest supplier id, and the cheapest id catalogue
+
+    //@TODO: think of a solution how to overcome the expiration date field?
 }
 

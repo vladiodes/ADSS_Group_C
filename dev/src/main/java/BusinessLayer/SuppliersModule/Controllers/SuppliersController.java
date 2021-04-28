@@ -131,6 +131,7 @@ public class SuppliersController {
     public void addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
         Supplier s = search(supplierId);
             s.addItemToOrder(orderId,quantity,supplierProductId);
+
     }
 
     /**

@@ -201,7 +201,10 @@ public class Supplier{
      */
     public void addItemToOrder(int orderId, int quantity, int supplierProductId){
         findOrder(orderId).addItem(findContract(supplierProductId),quantity,discountsByPrice);
+        //@TODO: when updating a fixed order - check if it's a fixed order and at least one day before
     }
+
+    //@TODO: add delete item from order function
 
     /**
      *

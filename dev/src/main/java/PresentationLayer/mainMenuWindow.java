@@ -4,7 +4,7 @@ import BusinessLayer.Facade.SupplierFacadeImpl;
 
 import java.util.HashMap;
 
-
+//@TODO: fix a bug with the items menu: opens but doesn't close at the end
 public class mainMenuWindow extends menuWindow {
     private boolean shouldTerminate=false;
     private menuWindow[] windows;

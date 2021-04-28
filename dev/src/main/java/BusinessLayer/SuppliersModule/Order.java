@@ -102,6 +102,8 @@ public class Order{
             pio.orderMore(quantity);
         totalQuantity+=quantity;
         calculateDiscount(discountsByPrice);
+
+
     }
 
     //this functions receives a product and searches for a productInOrder matching to that product.
