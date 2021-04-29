@@ -286,4 +286,13 @@ public class ScheduleController {
         }
         return toReturn;
     }
+    public boolean shiftContainsEmployee(String id,Date date,TypeOfShift type )
+    {
+        return this.getShift(date, type).isEmployeeInShift(id);
+    }
+    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType)
+    {
+        return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
+    }
+
 }

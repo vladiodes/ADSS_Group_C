@@ -336,4 +336,17 @@ public class Shift {
     }
 
 
+    public boolean isTypeEmployeeInShift(TypeOfEmployee empType) {
+
+        for (Pair p: currentShiftEmployees)
+        {
+            Employee currEmp = (Employee)p.first;
+            if(currEmp.getSkills().contains(empType))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
 }
