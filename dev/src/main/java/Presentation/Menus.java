@@ -1,8 +1,8 @@
 package Presentation;
 
-import Business.Facade;
-import Business.TypeOfEmployee;
-import Business.TypeOfShift;
+import Business.Controllers.EmployeesFacade;
+import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 
 
 import java.text.SimpleDateFormat;
@@ -39,10 +39,10 @@ public class Menus {
     private Map ARShift ;
     private int ARShiftOption;
 
-    private Facade facade;
+    private EmployeesFacade facade;
 
     //================================================Constructor===========================================================
-    public Menus(Facade facade)
+    public Menus(EmployeesFacade facade)
     {
         this.facade =facade;
     }
@@ -109,7 +109,7 @@ public class Menus {
 
                             //---------All input from user is ready-------------
 
-                            List<TypeOfEmployee> l = new LinkedList<>();
+                            List<TypeOfEmployee> l = new LinkedList<TypeOfEmployee>();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee= parseTypeOfEmp(employeeFields[6]);
                             while (typeOfEmployee==null) //Ask for valid input until received
@@ -520,14 +520,10 @@ public class Menus {
                 }
                 case(8): //pre-made scenario
                 {
-<<<<<<< Updated upstream
                     TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
                     this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
-=======
                     TypeOfEmployee temp = this.facade.getTypeOfLoggedIn();
                     this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
-
->>>>>>> Stashed changes
                     //Creates 4 employees, a shift, and adds 1 employee to the shift
                     Date date1= null;
                     Date date2 = null;
@@ -542,18 +538,18 @@ public class Menus {
                     {
                         System.out.println("Scenario failed because of date parsing");
                     }
-                    List<TypeOfEmployee> skillsNeta = new LinkedList<>();
+                    List<TypeOfEmployee> skillsNeta = new LinkedList<TypeOfEmployee>();
                     skillsNeta.add(TypeOfEmployee.ShiftManager);
 
-                    List<TypeOfEmployee> skillsBahar = new LinkedList<>();
+                    List<TypeOfEmployee> skillsBahar = new LinkedList<TypeOfEmployee>();
                     skillsBahar.add(TypeOfEmployee.BranchManager);
 
 
-                    List<TypeOfEmployee> skillsOded = new LinkedList<>();
+                    List<TypeOfEmployee> skillsOded = new LinkedList<TypeOfEmployee>();
                     skillsOded.add(TypeOfEmployee.Storage);
 
 
-                    List<TypeOfEmployee> skillsTom = new LinkedList<>();
+                    List<TypeOfEmployee> skillsTom = new LinkedList<TypeOfEmployee>();
                     skillsTom.add(TypeOfEmployee.Cashier);
                     System.out.println(this.facade.addEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta));
                     System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Storage));

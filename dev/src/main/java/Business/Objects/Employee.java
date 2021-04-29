@@ -1,4 +1,8 @@
-package Business;
+package Business.Objects;
+
+import Business.Misc.Pair;
+import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +22,7 @@ public class Employee {
     private String empConditions;
     private Date startWorkingDate;
     private List<TypeOfEmployee> skills;
-    private List<Pair<Date,TypeOfShift>> availableShifts;
+    private List<Pair<Date, TypeOfShift>> availableShifts;
 
     //======================================================Constructor=================================================================
     public Employee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) throws Exception

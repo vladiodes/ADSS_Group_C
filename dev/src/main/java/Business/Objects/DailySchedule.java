@@ -1,4 +1,6 @@
-package Business;
+package Business.Objects;
+
+import Business.Misc.TypeOfShift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,12 +18,12 @@ public class DailySchedule {
 
     public  DailySchedule()
     {
-        shifts=new LinkedList<>();
+        shifts=new LinkedList<Shift>();
     }
 
     public DailySchedule(Shift shift)
     {
-        shifts=new LinkedList<>();
+        shifts=new LinkedList<Shift>();
         addShift(shift);
     }
 

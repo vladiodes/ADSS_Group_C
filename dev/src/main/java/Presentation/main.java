@@ -1,11 +1,8 @@
 package Presentation;
 
-import Business.Facade;
-import Business.TypeOfEmployee;
+import Business.Controllers.EmployeesFacade;
+import Business.Misc.TypeOfEmployee;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class main {
@@ -14,7 +11,7 @@ public class main {
 
     public static void main(String [] args)
     {
-        Facade facade = new Facade(selectType());
+        EmployeesFacade facade = new EmployeesFacade(selectType());
         new Menus(facade).start();
     }
 

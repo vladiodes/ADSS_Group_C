@@ -1,10 +1,9 @@
-package tests;
+package UnitTests;
 
 import Business.Controllers.ScheduleController;
 import Business.Controllers.StaffController;
-import Business.Shift;
-import Business.TypeOfEmployee;
-import Business.TypeOfShift;
+import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,7 +1,10 @@
-package Business;
+package Business.Controllers;
 
 import Business.Controllers.ScheduleController;
 import Business.Controllers.StaffController;
+import Business.Misc.Pair;
+import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 
 import java.util.Date;
 import java.util.List;
@@ -11,14 +14,14 @@ import java.util.List;
  * Functions that refer/modify employees are called from staffController
  * Functions that refer/modify shifts and schedule are called from scheduleController
  */
-public class Facade {
+public class EmployeesFacade {
     private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
     private StaffController staffController;
 
 
     //When creating the assignment screen add the skills of each employee
-    public Facade(TypeOfEmployee typeOfLoggedIn)
+    public EmployeesFacade(TypeOfEmployee typeOfLoggedIn)
     {
         this.typeOfLoggedIn=typeOfLoggedIn;
         this.staffController=new StaffController(typeOfLoggedIn);
@@ -111,7 +114,6 @@ public class Facade {
     }
 
     public TypeOfEmployee getTypeOfLoggedIn() {
-<<<<<<< Updated upstream
         return typeOfLoggedIn;
     }
 
@@ -119,12 +121,10 @@ public class Facade {
         this.typeOfLoggedIn = typeOfLoggedIn;
         this.scheduleController.setTypeOfLoggedIn(typeOfLoggedIn);
         this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
-=======
         return this.typeOfLoggedIn;
     }
 
     public void setTypeOfLoggedIn(TypeOfEmployee type) {
         this.typeOfLoggedIn=type;
->>>>>>> Stashed changes
     }
 }
