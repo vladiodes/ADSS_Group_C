@@ -1,7 +1,5 @@
 package Business.Objects;
-
 import Business.Misc.TypeOfEmployee;
-
 import java.util.Date;
 import java.util.List;
 
