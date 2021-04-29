@@ -121,10 +121,6 @@ public class EmployeesFacade {
         this.typeOfLoggedIn = typeOfLoggedIn;
         this.scheduleController.setTypeOfLoggedIn(typeOfLoggedIn);
         this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
-        return this.typeOfLoggedIn;
     }
 
-    public void setTypeOfLoggedIn(TypeOfEmployee type) {
-        this.typeOfLoggedIn=type;
-    }
 }
