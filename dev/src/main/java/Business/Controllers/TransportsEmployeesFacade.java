@@ -22,7 +22,6 @@ public class TransportsEmployeesFacade {
     private StaffController staffController;
     private Sites Sit = new Sites();
     private Transports Tra = new Transports();
-    private Drivers Dri = new Drivers();
     private Trucks Tru = new Trucks();
 
 
@@ -131,11 +130,6 @@ public class TransportsEmployeesFacade {
     }
 
     //========================================================Transports========================================================================
-
-    public void addDriver(String name, int license, int id) throws Exception {
-        Dri.addDriver(name, id, license);
-    }
-
     public void addSite(String Ad, int num, String c, String Sec) throws Exception {
         Sit.addSite(Ad, num, c, Sec);
     }
@@ -144,8 +138,13 @@ public class TransportsEmployeesFacade {
         Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
-    public void addTransport(Date date, int w, int driverID, int TruckID, List<ItemContract> IC, String Source) throws Exception {
-        Tra.addTransport(new Transport(date, w, Dri.getDriver(driverID), Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
+    public String addTransport(Date date, int weight, String driverID, int TruckID, List<ItemContract> IC, String Source, TypeOfShift TransportationShift) throws Exception {
+        if(!scheduleController.shiftContainsEmployee(driverID,date,TransportationShift))
+            return "Driver not in shift at the time of the transport.";
+        if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
+            return "No storage employee at the time of the shift, can't register transport.";
+        Tra.addTransport(new Transport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
+        return "Transort Registered Successfuly.";
     }
 
     public void addSection(String section) throws Exception {
@@ -162,10 +161,6 @@ public class TransportsEmployeesFacade {
 
     public ArrayList<Truck> getAllTrucks() {
         return Tru.getTrucks();
-    }
-
-    public ArrayList<Driver> getAllDrivers() {
-        return Dri.getDrivers();
     }
 
     public ArrayList<Site> getAllSites() {

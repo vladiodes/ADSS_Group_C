@@ -1,13 +1,17 @@
 package Business.Objects;
 
-public class Driver {
+import Business.Misc.TypeOfEmployee;
+
+import java.util.Date;
+import java.util.List;
+
+public class Driver extends Employee {
     private String Name;
     private int License;
     private int ID;
 
-    public Driver(String name, int id, int license) {
-        setName(name);
-        setID(id);
+    public Driver(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) throws Exception {
+        super(firstName,lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate,skills);
         setLicense(license);
     }
 
