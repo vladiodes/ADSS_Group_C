@@ -5,7 +5,9 @@ import Business.Controllers.StaffController;
 import Business.Misc.Pair;
 import Business.Misc.TypeOfEmployee;
 import Business.Misc.TypeOfShift;
+import Business.Objects.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,14 +16,19 @@ import java.util.List;
  * Functions that refer/modify employees are called from staffController
  * Functions that refer/modify shifts and schedule are called from scheduleController
  */
-public class EmployeesFacade {
+public class TransportsEmployeesFacade {
     private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
     private StaffController staffController;
+    private Sites Sit = new Sites();
+    private Transports Tra = new Transports();
+    private Drivers Dri = new Drivers();
+    private Trucks Tru = new Trucks();
+
 
 
     //When creating the assignment screen add the skills of each employee
-    public EmployeesFacade(TypeOfEmployee typeOfLoggedIn)
+    public TransportsEmployeesFacade(TypeOfEmployee typeOfLoggedIn)
     {
         this.typeOfLoggedIn=typeOfLoggedIn;
         this.staffController=new StaffController(typeOfLoggedIn);
@@ -123,4 +130,61 @@ public class EmployeesFacade {
         this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
     }
 
+    //========================================================Transports========================================================================
+
+    public void addDriver(String name, int license, int id) throws Exception {
+        Dri.addDriver(name, id, license);
+    }
+
+    public void addSite(String Ad, int num, String c, String Sec) throws Exception {
+        Sit.addSite(Ad, num, c, Sec);
+    }
+
+    public void addTruck(int plate, String model, int maxweight, String type, int factoryweight) throws Exception {
+        Tru.addTruck(plate, model, maxweight, type, factoryweight);
+    }
+
+    public void addTransport(Date date, int w, int driverID, int TruckID, List<ItemContract> IC, String Source) throws Exception {
+        Tra.addTransport(new Transport(date, w, Dri.getDriver(driverID), Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
+    }
+
+    public void addSection(String section) throws Exception {
+        Sit.addSection(section);
+    }
+
+    public ArrayList<Transport> getTransportsOfDriver(int driverID) {
+        return Tra.getTransportsOfDriver(driverID);
+    }
+
+    public ArrayList<Transport> getTransportsByDate(Date date) {
+        return Tra.getTransportsByDate(date);
+    }
+
+    public ArrayList<Truck> getAllTrucks() {
+        return Tru.getTrucks();
+    }
+
+    public ArrayList<Driver> getAllDrivers() {
+        return Dri.getDrivers();
+    }
+
+    public ArrayList<Site> getAllSites() {
+        return Sit.getSites();
+    }
+
+    public ArrayList<String> getAllSections() {
+        return Sit.getSections();
+    }
+
+    public ArrayList<Transport> getAllTransports() {
+        return Tra.getTransports();
+    }
+
+    public String getSection(String s) throws Exception {
+        return Sit.getSection(s);
+    }
+
+    public Site getSite(String s) throws Exception {
+        return Sit.getSite(s);
+    }
 }

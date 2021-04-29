@@ -1,6 +1,6 @@
 package Presentation;
 
-import Business.Controllers.EmployeesFacade;
+import Business.Controllers.TransportsEmployeesFacade;
 import Business.Misc.TypeOfEmployee;
 
 import java.util.Scanner;
@@ -11,7 +11,7 @@ public class main {
 
     public static void main(String [] args)
     {
-        EmployeesFacade facade = new EmployeesFacade(selectType());
+        TransportsEmployeesFacade facade = new TransportsEmployeesFacade(selectType());
         new Menus(facade).start();
     }
 

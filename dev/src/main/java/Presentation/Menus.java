@@ -1,6 +1,6 @@
 package Presentation;
 
-import Business.Controllers.EmployeesFacade;
+import Business.Controllers.TransportsEmployeesFacade;
 import Business.Misc.TypeOfEmployee;
 import Business.Misc.TypeOfShift;
 
@@ -39,10 +39,10 @@ public class Menus {
     private Map ARShift ;
     private int ARShiftOption;
 
-    private EmployeesFacade facade;
+    private TransportsEmployeesFacade facade;
 
     //================================================Constructor===========================================================
-    public Menus(EmployeesFacade facade)
+    public Menus(TransportsEmployeesFacade facade)
     {
         this.facade =facade;
     }
