@@ -222,6 +222,30 @@ public class ScheduleController {
         return "constraint removed successfully";
     }
 
+    /**
+     * Checks if the requested shift contains the specific employee identified by it's ID
+     * @param id
+     * @param date
+     * @param type
+     * @return true is the shift requested contains the specific employee, false if not contains
+     */
+    public boolean shiftContainsEmployee(String id,Date date,TypeOfShift type )
+    {
+        return this.getShift(date, type).isEmployeeInShift(id);
+    }
+
+    /**
+     * Checks if the requested shift contains an employee that is assigned to the skill "empType"
+     * @param empType
+     * @param date
+     * @param shiftType
+     * @return true if contains, false if not contains
+     */
+    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType)
+    {
+        return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
+    }
+
     @Override
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -286,13 +310,6 @@ public class ScheduleController {
         }
         return toReturn;
     }
-    public boolean shiftContainsEmployee(String id,Date date,TypeOfShift type )
-    {
-        return this.getShift(date, type).isEmployeeInShift(id);
-    }
-    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType)
-    {
-        return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
-    }
+
 
 }
