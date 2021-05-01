@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDTO {
-    private String name;
-    private int id;
+    public String name;
+    public int id;
     // check about itemDTO
-    private List<String> items;
-    private List<String> subCategories;
-    private String fatherCategory;
+    public List<String> items;
+    public List<String> subCategories;
+    public String fatherCategory;
+    public Integer fatherCatID;
 
     public CategoryDTO(Category c){
         this.name=c.getName();
@@ -22,10 +23,14 @@ public class CategoryDTO {
         {
             this.subCategories.add(cat.getName());
         }
-        if (c.getFatherCategory()!=null)
-            this.fatherCategory=c.getFatherCategory().getName();
-        else
-            this.fatherCategory=null;
+        if (c.getFatherCategory()!=null) {
+            fatherCatID=c.getFatherCategory().getID();
+            this.fatherCategory = c.getFatherCategory().getName();
+        }
+        else {
+            fatherCatID = null;
+            this.fatherCategory = null;
+        }
         this.items = new ArrayList<>();
         for(String name : c.getItemNames())
         {
@@ -62,25 +67,4 @@ public class CategoryDTO {
             builder.append("Category Has No Items\n");
         return builder.toString();
     }
-
-    public Integer getID() {
-        return this.id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFatherCategory() {
-        return fatherCategory;
-    }
-
-    public List<String> getItems() {
-        return items;
-    }
-
-    public List<String> getSubCategories() {
-        return subCategories;
-    }
-
 }
