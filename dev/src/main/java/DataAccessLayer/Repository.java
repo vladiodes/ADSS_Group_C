@@ -149,6 +149,7 @@ public class Repository {
                 "\t\"Name\"\tTEXT NOT NULL UNIQUE,\n" +
                 "\t\"selfPickUp\"\tBoolean NOT NULL,\n" +
                 "\t\"bankAccount\"\tTEXT NOT NULL,\n" +
+                "\t\"paymentMethod\"\tTEXT NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
                 ");";
         String SupplierCat = "CREATE TABLE IF NOT EXISTS \"SupplierCatagories\" (\n" +

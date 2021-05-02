@@ -4,15 +4,12 @@ import DTO.SupplierDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SupplierDAO extends DAO<SupplierDTO> {
-    //no paymentmethod col in supplier table?
-    //using repo for get?
-    String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="PaymentMethod",
-    INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol),
-    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol);
+    String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="paymentMethod",
+    INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol),
+    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol);
 
     public  SupplierDAO(){super("Supplier");}
     @Override
@@ -25,6 +22,7 @@ public class SupplierDAO extends DAO<SupplierDTO> {
             ps.setString(1, dto.supplierName);
             ps.setString(2,String.valueOf(dto.selfPickUp));
             ps.setString(3,dto.bankAccount);
+            ps.setString(4,String.valueOf(dto.paymentMethod));
             ps.executeUpdate();
             id=getInsertedID(con);
         } catch (SQLException e) {
@@ -45,7 +43,8 @@ public class SupplierDAO extends DAO<SupplierDTO> {
             ps.setString(1,dto.supplierName);
             ps.setString(2,String.valueOf(dto.selfPickUp));
             ps.setString(3,dto.bankAccount);
-            ps.setString(4,String.valueOf(dto.getSupplierID()));
+            ps.setString(4,String.valueOf(dto.paymentMethod));
+            ps.setString(5,String.valueOf(dto.getSupplierID()));
             rowsAffected=ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,21 +55,10 @@ public class SupplierDAO extends DAO<SupplierDTO> {
     }
 
     public SupplierDTO get(int id){
-        ResultSet rs=get("ID",String.valueOf(id));
-        SupplierDTO supplier=null;
-        try {
-            int fetchSize=rs.getFetchSize();
-            if(fetchSize!=0){
-
-            }
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-        return supplier;
+        return null;
     }
 
     public int delete(SupplierDTO dto) {
-        return delete("ID",String.valueOf(dto.getSupplierID()));
+        return 0;
     }
 }

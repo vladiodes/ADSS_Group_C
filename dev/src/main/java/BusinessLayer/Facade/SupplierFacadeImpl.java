@@ -126,7 +126,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     @Override
     public Response<OrderDTO> getOrder(int supplierID, int orderID) {
         try {
-            return new Response(new OrderDTO(suppliersController.getOrder(supplierID,orderID)));
+            return new Response(new OrderDTO(suppliersController.getOrder(supplierID,orderID),supplierID));
         }
         catch (IllegalArgumentException e){
             return new Response<>(e);
@@ -149,7 +149,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
         try {
             ArrayList<OrderDTO> list=new ArrayList<>();
             for(Order o:suppliersController.getOrdersBySupplier(supplierId))
-                list.add(new OrderDTO(o));
+                list.add(new OrderDTO(o,supplierId));
             return new Response<>(list);
         }
         catch (IllegalArgumentException e){
@@ -162,7 +162,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
         try {
             ArrayList<ContractDTO> list=new ArrayList<>();
             for(Contract c:suppliersController.getItemsBySupplier(supplierID))
-                list.add(new ContractDTO(c));
+                list.add(new ContractDTO(c,supplierID));
             return new Response<>(list);
         }
         catch (IllegalArgumentException e){

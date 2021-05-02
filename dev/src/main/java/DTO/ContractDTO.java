@@ -7,12 +7,14 @@ public class ContractDTO {
     public int catalogueID;
     public double pricePerUnit;
     public String productName;
+    public int supplierID;
 
-    public ContractDTO(Contract c) {
+    public ContractDTO(Contract c,int supplierID) {
         storeID=c.getProduct().getId();
         productName=c.getProduct().getName();
         pricePerUnit=c.getPricePerUnit();
         catalogueID=c.getCatalogueIDBySupplier();
+        this.supplierID=supplierID;
     }
 
     @Override

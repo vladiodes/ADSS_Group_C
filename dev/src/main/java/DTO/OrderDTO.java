@@ -17,10 +17,12 @@ public class OrderDTO {
     public int totalQuantity;
     public List<String> productsInOrder;
     public boolean isFixed;
+    public int supplierID;
 
-    public OrderDTO(Order order) {
+    public OrderDTO(Order order,int supplierID) {
         dateOfOrder = order.getDateOfOrder();
         orderID = order.getOrderID();
+        this.supplierID=supplierID;
         shipmentStatus = order.getShipmentStatus();
         priceBeforeDiscount = order.getPriceBeforeDiscount();
         priceAfterDiscount = order.getPriceAfterDiscount();
