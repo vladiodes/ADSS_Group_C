@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DAO<T> {
-    private String tableName;
+    protected String tableName;
     public abstract int insert(T Ob);
     public abstract int update(T updatedOb);
     public List<T> getAll(){
