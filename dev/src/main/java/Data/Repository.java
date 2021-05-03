@@ -66,6 +66,7 @@ public class Repository {
                 "\t\"Factory Weight\"\tINTEGER,\n" +
                 "\t\"Max Weight\"\tINTEGER,\n" +
                 "\t\"Model\"\tTEXT,\n" +
+                "\t\"Type\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"Plate Num\")\n" +
                 ");";
         String DriversTable = "CREATE TABLE IF NOT EXISTS \"Drivers\" (\n" +
