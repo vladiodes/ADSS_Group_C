@@ -121,7 +121,7 @@ public class TransportsMain {
             System.out.println("Please enter the name of the new driver");
             String name = in.nextLine();
             System.out.println("Please enter the id of the new driver");
-            int id = in.nextInt();
+            String id = in.nextLine();
             in.nextLine();
             System.out.println("Please enter the license of the new driver");
             int license = in.nextInt();
@@ -185,7 +185,7 @@ public class TransportsMain {
             int weight = in.nextInt();
             in.nextLine();
             System.out.println("Please enter the id of the driver");
-            int driverID = in.nextInt();
+            String driverID = in.nextLine();
             in.nextLine();
             System.out.println("Please enter the plate number of the truck");
             int plateNum = in.nextInt();
