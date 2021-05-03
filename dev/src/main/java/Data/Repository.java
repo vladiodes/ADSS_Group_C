@@ -9,7 +9,7 @@ public class Repository {
         generateTables();
     }
 
-    private Connection connect(){
+    public Connection connect(){
         Connection conn = null;
         try {
             // db parameters
@@ -34,7 +34,7 @@ public class Repository {
         return conn;
     }
 
-    private void closeConn(Connection conn)
+    public void closeConn(Connection conn)
     {
         if (conn == null) return;
         try
@@ -120,7 +120,7 @@ public class Repository {
         }
     }
 
-    public Repository getInstance(){
+    public static Repository getInstance(){
         if( Instance == null)
             Instance = new Repository();
         return Instance;
