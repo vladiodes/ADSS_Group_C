@@ -4,13 +4,13 @@ import java.sql.*;
 
 public class Repository {
     private static Repository Instance = null;
-    private Connection conn = null;
 
     private Repository(){
         generateTables();
     }
 
-    private void connect(){
+    private Connection connect(){
+        Connection conn = null;
         try {
             // db parameters
             String url = "jdbc:sqlite:database.db";
@@ -31,9 +31,10 @@ public class Repository {
                 System.out.println(ex.getMessage());
             }
         }
+        return conn;
     }
 
-    private void closeConn()
+    private void closeConn(Connection conn)
     {
         if (conn == null) return;
         try
@@ -100,7 +101,7 @@ public class Repository {
                 "\tFOREIGN KEY(\"ItemContractID\") REFERENCES \"ItemContracts\"(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"ItemContractTransportID\") REFERENCES \"ItemContracts\"(\"TransportID\")\n" +
                 ");";
-        connect();
+        Connection conn = connect();
         if (conn == null) return;
         try {
             Statement stmt = conn.createStatement();
@@ -115,7 +116,7 @@ public class Repository {
         } catch (SQLException exception) {
             System.out.println("SQLException");
         } finally {
-            closeConn();
+            closeConn(conn);
         }
     }
 
