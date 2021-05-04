@@ -143,7 +143,9 @@ public class TransportsEmployeesFacade {
             return "Driver not in shift at the time of the transport.";
         if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
             return "No storage employee at the time of the shift, can't register transport.";
-        Tra.addTransport(new Transport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source)));
+        if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
+            return "Requested ID isn't a Driver.";
+        Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));
         return "Transort Registered Successfuly.";
     }
 

@@ -5,13 +5,14 @@ import java.util.*;
 
 public class Transports implements Controller<Transport> {
     private ArrayList<Transport> transports;
-
+    private int ID = 0;
     public Transports() {
         this.transports = new ArrayList<Transport>();
     }
 
-    public void addTransport(Transport transport) {
-        transports.add(transport);
+    public void addTransport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source) throws Exception {
+        transports.add(new Transport(date, weight, driver, truck, contracts, source, ID));
+        ID ++;
     }
 
     public ArrayList<Transport> getTransportsOfDriver(int driverID) {
@@ -32,5 +33,10 @@ public class Transports implements Controller<Transport> {
 
     public ArrayList<Transport> getTransports() {
         return transports;
+    }
+
+    @Override
+    public List<Transport> Load() {
+        return null;
     }
 }

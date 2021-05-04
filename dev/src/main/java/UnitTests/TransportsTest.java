@@ -3,25 +3,34 @@ package UnitTests;
 import Business.Controllers.Sites;
 import Business.Controllers.Transports;
 import Business.Controllers.Trucks;
+import Business.Misc.TypeOfEmployee;
 import Business.Objects.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransportsTest {
+//String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license
+    List<TypeOfEmployee> driver = new ArrayList<TypeOfEmployee>();
 
+    @BeforeAll
+    void Init(){
+        driver.add(TypeOfEmployee.Driver);
+    }
 
     @org.junit.jupiter.api.Test
-    void addTransportWrongWeight() {
+    void addTransportWrongWeight() throws Exception { //
         Transports T = new Transports();
         Truck TempTruck = new Truck(1, "s", 5, "a", 1);
-        Driver TempDriver = new Driver("a", 2, 1000);
+        Driver TempDriver = new Driver("firstName","lastName","123","123",69,"fine",new Date(),driver,500);
         Site TempSite = new Site("", 123, "", "North");
         try {
-            T.addTransport(new Transport(new Date(), 7, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite));
+            T.addTransport(new Date(), 7, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite);
             assertTrue(false);
         } catch (Exception e) {
             assertTrue(true);
@@ -29,13 +38,13 @@ class TransportsTest {
     }
 
     @Test
-    void addTransport() {
+    void addTransport() throws Exception {
         Transports T = new Transports();
         Truck TempTruck = new Truck(1, "s", 5, "a", 1);
-        Driver TempDriver = new Driver("a", 2, 1000);
+        Driver TempDriver = new Driver("firstName","lastName","123","123",69,"fine",new Date(),driver,500);
         Site TempSite = new Site("", 123, "", "North");
         try {
-            T.addTransport(new Transport(new Date(), 4, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite));
+            T.addTransport(new Date(), 4, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite);
             assertTrue(true);
         } catch (Exception e) {
             assertTrue(false);
@@ -43,25 +52,13 @@ class TransportsTest {
     }
 
     @Test
-    void addTransportWrongDriver() {
+    void addTransportWrongDriver() throws Exception {
         Transports T = new Transports();
         Truck TempTruck = new Truck(1, "s", 5, "a", 5);
-        Driver TempDriver = new Driver("a", 2, 4);
+        Driver TempDriver = new Driver("firstName","lastName","123","123",69,"fine",new Date(),driver,1);
         Site TempSite = new Site("", 123, "", "North");
         try {
-            T.addTransport(new Transport(new Date(), 7, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite));
-            assertTrue(false);
-        } catch (Exception e) {
-            assertTrue(true);
-        }
-    }
-
-    @Test
-    void addingTwoDriversOneID() {
-        Drivers TempDrivers = new Drivers();
-        try {
-            TempDrivers.addDriver("yep", 5, 1);
-            TempDrivers.addDriver("yep1", 5, 1);
+            T.addTransport(new Date(), 7, TempDriver, TempTruck, new ArrayList<ItemContract>(), TempSite);
             assertTrue(false);
         } catch (Exception e) {
             assertTrue(true);

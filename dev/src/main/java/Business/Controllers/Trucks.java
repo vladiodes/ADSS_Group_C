@@ -3,6 +3,7 @@ package Business.Controllers;
 import Business.Objects.Truck;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Trucks implements Controller<Truck> {
     private HashMap<Integer, Truck> trucks;
@@ -25,5 +26,10 @@ public class Trucks implements Controller<Truck> {
 
     public ArrayList<Truck> getTrucks() {
         return new ArrayList<Truck>(trucks.values());
+    }
+
+    @Override
+    public List<Truck> Load() {
+        return null;
     }
 }

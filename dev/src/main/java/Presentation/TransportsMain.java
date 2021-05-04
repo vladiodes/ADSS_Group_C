@@ -1,6 +1,8 @@
 package Presentation;
 
 import Business.Controllers.TransportsEmployeesFacade;
+import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 import Business.Objects.Employee;
 import Business.Objects.ItemContract;
 
@@ -8,12 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TransportsMain {
-    private static TransportsEmployeesFacade API = new TransportsEmployeesFacade();
+    private static TransportsEmployeesFacade API = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
     public static int ICID = 0;
     private static Scanner in;
     private static Boolean DataInitialized = false;
 
-    public static void main(String args[]) {
+    public static void start() {
         in = new Scanner(System.in);
         while (true) {
             try {
@@ -40,7 +42,7 @@ public class TransportsMain {
                     break;
                 switch (option) {
                     case 1:
-                        AddDriver();
+                        //AddDriver();
                         break;
                     case 2:
                         AddSite();
@@ -58,7 +60,7 @@ public class TransportsMain {
                         GetAllTrucks();
                         break;
                     case 7:
-                        GetAllDrivers();
+                        //GetAllDrivers();
                         break;
                     case 8:
                         GetAllSites();
@@ -114,7 +116,7 @@ public class TransportsMain {
         }
         return contracts;
     }
-
+/*
     public static void AddDriver() {
 
         try {
@@ -131,7 +133,7 @@ public class TransportsMain {
             System.out.println(e.getMessage());
         }
     }
-
+*/
     public static void AddSite() {
         try {
             System.out.println("Please enter the address of the site");
@@ -181,6 +183,12 @@ public class TransportsMain {
                 date = in.nextLine();
                 transDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
             }
+            TypeOfShift typeOfShift = null;
+            while(typeOfShift == null) {
+                System.out.println("Please Enter a valid Type Of Shift The transporation is at:");
+                String type = in.nextLine();
+                typeOfShift = parseTypeOfShift(type);
+            }
             System.out.println("Please enter the weight of the transport");
             int weight = in.nextInt();
             in.nextLine();
@@ -192,11 +200,12 @@ public class TransportsMain {
             in.nextLine();
             System.out.println("Please enter where the transport is going from");
             String source = in.nextLine();
+
             System.out.println("Please follow the instructions to add item contracts to the current transportation:");
             ArrayList<ItemContract> contracts = makeItemContract();
             while (true) {
                 try {
-                    API.addTransport(transDate, weight, driverID, plateNum, contracts, source);
+                    API.addTransport(transDate, weight, driverID, plateNum, contracts, source,typeOfShift);
                     System.out.println("The transport was successfuly recorded!");
                     break;
                 } catch (Exception e) {
@@ -242,7 +251,7 @@ public class TransportsMain {
             System.out.println(e.getMessage());
         }
     }
-
+/*
     public static void GetAllDrivers() {
         try {
             System.out.println(API.getAllDrivers());
@@ -250,7 +259,7 @@ public class TransportsMain {
             System.out.println(e.getMessage());
         }
     }
-
+*/
     public static void GetAllSites() {
         try {
             System.out.println(API.getAllSites());
@@ -303,7 +312,7 @@ public class TransportsMain {
         }
         try
         {
-            API.addDriver("Ami Rozis", 123123123, 5000);
+   //         API.addDriver("Ami Rozis", 123123123, 5000);
             API.addSection("North");
             API.addSection("Center");
             API.addSection("South");
@@ -316,5 +325,19 @@ public class TransportsMain {
         catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+
+    private  static TypeOfShift parseTypeOfShift(String type)
+    {
+        TypeOfShift typeOfShift;
+        try
+        {
+            typeOfShift=TypeOfShift.valueOf(type);
+        }
+        catch (Exception e)
+        {
+            typeOfShift=null;
+        }
+        return typeOfShift;
     }
 }

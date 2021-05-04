@@ -47,4 +47,9 @@ public class Sites implements Controller<Site> {
     public ArrayList<String> getSections() {
         return sections;
     }
+
+    @Override
+    public List<Site> Load() {
+        return null;
+    }
 }

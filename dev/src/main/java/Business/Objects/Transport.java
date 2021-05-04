@@ -9,14 +9,16 @@ public class Transport {
     private Truck truck = null;
     private List<ItemContract> Contracts;
     private Site source = null;
+    private int ID;
 
-    public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source) throws Exception {
+    public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source, int ID) throws Exception {
         setTruck(truck);
         setDate(date);
         setDriver(driver);
         setContracts(contracts);
         setSource(source);
         setWeight(weight);
+        this.ID = ID;
     }
 
     public void setDate(Date date) {
