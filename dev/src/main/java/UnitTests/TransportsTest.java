@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransportsTest {
-//String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license
+/*//String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license
     List<TypeOfEmployee> driver = new ArrayList<TypeOfEmployee>();
 
     @BeforeAll
@@ -133,5 +133,5 @@ class TransportsTest {
         } catch (Exception e) {
             assertTrue(false);
         }
-    }
+    }*/
 }
