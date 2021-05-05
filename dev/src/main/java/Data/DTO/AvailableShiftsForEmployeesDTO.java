@@ -3,9 +3,9 @@ package Data.DTO;
 import java.util.Date;
 
 public class AvailableShiftsForEmployeesDTO {
-    private String EmpID;
-    private Date date;
-    private String type;
+    public String EmpID;
+    public Date date;
+    public String type;
 
 
     public AvailableShiftsForEmployeesDTO( String ID, Date date, String type)

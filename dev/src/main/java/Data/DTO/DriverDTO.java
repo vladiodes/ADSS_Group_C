@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DriverDTO {
-    private String firstName;
-    private String lastName;
-    private String id;
-    private String bankAccountNumber;
-    private int salary;
-    private String empConditions;
-    private Date startWorkingDate;
-    private List<String> skills;
-    private List<Pair<Date, String>> availableShifts;
+    public String firstName;
+    public String lastName;
+    public String id;
+    public String bankAccountNumber;
+    public int salary;
+    public String empConditions;
+    public Date startWorkingDate;
+    public List<String> skills;
+    public List<Pair<Date, String>> availableShifts;
     public int License;
 
     public DriverDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions,

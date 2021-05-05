@@ -29,9 +29,26 @@ public abstract class DAO<T> {
     }
 
     public abstract T makeDTO(ResultSet RS);
+<<<<<<< Updated upstream
 
     public abstract int delete(T ob);
 
+=======
+    public int delete(String colName,String value){
+        String DELETE_SQL=String.format("Delete From %s WHERE %s=%s",tableName,colName,value);
+        int rowsAffected=-1;
+        Connection con=Repository.getInstance().connect();
+        try {
+            Statement stmt=con.createStatement();
+            rowsAffected=stmt.executeUpdate(DELETE_SQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Repository.getInstance().closeConn(con);
+        }
+        return rowsAffected;
+    }
+>>>>>>> Stashed changes
     protected String InsertStatement(String Values) {
         return String.format("INSERT INTO %s \n" +
                 "VALUES %s;", tableName, Values);

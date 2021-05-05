@@ -1,8 +1,8 @@
 package Data.DTO;
 
 public class EmployeesInShiftDTO {
-    private Integer ShiftID;
-    private Integer EmployeeID;
+    public Integer ShiftID;
+    public Integer EmployeeID;
 
     public EmployeesInShiftDTO(Integer ShiftID, Integer EmployeeID) {
         this.ShiftID = ShiftID;

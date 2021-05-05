@@ -66,14 +66,144 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         return 1;
     }
 
-    @Override
-    public int update(ShiftDTO updatedOb) {
-        return 0;
-    }
 
     @Override
+<<<<<<< Updated upstream
+    public int update(ShiftDTO updatedOb) {
+        return 0;
+=======
+    public int update(ShiftDTO updatedOb)//not allowed to change ID
+    {
+        Connection conn = Repository.getInstance().connect();
+        if(updatedOb == null) return 0;
+        String updateString = String.format("UPDATE %s" +
+                        " SET  \"Date\"= %s " +
+                        ", \"TypeOfShift\"=\"%s\", \"IsSealed\"=\"%s\"" +
+                        "WHERE \"Date\" == \"%s\" AND \"TypeOfShift\" == \"%s\";",
+                tableName,updatedOb.date,updatedOb.type,
+                updatedOb.isSealed, updatedOb.date, updatedOb.type);
+        Statement s;
+        try {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e ){
+            return 0;
+        }
+    }
+
+    public int updateConstraint(int ShiftID,String TypeOfEmployee, int amount)
+    {
+        Connection conn = Repository.getInstance().connect();
+        if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
+        String updateString = String.format("UPDATE %s" +
+                        " SET  \"ShiftID\"= %s " +
+                        ", \"TypeOfEmployee\"=\"%s\",  \"Amount\"=\"%s\"" +
+                        "WHERE \"ShiftID\" == \"%s\" AND \"TypeOfEmployee\" == \"%s\";",
+                "ShiftConstraints",ShiftID,TypeOfEmployee,
+                amount, ShiftID, TypeOfEmployee);
+        Statement s;
+        try {
+            s = conn.createStatement();
+            return  s.executeUpdate(updateString);
+        }
+        catch (Exception e ){
+            return 0;
+        }
+    }
+
+
+    public int insertEmployeeToShift(String EmployeeID,int ShiftID,String RoleInShift)
+    {
+        Connection conn = Repository.getInstance().connect();
+        String updateString;
+        if(EmployeeID == null || ShiftID < 0 || RoleInShift == null) return 0;
+        updateString= String.format("INSERT INTO %s \n" +
+                "VALUES (\"%s\",\"%s\",\"%s\");", "EmployeesInShift", EmployeeID, ShiftID,RoleInShift);
+        Statement s;
+        try
+        {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e ){
+            return 0;
+        }
+    }
+
+
+    public int removeEmployeeToShift(String EmployeeID,int ShiftID,String RoleInShift)
+    {
+        Connection conn = Repository.getInstance().connect();
+        String updateString;
+        if(EmployeeID == null || ShiftID < 0 || RoleInShift==null) return 0;
+        updateString= String.format("DELETE FROM %s \n" +
+                "WHERE %s=%s AND %s=%s AND %s=%s;", "EmployeesInShift", "EmployeeID", EmployeeID,"ShiftID" ,ShiftID, "RoleInShift", RoleInShift);
+        Statement s;
+        try
+        {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e )
+        {
+            return 0;
+        }
+    }
+
+
+
+    public int insertConstraints(int ShiftID,String TypeOfEmployee, int amount)
+    {
+        Connection conn = Repository.getInstance().connect();
+        String updateString;
+        if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
+        updateString= String.format("INSERT INTO %s \n" +
+                "VALUES (\"%s\",\"%s\",\"%s\");", "ShiftConstraints", ShiftID, TypeOfEmployee,amount);
+        Statement s;
+        try
+        {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e ){
+            return 0;
+        }
+    }
+
+
+
+    public int removeConstraints(int ShiftID,String TypeOfEmployee)
+    {
+        Connection conn = Repository.getInstance().connect();
+        String updateString;
+        if(TypeOfEmployee == null || ShiftID < 0 ) return 0;
+        updateString= String.format("DELETE FROM %s \n" +
+                "WHERE %s=%s AND %s=%s;", "ShiftConstraints", "ShiftID", ShiftID,"TypeOfEmployee" ,TypeOfEmployee);
+        Statement s;
+        try
+        {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e )
+        {
+            return 0;
+        }
+>>>>>>> Stashed changes
+    }
+
+
+
+    @Override
+<<<<<<< Updated upstream
     public ShiftDTO makeDTO(ResultSet RS) {
         ShiftDTO output = null;
+=======
+    public ShiftDTO makeDTO(ResultSet RS)
+    {
+        ShiftDTO output ;
+>>>>>>> Stashed changes
         try {
             Map<String, Integer> constraints = getconstraintsList(RS.getInt(0)/*id*/);
             if (constraints == null) {
@@ -93,14 +223,23 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         return output;
     }
 
-    //----------check the 2 functions
 
     private List<Pair<String, String>> getcurrentShiftEmployeesList(int shiftId) {
+<<<<<<< Updated upstream
         List<Pair<String, String>> ans = new LinkedList<>();
         ResultSet rs = getWithInt("EmployeesInShift", "ShiftID", shiftId);
         try {
             while (rs.next()) {
                 Pair<String, String> p = new Pair<>(rs.getString(0), rs.getString(1)/*type of shift*/);
+=======
+        List<Pair<String, String>> ans =new LinkedList<>();
+        ResultSet rs=getWithInt("EmployeesInShift","ShiftID", shiftId  );
+        try
+        {
+            while (rs.next())
+            {
+                Pair<String, String> p = new Pair<>(rs.getString(0),rs.getString(2)/*type of employee*/);
+>>>>>>> Stashed changes
                 ans.add(p);
             }
         } catch (Exception e) {
@@ -108,6 +247,10 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         }
         return ans;
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
     /*
                     "\t\"ShiftID\"\tINTEGER,\n" +
@@ -115,11 +258,21 @@ public class ShiftDAO extends DAO<ShiftDTO> {
                     "\t\"Amount\"\tINTEGER,\n" +
     */
     private Map<String, Integer> getconstraintsList(int shiftId) {
+<<<<<<< Updated upstream
         Map<String, Integer> ans = new HashMap<>();
         ResultSet rs = getWithInt("EmployeesInShift", "ShiftID", shiftId);
         try {
             while (rs.next()) {
                 ans.put(rs.getString(1)/*type of employee*/, rs.getInt(2)/*amount*/);
+=======
+        Map<String, Integer> ans= new HashMap<>();
+        ResultSet rs=getWithInt("ShiftConstraints","ShiftID", shiftId  );
+        try
+        {
+            while (rs.next())
+            {
+                ans.put(rs.getString(1)/*type of employee*/,rs.getInt(2)/*amount*/);
+>>>>>>> Stashed changes
             }
         } catch (Exception e) {
             return null;
@@ -127,8 +280,4 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         return ans;
     }
 
-    @Override
-    public int delete(ShiftDTO ob) {
-        return 0;
-    }
 }

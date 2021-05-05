@@ -159,6 +159,7 @@ public class Repository {
         String EmployeesInShiftTable = "CREATE TABLE IF NOT EXISTS \"EmployeesInShift\" (\n" +
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"ShiftID\"\tINTEGER,\n" +
+                "\t\"RoleInShift\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\"),\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\")\n" +
