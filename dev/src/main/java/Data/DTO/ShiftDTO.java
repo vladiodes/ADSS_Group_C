@@ -11,21 +11,50 @@ import static Business.Misc.TypeOfEmployee.ShiftManager;
 
 public class ShiftDTO {
     //==================================================================Fields==================================================================
-    private TypeOfShiftDTO type;
+    private Integer Id;
+    private String type;
     private Date date;
-    private Map<TypeOfEmployeeDTO, Integer> constraints;
-    private List<Pair<EmployeeDTO,TypeOfEmployeeDTO>> currentShiftEmployees;
+    private Map<String, Integer> constraints;
+    private List<Pair<String/*empID*/,String/*typeOfEmployee*/>> currentShiftEmployees;//----------------------------change EmployeeDTO to String(emp Id)
     private boolean isSealed;
 
 
     //==================================================================Constructor==============================================================
-    public ShiftDTO(TypeOfShiftDTO type, Date date)
+    public ShiftDTO(Integer Id,String type, Date date,Map<String, Integer> constraints,List<Pair<String/*empID*/,String/*typeOfEmployee*/>> currentShiftEmployees )
     {
+        this.Id=Id;
         this.type = type;
         this.date = date;
-        this.currentShiftEmployees = new LinkedList<>();
-        this.constraints = new HashMap<>(); //init
-        this.constraints.put(new TypeOfEmployeeDTO("ShiftManager"), 1); //Default constraint
+        this.currentShiftEmployees = currentShiftEmployees;
+        this.constraints = constraints;
+        this.constraints.put("ShiftManager", 1); //Default constraint
         this.isSealed = false;
+
+    }
+
+    public String fieldsToString()
+    {
+        return String.format("(\"%s\",\"%s\",\"%s\")", this.type, date.toString(), isSealed ? "True" : "False");
+    }
+
+
+
+    public int getNumberOfEmpInShift() {
+        return this.currentShiftEmployees.size();
+    }
+
+    public String getEmployees(int index) {
+        return String.format("(\"%s\",\"%s\")", this.Id,  this.currentShiftEmployees.get(index).first);
+    }
+
+
+    public String getConstraint(String type) {
+        Integer amount = this.constraints.get(type);
+        return String.format("(\"%s\",\"%s\")", this.Id,  type, amount);
+
+    }
+
+    public Map<String, Integer> getConstraintsMap() {
+        return  this.constraints;
     }
 }

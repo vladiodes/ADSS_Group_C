@@ -1,7 +1,6 @@
 package Data.DAO;
 
 import Data.DTO.SiteDTO;
-import Data.DTO.TruckDTO;
 import Data.Repository;
 
 import java.sql.Connection;
@@ -21,7 +20,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         Statement s;
         try {
             s = conn.createStatement();
-            s.executeUpdate(InstertStatement(Values));
+            s.executeUpdate(InsertStatement(Values));
             return 1;
         }
         catch (Exception e ){

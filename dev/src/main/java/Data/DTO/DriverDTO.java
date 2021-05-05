@@ -15,11 +15,12 @@ public class DriverDTO {
     private int salary;
     private String empConditions;
     private Date startWorkingDate;
-    private List<TypeOfEmployeeDTO> skills;
-    private List<Pair<Date, TypeOfShiftDTO>> availableShifts;
+    private List<String> skills;
+    private List<Pair<Date, String>> availableShifts;
     public int License;
 
-    public DriverDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployeeDTO> skills, int License)
+    public DriverDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions,
+                     Date startWorkingDate,int License, List<String> skills, List<Pair<Date, String>> availableShifts)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,7 +30,39 @@ public class DriverDTO {
         this.empConditions = empConditions;
         this.startWorkingDate = startWorkingDate;
         this.skills=skills;
-        this.availableShifts = new LinkedList<>();
         this.License=License;
+        this.availableShifts=availableShifts;
     }
+
+    public String fieldsToString()
+    {
+        return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", this.firstName,
+                this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions, this.startWorkingDate.toString(),Integer.toString(this.License));
+    }
+
+
+    public String getAvailableShifts(int index) {
+        Pair<Date,String> p = this.availableShifts.get(index);
+        String currDate =p.first.toString();
+        String currType = p.second;
+        return String.format("(\"%s\",\"%s\",\"%s\")", this.id ,currDate ,currType);
+    }
+
+    public int getNumberOfAvailableShifts() {
+        return this.availableShifts.size();
+    }
+
+    public int getNumberOfSkills() {
+        return this.skills.size();
+    }
+
+    public String getSkills(int index) {
+        return String.format("(\"%s\",\"%s\")", this.id ,skills.get(index));
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+
 }
