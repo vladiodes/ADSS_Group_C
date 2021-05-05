@@ -16,7 +16,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
         Statement s;
         try {
             s = conn.createStatement();
-            s.executeUpdate(InstertStatement(Values));
+            s.executeUpdate(InsertStatement(Values));
             return 1;
         }
         catch (Exception e ){
