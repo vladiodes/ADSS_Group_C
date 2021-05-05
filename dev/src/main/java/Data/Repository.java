@@ -1,15 +1,23 @@
 package Data;
-import java.sql.*;
+import Data.DAO.*;
+import Data.DTO.ItemContractDTO;
+import Data.DTO.SiteDTO;
+import Data.DTO.TransportDTO;
+import Data.DTO.TruckDTO;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Repository {
     private static Repository Instance = null;
 
-    private Repository(){
+    private Repository() {
         generateTables();
     }
 
-    public Connection connect(){
+    public Connection connect() {
         Connection conn = null;
         try {
             // db parameters
@@ -21,7 +29,7 @@ public class Repository {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
+        }/* finally {
             try {
                 if (conn != null) {
                     conn.close();
@@ -30,31 +38,28 @@ public class Repository {
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
-        }
+        }*/
         return conn;
     }
 
-    public void closeConn(Connection conn)
-    {
+    public void closeConn(Connection conn) {
         if (conn == null) return;
-        try
-        {
+        try {
             conn.close();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-
-    private void generateTables(){
+    private void generateTables() {
 
         //Transportation tables--------------------------------------------------------------------------
+
         String SectionsTable = "CREATE TABLE IF NOT EXISTS \"Sections\" (\n" +
                 "\t\"Name\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"Name\")\n" +
                 ");";
+
         String SitesTable = "CREATE TABLE IF NOT EXISTS \"Sites\" (\n" +
                 "\t\"Contact\"\tTEXT,\n" +
                 "\t\"Phone Number\"\tTEXT,\n" +
@@ -63,6 +68,7 @@ public class Repository {
                 "\tPRIMARY KEY(\"Address\"),\n" +
                 "\tFOREIGN KEY(\"Section\") REFERENCES \"Sections\"(\"Name\")\n" +
                 ");";
+
         String TrucksTable = "CREATE TABLE IF NOT EXISTS \"Trucks\" (\n" +
                 "\t\"Plate Num\"\tTEXT,\n" +
                 "\t\"Factory Weight\"\tINTEGER,\n" +
@@ -75,47 +81,50 @@ public class Repository {
         String TransportsTable = "CREATE TABLE IF NOT EXISTS \"Transports\" (\n" +
                 "\t\"Weight\"\tINTEGER,\n" +
                 "\t\"Date\"\tTEXT,\n" +
-                "\t\"ID\"\tINTEGER,\n" +
-                "\t\"Truck\"\tINTEGER,\n" +
+                "\t\"ID\"\tTEXT,\n" +
+                "\t\"Truck\"\tTEXT,\n" +
                 "\t\"Source\"\tTEXT,\n" +
-                "\t\"Driver\"\tINTEGER,\n" +
+                "\t\"Driver\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"Truck\") REFERENCES \"Trucks\"(\"Plate Num\"),\n" +
                 "\tFOREIGN KEY(\"Driver\") REFERENCES \"Drivers\"(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"Source\") REFERENCES \"Sites\"(\"Address\")\n" +
                 ");";
+
         String ItemcontractsTable = "CREATE TABLE IF NOT EXISTS \"ItemContracts\" (\n" +
                 "\t\"ID\"\tINTEGER,\n" +
                 "\t\"TransportID\"\tINTEGER,\n" +
-                "\t\"Destination\"\tINTEGER,\n" +
+                "\t\"Destination\"\tTEXT,\n" +
+                "\t\"Passed\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"ID\",\"TransportID\"),\n" +
                 "\tFOREIGN KEY(\"Destination\") REFERENCES \"Sites\"(\"Address\")\n" +
                 ");";
+
         String ItemsTable = "CREATE TABLE IF NOT EXISTS \"ItemsInItemcontracts\" (\n" +
                 "\t\"Count\"\tINTEGER,\n" +
-                "\t\"ID\"\tINTEGER,\n" +
+                "\t\"Name\"\tTEXT,\n" +
                 "\t\"ItemContractID\"\tINTEGER,\n" +
                 "\t\"ItemContractTransportID\"\tINTEGER,\n" +
-                "\tPRIMARY KEY(\"ID\",\"ItemContractID\",\"ItemContractTransportID\"),\n" +
+                "\tPRIMARY KEY(\"Name\",\"ItemContractID\",\"ItemContractTransportID\"),\n" +
                 "\tFOREIGN KEY(\"ItemContractID\") REFERENCES \"ItemContracts\"(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"ItemContractTransportID\") REFERENCES \"ItemContracts\"(\"TransportID\")\n" +
                 ");";
 
         //Employees Tables ------------------------------------------------------------------------------------------------------------------
 
-        String DriversTable =  "CREATE TABLE IF NOT EXISTS \"Drivers\" (\n" +
+        String DriversTable = "CREATE TABLE IF NOT EXISTS \"Drivers\" (\n" +
                 "\t\"FirstName\"\tTEXT,\n" +
                 "\t\"LastName\"\tTEXT,\n" +
                 "\t\"ID\"\tTEXT,\n" +
                 "\t\"BankAccountNumber\"\tTEXT,\n" +
                 "\t\"Salary\"\tINTEGER,\n" +
                 "\t\"EmpConditions\"\tTEXT,\n" +
-                "\t\"StartWorkingDate\"\tDATE,\n" +
+                "\t\"StartWorkingDate\"\tTEXT,\n" +
                 "\t\"License\"\tINTEGER,\n" +
-                "\tPRIMARY KEY(\"ID\"),\n" +
+                "\tPRIMARY KEY(\"ID\")\n" +
                 ");";
 
-        String EmployeesTable =  "CREATE TABLE IF NOT EXISTS \"Employees\" (\n" +
+        String EmployeesTable = "CREATE TABLE IF NOT EXISTS \"Employees\" (\n" +
                 "\t\"FirstName\"\tTEXT,\n" +
                 "\t\"LastName\"\tTEXT,\n" +
                 "\t\"ID\"\tTEXT,\n" +
@@ -123,10 +132,9 @@ public class Repository {
                 "\t\"Salary\"\tINTEGER,\n" +
                 "\t\"EmpConditions\"\tTEXT,\n" +
                 "\t\"StartWorkingDate\"\tDATE,\n" +
-                "\tPRIMARY KEY(\"ID\"),\n" +
+                "\tPRIMARY KEY(\"ID\")\n" +
                 ");";
         //Foreign keys skills and availableShift
-
 
         String ShiftsTable = "CREATE TABLE IF NOT EXISTS \"Shifts\" (\n" +
                 "\t\"ID\"\tINTEGER,\n" +
@@ -137,42 +145,40 @@ public class Repository {
                 "\tFOREIGN KEY(\"ItemContractID\") REFERENCES \"ItemContracts\"(\"ID\"),\n" +
                 "\tFOREIGN KEY(\"ItemContractTransportID\") REFERENCES \"ItemContracts\"(\"TransportID\")\n" +
                 ");";
-        //Foreign Keys current employee and constarits
 
-
+        //Foreign Keys current employee and constraints
 
         String AvailableShiftsForEmployees = "CREATE TABLE IF NOT EXISTS \"AvailableShiftsForEmployees\" (\n" +
                 "\t\"EmpID\"\tTEXT,\n" +
                 "\t\"Date\"\tDATE,\n" +
                 "\t\"Type\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"EmpID\",\"Date\",\"Type\"),\n" +
-                "\tFOREIGN KEY(\"EmpID\") REFERENCES \"Employees\"(\"ID\"),\n" +
+                "\tFOREIGN KEY(\"EmpID\") REFERENCES \"Employees\"(\"ID\")\n" +
                 ");";
+
         String EmployeesInShiftTable = "CREATE TABLE IF NOT EXISTS \"EmployeesInShift\" (\n" +
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"ShiftID\"\tINTEGER,\n" +
                 "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\"),\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\"),\n" +
+                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\")\n" +
                 ");";
+
         String EmployeeSkillsTable = "CREATE TABLE IF NOT EXISTS \"EmployeeSkills\" (\n" +
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"TypeOfEmployee\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\"),\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\"),\n" +
+                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\")\n" +
                 ");";
+
         String ShiftConstraintsTable = "CREATE TABLE IF NOT EXISTS \"ShiftConstraints\" (\n" +
                 "\t\"ShiftID\"\tINTEGER,\n" +
                 "\t\"TypeOfEmployee\"\tTEXT,\n" +
                 "\t\"Amount\"\tINTEGER,\n" +
                 "\tPRIMARY KEY(\"ShiftID\",\"TypeOfEmployeeID\"),\n" +
-                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\"),\n" +
+                "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\")\n" +
                 ");";
-
-
-
-
 
         Connection conn = connect();
         if (conn == null) return;
@@ -182,7 +188,6 @@ public class Repository {
             stmt.execute(SectionsTable);
             stmt.execute(SitesTable);
             stmt.execute(TrucksTable);
-            stmt.execute(DriversTable);
             stmt.execute(DriversTable);
             stmt.execute(TransportsTable);
             stmt.execute(ItemcontractsTable);
@@ -201,10 +206,17 @@ public class Repository {
         }
     }
 
-    public static Repository getInstance(){
-        if( Instance == null)
+    public static Repository getInstance() {
+        if (Instance == null)
             Instance = new Repository();
         return Instance;
     }
+/*
+    public static void main(String[] args) {
+        //getInstance();
+        TransportsDAO dao = new TransportsDAO();
 
+        List<TransportDTO> i = dao.getAll();
+        System.out.println(i.get(0).Contracts.get(0).passed);
+    }*/
 }

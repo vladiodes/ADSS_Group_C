@@ -1,7 +1,6 @@
 package Data.DTO;
 
 import Business.Misc.Pair;
-
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,17 +28,15 @@ public class EmployeeDTO {
         this.availableShifts = availableShifts;
     }
 
-    public String fieldsToString()
-    {
+    public String fieldsToString() {
         return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", this.firstName, this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions, this.startWorkingDate.toString());
     }
 
-
     public String getAvailableShifts(int index) {
-        Pair<Date,String> p = this.availableShifts.get(index);
-        String currDate =p.first.toString();
+        Pair<Date, String> p = this.availableShifts.get(index);
+        String currDate = p.first.toString();
         String currType = p.second;
-        return String.format("(\"%s\",\"%s\",\"%s\")", this.id ,currDate ,currType);
+        return String.format("(\"%s\",\"%s\",\"%s\")", this.id, currDate, currType);
     }
 
     public int getNumberOfAvailableShifts() {
@@ -51,7 +48,7 @@ public class EmployeeDTO {
     }
 
     public String getSkills(int index) {
-        return String.format("(\"%s\",\"%s\")", this.id ,skills.get(index));
+        return String.format("(\"%s\",\"%s\")", this.id, skills.get(index));
     }
 
     public String getId() {
