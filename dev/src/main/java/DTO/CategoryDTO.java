@@ -1,6 +1,7 @@
 package DTO;
 
 import BusinessLayer.InventoryModule.Category;
+import BusinessLayer.InventoryModule.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +9,25 @@ import java.util.List;
 public class CategoryDTO {
     public String name;
     public int id;
-    // check about itemDTO
+
+    //=============Those fields are when reading data from the database===========//
+    public List<Integer> itemIDS;
+    public List<Integer> categoriesIDS;
+    //===========================================================================//
+
     public List<String> items;
     public List<String> subCategories;
     public String fatherCategory;
     public Integer fatherCatID;
 
+    public CategoryDTO(Integer id,String name, Integer fatherCatID){
+        this.fatherCatID=fatherCatID;
+        this.id=id;
+        this.name=name;
+    }
     public CategoryDTO(Category c){
+        itemIDS=new ArrayList<>();
+        categoriesIDS=new ArrayList<>();
         this.name=c.getName();
         this.id=c.getID();
         this.subCategories = new ArrayList<>();
@@ -22,6 +35,7 @@ public class CategoryDTO {
         for(Category cat : c.getSubCategories())
         {
             this.subCategories.add(cat.getName());
+            categoriesIDS.add(cat.getID());
         }
         if (c.getFatherCategory()!=null) {
             fatherCatID=c.getFatherCategory().getID();
@@ -32,9 +46,10 @@ public class CategoryDTO {
             this.fatherCategory = null;
         }
         this.items = new ArrayList<>();
-        for(String name : c.getItemNames())
+        for(Item item: c.getItems().values())
         {
-            this.items.add(name);
+            items.add(item.getName());
+            itemIDS.add(item.getId());
         }
     }
 

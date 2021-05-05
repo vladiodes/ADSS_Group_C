@@ -4,7 +4,7 @@ import java.sql.*;
 
 public abstract class DAO<T> {
     protected String tableName;
-
+//@TODO: when inserting daos, pay attention to update association tables as well
     public DAO(String tableName){
         this.tableName=tableName;
     }

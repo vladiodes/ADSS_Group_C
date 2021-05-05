@@ -91,7 +91,7 @@ public class RecordController {
 
 
     public Sale addSale(Item item,int quantity){
-        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getBuyingPrice(),item.getSellingPrice(),LocalDate.now(),quantity);
+        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getSellingPrice(),LocalDate.now(),quantity);
         this.sales.put(salesKey,sale);
         this.salesKey++;
         return sale;

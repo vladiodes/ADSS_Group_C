@@ -1,10 +1,16 @@
 package DataAccessLayer;
 
+import DTO.ItemDTO;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Repository {
     //@TODO: add a DAL to the system
     private static Repository instance = null;
+    private String categoriesTable="Category";
+    private String itemsTable="Item";
 
     private Repository() {
         createTables();
@@ -42,11 +48,33 @@ public class Repository {
         }
     }
 
+    public List<Integer> getCategoryItems(int categoryID) {
+        ResultSet rs = null;
+        ArrayList<Integer> itemsIDS = new ArrayList<>();
+        Connection con = connect();
+        try {
+            String query = String.format("Select %s.ID as ID\n" +
+                    "from %s,%s\n" +
+                    "where %s.ID=%s.CategoryID AND Category.ID=%d;", itemsTable, categoriesTable, itemsTable, categoriesTable, itemsTable, categoryID);
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        if (rs == null) return null;
+        try {
+            itemsIDS = new ArrayList<>();
+            while (rs.next())
+                itemsIDS.add(rs.getInt("ID"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return itemsIDS;
+    }
+
     private void createTables() {
-        String test="CREATE TABLE \"Test\" (\n" +
-                "\t\"id\"\tINTEGER,\n" +
-                "\tPRIMARY KEY(\"id\")\n" +
-                ");";
         String categoriesTable = "CREATE TABLE IF NOT EXISTS \"Category\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
                 "\t\"Name\"\tTEXT NOT NULL,\n" +
@@ -212,4 +240,27 @@ public class Repository {
             closeConnection(conn);
         }
     }
+
+    public List<Integer> getIds(String query){
+        ResultSet rs = null;
+        ArrayList<Integer> Ids = new ArrayList<>();
+        Connection con = connect();
+        try {
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con);
+        }
+        if (rs == null) return null;
+        try {
+            while (rs.next())
+                Ids.add(rs.getInt("ID"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Ids;
+    }
+
 }

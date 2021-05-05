@@ -11,6 +11,12 @@ public class Report {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    public Report(int reportID,List<Item> items,LocalDate startDate,LocalDate endDate){
+        this.reportID=reportID;
+        this.items=items;
+        this.startDate=startDate;
+        this.endDate=endDate;
+    }
     public Report(int reportID){
         this.reportID=reportID;
         this.items=new ArrayList<>();

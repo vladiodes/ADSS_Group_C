@@ -2,6 +2,7 @@ package DTO;
 
 import BusinessLayer.InventoryModule.Item;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -16,7 +17,22 @@ public class ItemDTO {
     private int minAmount;
     private LocalDate expDate;
     private int alertTime;
+    private double sellingPrice;
+    private int categoryID;
 
+    public ItemDTO(int id, String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, Date expDate, double sellingPrice, int categoryID){
+        this.id=id;
+        itemName=name;
+        this.location=location;
+        this.producer=producer;
+        this.availableAmount=availableAmount;
+        this.storageAmount=storageAmount;
+        this.shelfAmount=shelfAmount;
+        this.minAmount=minAmount;
+        this.expDate=expDate.toLocalDate();
+        this.sellingPrice=sellingPrice;
+        this.categoryID=categoryID;
+    }
     public ItemDTO(Item i){
         this.id=i.getId();
         this.itemName = i.getName();
@@ -28,6 +44,8 @@ public class ItemDTO {
         this.setMinAmount(i.getMinAmount());
         this.setExpDate(i.getExpDate());
         this.setAlertTime(i.getAlertTime());
+        sellingPrice=i.getSellingPrice();
+        categoryID=i.getCategoryID();
     }
 
     @Override
@@ -37,6 +55,7 @@ public class ItemDTO {
         builder.append("Item Name: " + this.itemName + "\n");
         builder.append("Item Location: "+ this.location + "\n");
         builder.append("Item Producer: "+ this.producer + "\n");
+        builder.append("Item Selling price: " + sellingPrice + "\n");
         builder.append("Item Available Amount: "+ this.availableAmount + "\n");
         builder.append("Item Storage Amount: "+ this.storageAmount + "\n");
         builder.append("Item Shelf Amount: "+ this.shelfAmount + "\n");
@@ -110,11 +129,19 @@ public class ItemDTO {
         return this.id;
     }
 
+    public double getSellingPrice() {
+        return sellingPrice;
+    }
+
     public int getAlertTime() {
         return this.alertTime;
     }
 
     public String getName() {
         return this.itemName;
+    }
+
+    public int getCategoryID() {
+        return categoryID;
     }
 }

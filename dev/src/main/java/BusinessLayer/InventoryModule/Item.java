@@ -17,6 +17,9 @@ public class Item {
     private int alertTime;
     private double buyingPrice;
     private double sellingPrice;
+
+    //for database completeness
+    private int categoryID;
     //@TODO: add contract lists as a field
 
     //@TODO: at the end - change the class to flyweight pattern
@@ -26,7 +29,7 @@ public class Item {
 
     // -- constructor
 
-    public Item(int id, String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice,double sellingPrice){
+    public Item(int id, String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID){
         this.id=id;
         this.name=name;
         this.location=location;
@@ -37,8 +40,9 @@ public class Item {
         this.minAmount=minAmount;
         this.expDate=expDate;
         this.alertTime=2;
-        this.buyingPrice=buyingPrice;
+        //this.buyingPrice=buyingPrice; //@TODO: system should calculate it
         this.sellingPrice=sellingPrice;
+        this.categoryID=categoryID;
     }
 
     @Override
@@ -189,6 +193,10 @@ public class Item {
         //@TODO: check if need to make an order (min quantity, etc..)
 
         //@TODO: nice to have: add a field that maintains if there are products that are expected to arrive
+    }
+
+    public int getCategoryID() {
+        return categoryID;
     }
 
     //@TODO: functions that get the cheapest supplier id, and the cheapest id catalogue

@@ -15,6 +15,22 @@ public class Category {
     // can be null
     private Category fatherCategory;
 
+    /**
+     * Used when reading data from database
+     * @param name
+     * @param id
+     * @param fatherCategory
+     * @param subCategories
+     */
+    public Category(String name, int id,Category fatherCategory,List<Category> subCategories,List<Item> items){
+        this.name=name;
+        this.id=id;
+        this.fatherCategory=fatherCategory;
+        this.subCategories=subCategories;
+        for(Item item:items)
+            this.items.put(item.getId(),item);
+    }
+
     public Category(String name,int id,Category fatherCategory){
         this.name=name;
         this.id=id;
@@ -78,7 +94,8 @@ public class Category {
 
             throw new IllegalArgumentException("invalid buying price");
 
-        Item toAdd = new Item(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+        //@TODO: buying price should be calculated by system and not passed as an argument
+        Item toAdd = new Item(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID());
         this.items.put(itemID, toAdd);
         return toAdd;
     }
