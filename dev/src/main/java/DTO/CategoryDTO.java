@@ -21,6 +21,8 @@ public class CategoryDTO {
     public Integer fatherCatID;
 
     public CategoryDTO(Integer id,String name, Integer fatherCatID){
+        itemIDS=new ArrayList<>();
+        categoriesIDS=new ArrayList<>();
         this.fatherCatID=fatherCatID;
         this.id=id;
         this.name=name;

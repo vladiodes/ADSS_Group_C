@@ -18,7 +18,7 @@ class StockControllerTest {
 
     @org.junit.jupiter.api.AfterEach
     void tearDown() {
-        this.stockController.clear();
+
     }
 
     @org.junit.jupiter.api.Test

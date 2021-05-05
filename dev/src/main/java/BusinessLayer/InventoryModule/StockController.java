@@ -1,5 +1,8 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.CategoryMapper;
+import BusinessLayer.Mappers.ItemsMapper;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,16 +11,12 @@ import java.util.Map;
 public class StockController {
     // -- fields
     private static StockController stockControllerInstance = null;
-    private int categoryID;
-    private int itemID; // by father category
-    private HashMap<Integer,Category> categories;
+    private CategoryMapper mapper;
 
     // -- constructor
     private StockController()
     {
-        this.categoryID =1;
-        this.itemID=1;
-        this.categories = new HashMap<>();
+        mapper=CategoryMapper.getInstance();
     }
 
     public static StockController getInstance(){
@@ -30,14 +29,11 @@ public class StockController {
     // -- public methods
 
     public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double buyingPrice,double sellingPrice) {
-
-
-        if (categoryID>=this.categoryID | categoryID<0)
+        if (categoryID<0)
             throw new IllegalArgumentException("invalid category id");
         if (!isAvailableLocation(location))
-            throw new IllegalArgumentException("location is already token");
-        Item toReturn = this.categories.get(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,itemID,buyingPrice,sellingPrice);
-        itemID++;
+            throw new IllegalArgumentException("location is already taken");
+        Item toReturn = CategoryMapper.getInstance().getCategory(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
         return toReturn;
     }
 
@@ -46,24 +42,28 @@ public class StockController {
         this.getItemByID(itemID).updateItem(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
     }
 
+    private Category findCategory(int categoryID){
+        return mapper.getCategory(categoryID);
+    }
+
     public void updateCategory(int categoryID,String categoryName){
-        if(this.categories.containsKey(categoryID))
-            this.categories.get(categoryID).updateCategory(categoryName);
-        else
+        Category cat=findCategory(categoryID);
+        if(cat==null)
             throw new IllegalArgumentException("Invalid category ID");
+        cat.updateCategory(categoryName);
     }
     public void addCategoryDiscount(int categoryID,double discount){
 
-        if (categoryID>=this.categoryID | categoryID<0)
+        if (categoryID<0 || findCategory(categoryID)==null)
             throw new IllegalArgumentException("invalid category id");
         if (discount<0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
-        this.categories.get(categoryID).addDiscount(discount);
+        findCategory(categoryID).addDiscount(discount);
     }
 
     public void addItemDiscount(int itemID,double discount){
 
-        if (itemID>=this.itemID | itemID<0)
+        if (itemID<0)
             throw new IllegalArgumentException("invalid Item id");
         if (discount<0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
@@ -73,29 +73,22 @@ public class StockController {
     public Category addCategory(String name,int fatherID){
         // checks - father id = 0 -> no father category
         // check that the father ID exists
-        Category FatherCategory;
-        if(this.categoryID == 1 && fatherID == 1)
-        {
-            throw new IllegalArgumentException("No Categories yet , Cannot add father category 1");
-        }
-        if (fatherID<0 | fatherID>this.categoryID)
+        if (fatherID<0)
             throw new IllegalArgumentException("invalid father category");
-        if (fatherID==0)
-            FatherCategory = null;
-        else
-            FatherCategory = this.categories.get(fatherID);
-        Category toAdd = new Category(name,this.categoryID,FatherCategory);
-        this.categories.put(this.categoryID,toAdd);
+        Category FatherCategory = null;
+        if(fatherID>0){
+            FatherCategory=findCategory(fatherID);
+            if(FatherCategory==null)
+                throw new IllegalArgumentException("No such father category");
+        }
+        Category toAdd = new Category(name,FatherCategory);
         if (toAdd.getFatherCategory()!=null)
             toAdd.getFatherCategory().addSubCategory(toAdd);
-        this.categoryID++;
         return toAdd;
     }
 
     public Item getItemByLocation(int location){
-        if (isAvailableLocation(location))
-            throw new IllegalArgumentException("there is no item in this location");
-        return this.findItemByLocation(location);
+        return findItemByLocation(location);
     }
     public Item getItemById(int itemID){
         return this.findItem(itemID);
@@ -103,27 +96,24 @@ public class StockController {
 
     public void changeAlertTime(int itemID,int daysAmount){
         this.findItem(itemID).setAlertTime(daysAmount);
+        //@todo:add alert time to db
     }
 
 
     // -- private methods
     private Item findItem(int itemID) {
-        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
-            Category value = entry.getValue();
-            if (value.getItems().containsKey(itemID))
-                return value.getItems().get(itemID);
+        for (Category cat : mapper.getAllCategories()) {
+            if (cat.getItems().containsKey(itemID))
+                return cat.getItems().get(itemID);
         }
         throw new IllegalArgumentException("there is no item with this item ID");
     }
     private Item findItemByLocation(int location){
-        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
-            Category value = entry.getValue();
-            for (Map.Entry<Integer, Item> entry1 : value.getItems().entrySet()) {
-                if (entry1.getValue().getLocation()==location)
-                    return entry1.getValue();
-            }
-    }
-        throw new IllegalArgumentException("there is no item in this location");
+        Item i=ItemsMapper.getInstance().getItemByLocation(location);
+        if(i==null)
+            throw new IllegalArgumentException("there is no item in this location");
+        return i;
+
 }
     private Item getItemByID(int id) {
         Item item = findItem(id);
@@ -134,40 +124,26 @@ public class StockController {
     private boolean isAvailableLocation(int location){
         if (location<0)
             throw new IllegalArgumentException("invalid location");
-        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
-            Category value = entry.getValue();
-            for (Map.Entry<Integer, Item> entry1 : value.getItems().entrySet()) {
-                if (entry1.getValue().getLocation()==location)
-                    return false;
-            }
-        }
-        return true;
-
+        return ItemsMapper.getInstance().getItemByLocation(location)==null;
         // check in all items that the location is free
     }
 
     public ArrayList<Category> getAllCategories() {
-        ArrayList<Category> toReturn = new ArrayList<>();
-        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
-            Category value = entry.getValue();
-            toReturn.add(value);
-        }
-        return toReturn;
+        return mapper.getAllCategories();
     }
 
     public ArrayList<Category> getCategories(ArrayList<Integer> categoriesList) {
         ArrayList<Category> toReturn = new ArrayList<>();
-        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
-            Category value = entry.getValue();
-            if (categoriesList.contains(entry.getKey()))
-                toReturn.add(value);
+        for (Category cat: mapper.getAllCategories()) {
+            if (categoriesList.contains(cat.getID()))
+                toReturn.add(cat);
         }
         return toReturn;
     }
 
     public void deleteItem(int itemID) {
         boolean deleted = false;
-        for(Category cat : categories.values())
+        for(Category cat : getAllCategories())
         {
             if(cat.containsItem(itemID)) {
                 cat.deleteItem(itemID);
@@ -194,10 +170,5 @@ public class StockController {
         //@TODO open a new order for the low quantity item
     }
 
-    public void clear() {
-        this.categories=new HashMap<>();
-        this.categoryID=1;
-        this.itemID=1;
 
-    }
 }

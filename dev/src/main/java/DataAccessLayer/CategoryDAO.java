@@ -1,9 +1,11 @@
 package DataAccessLayer;
 
+import BusinessLayer.InventoryModule.Category;
 import DTO.CategoryDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class  CategoryDAO extends DAO<CategoryDTO> {
     private String NameCol="Name",ParentCat="ParentCategoryID",
@@ -52,27 +54,56 @@ public class  CategoryDAO extends DAO<CategoryDTO> {
     }
 
     public CategoryDTO get(int id) {
-        CategoryDTO output=null;
-        ResultSet rs=get("ID",String.valueOf(id));
+        CategoryDTO output = null;
+        Connection con = Repository.getInstance().connect();
+        ResultSet rs = get("ID", String.valueOf(id), con);
         try {
-            rs.last();
-            if (rs.getRow() == 0)
-                return null;
-            rs.beforeFirst();
-            output = new CategoryDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(ParentCat));
-        }
-        catch (SQLException e){
+            if (!rs.isClosed())
+                output = new CategoryDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(ParentCat));
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Repository.getInstance().closeConnection(con);
         }
-        if(output==null)
+        if (output == null)
             return null;
-        output.itemIDS=Repository.getInstance().getCategoryItems(output.id);
-        output.categoriesIDS=Repository.getInstance().getIds("SELECT C2.ID from Category as C1, Category as C2\n" +
+        String query = String.format("Select Item.ID as ID\n" +
+                "from Category,Item\n" +
+                "where Category.ID=Item.CategoryID AND Category.ID=%d;", output.id);
+
+        output.itemIDS = Repository.getInstance().getIds(query);
+        output.categoriesIDS = Repository.getInstance().getIds("SELECT C2.ID from Category as C1, Category as C2\n" +
                 "Where C2.ParentCategoryID=C1.ID AND C1.ID=" + output.id + ";");
         return output;
     }
 
     public int delete(CategoryDTO dto) {
         return delete("ID",String.valueOf(dto.id));
+    }
+
+    public List<CategoryDTO> getAllCategories(){
+        Connection con=Repository.getInstance().connect();
+        ResultSet rs=super.getAll(con);
+        ArrayList<CategoryDTO> output=new ArrayList<>();
+        try {
+            while (rs.next())
+                output.add(new CategoryDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(ParentCat)));
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            Repository.getInstance().closeConnection(con);
+
+        }
+        for(CategoryDTO cat:output) {
+            String query = String.format("Select Item.ID as ID\n" +
+                    "from Category,Item\n" +
+                    "where Category.ID=Item.CategoryID AND Category.ID=%d;", cat.id);
+            cat.itemIDS = Repository.getInstance().getIds(query);
+            cat.categoriesIDS = Repository.getInstance().getIds("SELECT C2.ID from Category as C1, Category as C2\n" +
+                    "Where C2.ParentCategoryID=C1.ID AND C1.ID=" + cat.id + ";");
+        }
+        return output;
     }
 }

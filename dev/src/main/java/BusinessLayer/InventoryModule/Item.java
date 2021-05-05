@@ -1,5 +1,8 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.ItemsMapper;
+import DTO.ItemDTO;
+
 import java.time.LocalDate;
 
 
@@ -29,8 +32,21 @@ public class Item {
 
     // -- constructor
 
-    public Item(int id, String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID){
-        this.id=id;
+    public Item(ItemDTO dto){
+        this.name=dto.getName();
+        this.location=dto.getLocation();
+        this.producer=dto.getProducer();
+        this.availableAmount=dto.getAvailableAmount();
+        this.storageAmount=dto.getStorageAmount();
+        this.shelfAmount=dto.getShelfAmount();
+        this.minAmount=dto.getMinAmount();
+        this.expDate=dto.getExpDate();
+        this.alertTime=dto.getAlertTime();
+        this.sellingPrice=dto.getSellingPrice();
+        this.categoryID=dto.getCategoryID();
+        this.id=dto.getID();
+    }
+    public Item(String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID){
         this.name=name;
         this.location=location;
         this.producer=producer;
@@ -43,6 +59,7 @@ public class Item {
         //this.buyingPrice=buyingPrice; //@TODO: system should calculate it
         this.sellingPrice=sellingPrice;
         this.categoryID=categoryID;
+        this.id=ItemsMapper.getInstance().addItem(this);
     }
 
     @Override
@@ -65,6 +82,11 @@ public class Item {
 
     public double getBuyingPrice() {
         return buyingPrice;
+    }
+
+    public void setId(int id){
+        if(id==-1)
+            this.id=id;
     }
 
     public void setBuyingPrice(double buyingPrice) {
@@ -109,6 +131,7 @@ public class Item {
 
     public void setSellingPrice(double sellingPrice) {
         this.sellingPrice = sellingPrice;
+        ItemsMapper.getInstance().updateItem(this);
     }
 
     public void setName(String name) {
@@ -146,10 +169,11 @@ public class Item {
         this.expDate=expDate;
         this.buyingPrice=buyingPrice;
         this.sellingPrice=sellingPrice;
+        ItemsMapper.getInstance().updateItem(this);
     }
 
     public void addDiscount(double discount) {
-        this.sellingPrice=sellingPrice-sellingPrice*discount/100;
+        setSellingPrice(sellingPrice-sellingPrice*discount/100);
     }
 
     public int getAlertTime() {
@@ -160,6 +184,7 @@ public class Item {
         if(alertTime < 0)
             throw new IllegalArgumentException("invalid alert time");
         this.alertTime = alertTime;
+        ItemsMapper.getInstance().updateItem(this);
     }
 
     public boolean isFaulty() {
@@ -189,6 +214,7 @@ public class Item {
         else
                 storageAmount=storageAmount-quantity;
         this.availableAmount=this.shelfAmount+this.storageAmount;
+        ItemsMapper.getInstance().updateItem(this);
 
         //@TODO: check if need to make an order (min quantity, etc..)
 

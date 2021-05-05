@@ -20,7 +20,7 @@ public class ItemDTO {
     private double sellingPrice;
     private int categoryID;
 
-    public ItemDTO(int id, String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, Date expDate, double sellingPrice, int categoryID){
+    public ItemDTO(int id, String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double sellingPrice, int categoryID){
         this.id=id;
         itemName=name;
         this.location=location;
@@ -29,7 +29,7 @@ public class ItemDTO {
         this.storageAmount=storageAmount;
         this.shelfAmount=shelfAmount;
         this.minAmount=minAmount;
-        this.expDate=expDate.toLocalDate();
+        this.expDate=expDate;
         this.sellingPrice=sellingPrice;
         this.categoryID=categoryID;
     }

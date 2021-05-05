@@ -20,7 +20,7 @@ public class OrderTest {
 
     @Test
     public void addItemToDeliveredOrder(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
         Contract c=new Contract(100,1,new HashMap<>(),product);
         order.receive();
         try {
@@ -36,7 +36,7 @@ public class OrderTest {
 
     @Test
     public void addItemTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
         Contract c=new Contract(100,1,new HashMap<>(),product);
         order.addItem(c,10,new HashMap<>());
         assertEquals(1, order.getProductsInOrder().size());
@@ -47,7 +47,7 @@ public class OrderTest {
 
     @Test
     public void addItemWithDiscountsTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(500.0,10);
@@ -61,7 +61,7 @@ public class OrderTest {
 
     @Test
     public void addItemWith2DiscountsTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(500.0,10);
@@ -76,7 +76,7 @@ public class OrderTest {
 
     @Test
     public void addItemWithDiscountsNotExceedingPriceTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         HashMap<Double,Integer>discounts=new HashMap<>();
         discounts.put(5000.0,10);
@@ -106,7 +106,7 @@ public class OrderTest {
 
     @Test
     public void removeProductFromDeliveredOrderTest() {
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c, 10, new HashMap<>());
@@ -122,7 +122,7 @@ public class OrderTest {
 
     @Test
     public void removeProductTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c,10,new HashMap<>());
@@ -132,9 +132,9 @@ public class OrderTest {
     }
 
     @Test public void checkIfProductExistsTest(){
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
-        Item product2=new Item(2,"product2",2,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product2=new Item("product2",2,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order.addItem(c,10,new HashMap<>());
@@ -145,7 +145,7 @@ public class OrderTest {
     @Test
     public void reOrderTest(){
         Order order1=new Order(LocalDateTime.now(),true,10);
-        Item product=new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
+        Item product=new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2);
 
         Contract c = new Contract(100, 1, new HashMap<>(), product);
         order1.addItem(c,10,new HashMap<>());

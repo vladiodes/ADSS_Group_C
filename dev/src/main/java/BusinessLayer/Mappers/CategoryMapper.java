@@ -25,8 +25,13 @@ public class CategoryMapper {
     }
 
     public Category buildCategory(CategoryDTO dto){
-        Category cat=new Category(dto.name,dto.id,getCategory(dto.fatherCatID),getSubCategories(dto.categoriesIDS),ItemsMapper.getInstance().getItems(dto.itemIDS));
+        if(dto==null)
+            return null;
+        Category cat=new Category(dto.name,dto.id,ItemsMapper.getInstance().getItems(dto.itemIDS));
         categoryMapper.put(cat.getID(),cat);
+        cat.setFatherCategory(getCategory(dto.fatherCatID));
+        for(Category sub:getSubCategories(dto.categoriesIDS))
+            cat.addSubCategory(sub);
         return cat;
     }
 
@@ -51,12 +56,24 @@ public class CategoryMapper {
         return categories;
     }
 
-    private Category getCategory(Integer categoryID) {
-        if(categoryMapper.containsKey(categoryID))
+    public Category getCategory(Integer categoryID) {
+        if(categoryID<=0)
+            return null;
+        if (categoryMapper.containsKey(categoryID))
             return categoryMapper.get(categoryID);
-        CategoryDTO dto=dao.get(categoryID);
-        if(dto==null)
-            throw new IllegalArgumentException("No such category in database");
+        CategoryDTO dto = dao.get(categoryID);
         return buildCategory(dto);
+    }
+
+    public ArrayList<Category> getAllCategories() {
+        ArrayList<Category> output=new ArrayList<>();
+        for(CategoryDTO dto:dao.getAllCategories()){
+            output.add(buildCategory(dto));
+        }
+        return output;
+    }
+
+    public HashMap<Integer, Category> getCategoryMapper() {
+        return categoryMapper;
     }
 }

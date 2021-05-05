@@ -21,7 +21,7 @@ public class SaleMapper {
     }
 
     public Sale buildSale(SaleDTO dto){
-        Sale sale=new Sale(dto.id,dto.itemID, dto.itemName,dto.sellingPrice,dto.saleDate,dto.quantity);
+        Sale sale=new Sale(dto);
         saleMapper.put(sale.getSaleID(),sale);
         return sale;
     }

@@ -10,18 +10,16 @@ public class RecordController {
     // -- fields
     private static RecordController recordControllerInstance = null;
     private HashMap<Integer,Sale> sales;
-    private int salesKey;
     private HashMap<Integer,Report> reports;
-    private int reportsKey;
+    private HashMap<Integer,SaleReport> saleReports;
     private HashMap<Integer,Item> faultyItems;
 
     // -- constructor
     private RecordController() {
         this.sales=new HashMap<>();
         this.reports=new HashMap<>();
-        this.reportsKey=1;
-        this.salesKey=1;
         this.faultyItems=new HashMap<>();
+        saleReports=new HashMap<>();
     }
 
     public static RecordController getInstance(){
@@ -41,12 +39,8 @@ public class RecordController {
                     itemsInReport.add(value);
             }
         }
-        Report toReturn = new Report(reportsKey);
-        toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDate.now());
-        toReturn.setEndDate(LocalDate.now());
-        reports.put(reportsKey,toReturn);
-        this.reportsKey++;
+        Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
+        reports.put(toReturn.getReportID(),toReturn);
         return toReturn;
 
     }
@@ -59,12 +53,9 @@ public class RecordController {
                     itemsInReport.add(value);
             }
         }
-        Report toReturn = new Report(reportsKey);
-        toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDate.now());
-        toReturn.setEndDate(LocalDate.now());
-        reports.put(reportsKey,toReturn);
-        this.reportsKey++;
+        Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
+
+        reports.put(toReturn.getReportID(),toReturn);
         return toReturn;
 
     }
@@ -78,22 +69,16 @@ public class RecordController {
                 itemsInReport.add(value);
              }
         }
-        Report toReturn = new Report(reportsKey);
-        toReturn.setItems(itemsInReport);
-        // today, one week ago
-        toReturn.setStartDate(LocalDate.now().minusWeeks(1));
-        toReturn.setEndDate(LocalDate.now());
-        reports.put(reportsKey,toReturn);
-        this.reportsKey++;
+        Report toReturn = new Report(itemsInReport,LocalDate.now().minusWeeks(1),LocalDate.now());
+        reports.put(toReturn.getReportID(),toReturn);
         return toReturn;
 
         }
 
 
     public Sale addSale(Item item,int quantity){
-        Sale sale = new Sale(this.salesKey,item.getId(),item.getName(),item.getSellingPrice(),LocalDate.now(),quantity);
-        this.sales.put(salesKey,sale);
-        this.salesKey++;
+        Sale sale = new Sale(item.getId(),item.getName(),item.getSellingPrice(),LocalDate.now(),quantity);
+        this.sales.put(sale.getSaleID(),sale);
         return sale;
     }
 
@@ -106,12 +91,8 @@ public class RecordController {
                     itemsInReport.add(value);
             }
         }
-        Report toReturn = new Report(reportsKey);
-        toReturn.setItems(itemsInReport);
-        toReturn.setStartDate(LocalDate.now());
-        toReturn.setEndDate(LocalDate.now());
-        reports.put(reportsKey,toReturn);
-        this.reportsKey++;
+        Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
+        reports.put(toReturn.getReportID(),toReturn);
         return toReturn;
 
     }
@@ -127,11 +108,10 @@ public class RecordController {
             }
 
         }
-        SaleReport toReturn = new SaleReport(reportsKey,salesInReport);
+        SaleReport toReturn = new SaleReport(salesInReport,startDate,endDate);
         toReturn.setStartDate(startDate);
         toReturn.setEndDate(endDate);
-        reports.put(reportsKey,toReturn);
-        reportsKey++;
+        saleReports.put(toReturn.getReportID(),toReturn);
         return toReturn;
     }
 
@@ -141,8 +121,6 @@ public class RecordController {
     }
 
     public void clear() {
-        this.reportsKey=1;
-        this.salesKey=1;
         this.sales=new HashMap<>();
         this.reports=new HashMap<>();
         this.faultyItems=new HashMap<>();

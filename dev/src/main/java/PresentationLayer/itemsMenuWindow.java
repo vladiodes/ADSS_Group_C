@@ -81,8 +81,8 @@ public class itemsMenuWindow extends menuWindow {
                     terminate();
                     break;
             }
-            closeWindow();
         }
+        closeWindow();
     }
 
     private void closeWindow() {
@@ -192,7 +192,7 @@ public class itemsMenuWindow extends menuWindow {
 
     private void findItemByLocation() {
         Response<ItemDTO> response = inventoryFacade.getItemByLocation(utills.getNonNegativeNumber("please enter item location\n"));
-        utills.printMessageOrSuccess(response, "Successfully finding item : \n");
+        utills.printMessageOrSuccess(response, "Successfully finding item :\n" + response.getValue());
     }
 
     private void changeAlertTime() {

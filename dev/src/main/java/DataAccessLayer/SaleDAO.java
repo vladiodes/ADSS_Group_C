@@ -57,17 +57,21 @@ public class SaleDAO extends DAO<SaleDTO> {
 
     public SaleDTO get(int id) {
         SaleDTO output=null;
-        ResultSet rs=get("ID",String.valueOf(id));
+        Connection con=Repository.getInstance().connect();
+        ResultSet rs=get("ID",String.valueOf(id),con);
         try {
             rs.last();
             if (rs.getRow() == 0)
                 return null;
             rs.beforeFirst();
-            ItemDTO itemInSale=new ItemDAO().get(rs.getInt(itemCol));
+            ItemDTO itemInSale=new ItemDAO().get(DAO.idCol,rs.getInt(itemCol));
             output = new SaleDTO(rs.getInt("ID"),rs.getInt(itemCol),itemInSale.getName(),itemInSale.getSellingPrice(),itemInSale.getExpDate(),rs.getInt(QuantityCol));
         }
         catch (SQLException e){
             e.printStackTrace();
+        }
+        finally {
+            Repository.getInstance().closeConnection(con);
         }
         if(output==null)
             return null;

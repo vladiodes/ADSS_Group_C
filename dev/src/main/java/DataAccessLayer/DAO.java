@@ -1,8 +1,11 @@
 package DataAccessLayer;
 
+import DTO.CategoryDTO;
+
 import java.sql.*;
 
 public abstract class DAO<T> {
+    public final static String idCol="ID";
     protected String tableName;
 //@TODO: when inserting daos, pay attention to update association tables as well
     public DAO(String tableName){
@@ -18,9 +21,8 @@ public abstract class DAO<T> {
 
     public abstract int update(T dto);
 
-    protected ResultSet get(String colName,String value){
+    protected ResultSet get(String colName,String value,Connection con){
         String SELECT_SQL=String.format("SELECT * FROM %s WHERE %s=%s",tableName,colName,value);
-        Connection con=Repository.getInstance().connect();
         ResultSet rs=null;
         try {
             Statement stmt= con.createStatement();
@@ -28,9 +30,6 @@ public abstract class DAO<T> {
         }
         catch (SQLException e){
             e.printStackTrace();
-        }
-        finally {
-            Repository.getInstance().closeConnection(con);
         }
         return rs;
     }
@@ -63,4 +62,19 @@ public abstract class DAO<T> {
         }
         return output;
     }
+
+    public ResultSet getAll(Connection con){
+        String SELECT_SQL=String.format("SELECT * FROM %s",tableName);
+        ResultSet rs=null;
+        try {
+            Statement stmt= con.createStatement();
+            rs=stmt.executeQuery(SELECT_SQL);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+
 }

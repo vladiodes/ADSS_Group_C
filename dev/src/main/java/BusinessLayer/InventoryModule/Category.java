@@ -1,5 +1,8 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.CategoryMapper;
+import BusinessLayer.Mappers.ItemsMapper;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,43 +22,32 @@ public class Category {
      * Used when reading data from database
      * @param name
      * @param id
-     * @param fatherCategory
-     * @param subCategories
      */
-    public Category(String name, int id,Category fatherCategory,List<Category> subCategories,List<Item> items){
-        this.name=name;
-        this.id=id;
-        this.fatherCategory=fatherCategory;
-        this.subCategories=subCategories;
-        for(Item item:items)
-            this.items.put(item.getId(),item);
+    public Category(String name, int id,List<Item> items) {
+        this.name = name;
+        this.id = id;
+        this.fatherCategory = null;
+        this.subCategories = new ArrayList<>();
+        this.items = new HashMap<>();
+        if (items != null) {
+            for (Item item : items)
+                this.items.put(item.getId(), item);
+        }
     }
 
-    public Category(String name,int id,Category fatherCategory){
+    public Category(String name,Category fatherCategory){
         this.name=name;
-        this.id=id;
         this.fatherCategory=fatherCategory;
         this.subCategories=new ArrayList<>();
         this.items=new HashMap<>();
+        this.id=CategoryMapper.getInstance().addCategory(this);
 
-    }
-
-    @Override
-    public String toString() {
-        return "category{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                ", items=" + items +
-                ", subCategories=" + subCategories +
-                ", fatherCategory=" + fatherCategory +
-                '}';
     }
 
     public void addDiscount(double discount) {
         for (Map.Entry<Integer, Item> entry : this.items.entrySet()) {
             Item value = entry.getValue();
             value.setSellingPrice(value.getSellingPrice() - value.getSellingPrice() * discount / 100);
-
         }
     }
 
@@ -71,6 +63,10 @@ public class Category {
         return fatherCategory;
     }
 
+    public void setFatherCategory(Category fatherCategory) {
+        this.fatherCategory = fatherCategory;
+    }
+
     public HashMap<Integer, Item> getItems() {
         return items;
     }
@@ -78,7 +74,7 @@ public class Category {
     public List<Category> getSubCategories() {
         return subCategories;
     }
-    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int itemID, double buyingPrice,double sellingPrice) {
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice,double sellingPrice) {
         if (storageAmount<0)
             throw new IllegalArgumentException("invalid storage amount");
         if (shelfAmount<0)
@@ -95,22 +91,14 @@ public class Category {
             throw new IllegalArgumentException("invalid buying price");
 
         //@TODO: buying price should be calculated by system and not passed as an argument
-        Item toAdd = new Item(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID());
-        this.items.put(itemID, toAdd);
+        Item toAdd = new Item(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID());
+        this.items.put(toAdd.getId(), toAdd);
         return toAdd;
-    }
-    public List<String> getItemNames()
-    {
-        List<String> toReturn = new ArrayList<>();
-        for(Item item : this.items.values())
-        {
-            toReturn.add(item.getName());
-        }
-        return toReturn;
     }
 
     public void updateCategory(String name) {
         this.name=name;
+        CategoryMapper.getInstance().updateCategory(this);
     }
     public void addSubCategory(Category toAdd){
         // go over sub categories and see if the category already exists
@@ -127,8 +115,12 @@ public class Category {
     }
     public void deleteItem(int itemID)
     {
-        if(items.containsKey(itemID))
+        if(items.containsKey(itemID)) {
+            Item toDelete=items.get(itemID);
+            ItemsMapper.getInstance().deleteItem(toDelete);
             items.remove(itemID);
+            //@todo: continue later
+        }
         else
             throw new IllegalArgumentException("Item does not exists in this category");
     }

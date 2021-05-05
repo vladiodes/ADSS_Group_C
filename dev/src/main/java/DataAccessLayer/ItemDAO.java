@@ -2,23 +2,21 @@ package DataAccessLayer;
 
 import DTO.ItemDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ItemDAO extends DAO<ItemDTO> {
-    private final String ExpirationCol = "ExpirationDate";
-    private final String LocationCol = "Location";
-    private final String NameCol = "Name";
-    private final String minCol = "minAmmount";
-    private final String availableCol = "availableAmmount";
-    private final String ProducerCol = "Producer";
-    private final String ShelfCol = "ShelfAmmount";
-    private final String sellingPrice = "SellingPrice";
-    private final String Storage = "StorageAmmount";
-    private final String CategoryIDCOL = "CategoryID";
+    public static final String ExpirationCol = "ExpirationDate";
+    public static final String LocationCol = "Location";
+    public static final String NameCol = "Name";
+    public static final String minCol = "minAmmount";
+    public static final String availableCol = "availableAmmount";
+    public static final String ProducerCol = "Producer";
+    public static final String ShelfCol = "ShelfAmmount";
+    public static final String sellingPrice = "SellingPrice";
+    public static final String Storage = "StorageAmmount";
+    public static final String CategoryIDCOL = "CategoryID";
     //@TODO: add alert time column
     private final String INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?,?,?,?,?)", tableName, ExpirationCol, LocationCol,
             NameCol, minCol, availableCol, ProducerCol, ShelfCol, sellingPrice, Storage, CategoryIDCOL);
@@ -85,18 +83,19 @@ public class ItemDAO extends DAO<ItemDTO> {
         return rowsAffected;
     }
 
-    public ItemDTO get(int id) {
+    public ItemDTO get(String column,int id) {
         ItemDTO output = null;
-        ResultSet rs = get("ID", String.valueOf(id));
+        Connection con=Repository.getInstance().connect();
+        ResultSet rs = get(column, String.valueOf(id),con);
         try {
-            rs.last();
-            if (rs.getRow() == 0)
-                return null;
-            rs.beforeFirst();
-            output = new ItemDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(LocationCol), rs.getString(ProducerCol),
-                    rs.getInt(availableCol), rs.getInt(Storage), rs.getInt(ShelfCol), rs.getInt(minCol), rs.getDate(ExpirationCol), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL));
-        } catch (SQLException e) {
+            if (!rs.isClosed())
+                output = new ItemDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(LocationCol), rs.getString(ProducerCol),
+                        rs.getInt(availableCol), rs.getInt(Storage), rs.getInt(ShelfCol), rs.getInt(minCol), LocalDate.parse(rs.getString(ExpirationCol)), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL));
+        }catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            Repository.getInstance().closeConnection(con);
         }
         return output;
     }

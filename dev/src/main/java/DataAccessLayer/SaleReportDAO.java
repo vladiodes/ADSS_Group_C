@@ -59,7 +59,8 @@ public class SaleReportDAO extends DAO<SaleReportDTO> {
 
     public SaleReportDTO get(int id){
         SaleReportDTO output=null;
-        ResultSet rs=get("ID",String.valueOf(id));
+        Connection con=Repository.getInstance().connect();
+        ResultSet rs=get("ID",String.valueOf(id),con);
         try {
             rs.last();
             if (rs.getRow() == 0)
@@ -73,6 +74,9 @@ public class SaleReportDAO extends DAO<SaleReportDTO> {
         }
         catch (SQLException e){
             e.printStackTrace();
+        }
+        finally {
+            Repository.getInstance().closeConnection(con);
         }
         return output;
     }

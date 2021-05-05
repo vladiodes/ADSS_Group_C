@@ -54,7 +54,7 @@ public class OrderDAO extends DAO<OrderDTO> {
     }
 
     public OrderDTO get(int id){
-        ResultSet rs=get("ID",String.valueOf(id));
+        //ResultSet rs=get("ID",String.valueOf(id));
         //@TODO: continue from here
         return null;
     }

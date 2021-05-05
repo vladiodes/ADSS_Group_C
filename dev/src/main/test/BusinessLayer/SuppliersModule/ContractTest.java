@@ -14,7 +14,7 @@ public class ContractTest {
 
     @Before
     public void setUp() {
-        contract=new Contract(100.0,1,new HashMap<>(),new Item(1,"product",1,"producer",1,1,1, LocalDate.now(),1.2,2));
+        contract=new Contract(100.0,1,new HashMap<>(),new Item("product",1,"producer",1,1,1, LocalDate.now(),1.2,2));
     }
 
     @Test

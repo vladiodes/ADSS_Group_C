@@ -2,6 +2,7 @@ package BusinessLayer.Mappers;
 
 import BusinessLayer.InventoryModule.Item;
 import DTO.ItemDTO;
+import DataAccessLayer.DAO;
 import DataAccessLayer.ItemDAO;
 
 import java.util.ArrayList;
@@ -25,8 +26,7 @@ public class ItemsMapper {
     }
 
     public Item buildItem(ItemDTO dto){
-        Item item=new Item(dto.getID(),dto.getName(),dto.getLocation(),dto.getProducer(),dto.getStorageAmount(),dto.getShelfAmount(),
-                dto.getMinAmount(),dto.getExpDate(),dto.getSellingPrice(),dto.getCategoryID());
+        Item item=new Item(dto);
         itemsMapper.put(item.getId(),item);
         return item;
     }
@@ -54,11 +54,27 @@ public class ItemsMapper {
     }
 
     public Item getItem(int id) {
-        if(itemsMapper.containsKey(id))
+        if (itemsMapper.containsKey(id))
             return itemsMapper.get(id);
-        ItemDTO dto=dao.get(id);
-        if(dto==null)
-            throw new IllegalArgumentException("No such item in the database");
+        ItemDTO dto = dao.get(DAO.idCol, id);
+        if (dto == null)
+            return null;
         return buildItem(dto);
+    }
+
+    public Item getItemByLocation(int location) {
+        for (Item i : itemsMapper.values()) {
+            if (i.getLocation() == location)
+                return i;
+        }
+        ItemDTO dto = dao.get(dao.LocationCol, location);
+        if (dto == null)
+            return null;
+        return buildItem(dto);
+    }
+
+    public boolean deleteItem(Item item){
+        itemsMapper.remove(item.getId());
+        return dao.delete(new ItemDTO(item))>0;
     }
 }

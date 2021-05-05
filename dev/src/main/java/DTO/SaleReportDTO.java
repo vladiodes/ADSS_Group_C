@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SaleReportDTO extends ReportDTO {
     private List<SaleDTO> sales;
-    private List<Integer> saleIDS;
+    public List<Integer> saleIDS;
     public SaleReportDTO(int id, LocalDate start,LocalDate end,List<Integer> saleIDS){
         super(id,start,end,null);
         this.saleIDS=saleIDS;

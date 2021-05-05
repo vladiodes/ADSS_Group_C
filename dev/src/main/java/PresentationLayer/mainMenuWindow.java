@@ -37,9 +37,7 @@ public class mainMenuWindow extends menuWindow {
         menu.put(1,"Suppliers menu");
         menu.put(2,"Orders menu");
         menu.put(3,"Items menu");
-        menu.put(4,"Scenario #1");
-        menu.put(5,"Scenario #2");
-        menu.put(6,"Exit");
+        menu.put(4,"Exit");
     }
 
     public void start() {

@@ -52,9 +52,9 @@ class RecordControllerTest {
     void getWeeklyReport() {
         try{
             ArrayList<Category> categories = new ArrayList();
-            Category cat = new Category("meat",1,null);
-            Item item1 = cat.addItem(202,"chicken","osem",200,200,50, LocalDate.now(),28,30,40);
-            Item item2 = cat.addItem(255,"burger","elit",300,200,50, LocalDate.now(),30,60,80);
+            Category cat = new Category("meat",null);
+            Item item1 = cat.addItem(202,"chicken","osem",200,200,50, LocalDate.now(),28,30);
+            Item item2 = cat.addItem(255,"burger","elit",300,200,50, LocalDate.now(),30,60);
             categories.add(cat);
             ArrayList<Item> toCompare = new ArrayList<>();
             toCompare.add(item1);
@@ -74,9 +74,9 @@ class RecordControllerTest {
         try
         {
         ArrayList<Category> categories = new ArrayList();
-        Category cat = new Category("meat",1,null);
-        Item item1 = cat.addItem(202,"chicken","osem",1,0,50, LocalDate.now(),28,30,40);
-        Item item2 = cat.addItem(255,"burger","elit",300,1,50, LocalDate.now(),30,60,80);
+        Category cat = new Category("meat",null);
+        Item item1 = cat.addItem(202,"chicken","osem",1,0,50, LocalDate.now(),28,30);
+        Item item2 = cat.addItem(255,"burger","elit",300,1,50, LocalDate.now(),30,60);
         categories.add(cat);
         ArrayList<Item> toCompare = new ArrayList<>();
         toCompare.add(item1);
@@ -93,9 +93,9 @@ class RecordControllerTest {
         try
         {
             ArrayList<Category> categories = new ArrayList();
-            Category cat = new Category("meat",1,null);
-            Item item1 = cat.addItem(202,"chicken","osem",100,0,50, LocalDate.now(),28,30,40);
-            Item item2 = cat.addItem(255,"burger","elit",300,1,50, LocalDate.now(),30,60,80);
+            Category cat = new Category("meat",null);
+            Item item1 = cat.addItem(202,"chicken","osem",100,0,50, LocalDate.now(),28,30);
+            Item item2 = cat.addItem(255,"burger","elit",300,1,50, LocalDate.now(),30,60);
             categories.add(cat);
             ArrayList<Sale> toCompare = new ArrayList<>();
             Sale sale1 = this.recordController.addSale(item1,50);

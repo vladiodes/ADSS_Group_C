@@ -1,5 +1,8 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.SaleMapper;
+import DTO.SaleDTO;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,13 +14,21 @@ public class Sale {
     private LocalDate saleDate;
     private int quantity;
 
-    public Sale(int saleID, int itemID, String itemName, double sellingPrice, LocalDate saleDate,int quantity){
-        this.saleID=saleID;
+    public Sale(int itemID, String itemName, double sellingPrice, LocalDate saleDate,int quantity){
         this.itemName = itemName;
         this.itemID=itemID;
         this.sellingPrice=sellingPrice;
         this.saleDate=saleDate;
         this.quantity=quantity;
+        saleID= SaleMapper.getInstance().addSale(this);
+    }
+    public Sale(SaleDTO dto){
+        this.itemName = dto.itemName;
+        this.itemID=dto.itemID;
+        this.sellingPrice=dto.sellingPrice;
+        this.saleDate=dto.saleDate;
+        this.quantity=dto.quantity;
+        saleID= dto.id;
     }
 
     public double getSellingPrice() {
