@@ -25,12 +25,8 @@ public class TransportsDAO extends DAO<TransportDTO> {
         try {
             s = conn.createStatement();
             s.executeUpdate(InsertStatement(Values));
-<<<<<<< Updated upstream
-            for (ItemContractDTO tempContract : Ob.Contracts) {
-=======
             for(ItemContractDTO tempContract : Ob.Contracts)
             {
->>>>>>> Stashed changes
                 s = conn.createStatement();
                 String currStatement = String.format("INSERT INTO ItemContracts VALUES (%d,%d,\"%s\",\"%s\");", tempContract.ID, Ob.ID, tempContract.destination, tempContract.passed);
                 s.executeUpdate(currStatement);

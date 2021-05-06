@@ -29,11 +29,8 @@ public abstract class DAO<T> {
     }
 
     public abstract T makeDTO(ResultSet RS);
-<<<<<<< Updated upstream
 
-    public abstract int delete(T ob);
 
-=======
     public int delete(String colName,String value){
         String DELETE_SQL=String.format("Delete From %s WHERE %s=%s",tableName,colName,value);
         int rowsAffected=-1;
@@ -48,7 +45,7 @@ public abstract class DAO<T> {
         }
         return rowsAffected;
     }
->>>>>>> Stashed changes
+
     protected String InsertStatement(String Values) {
         return String.format("INSERT INTO %s \n" +
                 "VALUES %s;", tableName, Values);

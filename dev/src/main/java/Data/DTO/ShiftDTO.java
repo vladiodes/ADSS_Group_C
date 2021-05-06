@@ -10,21 +10,14 @@ import static Business.Misc.TypeOfEmployee.ShiftManager;
 
 public class ShiftDTO {
     //==================================================================Fields==================================================================
-<<<<<<< Updated upstream
-    private Integer Id;
-    private String type;
-    private Date date;
-    private Map<String, Integer> constraints;
-    private List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees;//----------------------------change EmployeeDTO to String(emp Id)
-    private boolean isSealed;
-=======
+
     public Integer Id;
     public String type;
     public Date date;
     public Map<String, Integer> constraints;
     public List<Pair<String/*empID*/,String/*typeOfEmployee*/>> currentShiftEmployees;//----------------------------change EmployeeDTO to String(emp Id)
     public boolean isSealed;
->>>>>>> Stashed changes
+
 
 
     //==================================================================Constructor==============================================================

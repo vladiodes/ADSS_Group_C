@@ -68,10 +68,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
 
 
     @Override
-<<<<<<< Updated upstream
-    public int update(ShiftDTO updatedOb) {
-        return 0;
-=======
+
     public int update(ShiftDTO updatedOb)//not allowed to change ID
     {
         Connection conn = Repository.getInstance().connect();
@@ -190,20 +187,15 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         {
             return 0;
         }
->>>>>>> Stashed changes
     }
 
 
 
     @Override
-<<<<<<< Updated upstream
-    public ShiftDTO makeDTO(ResultSet RS) {
-        ShiftDTO output = null;
-=======
+
     public ShiftDTO makeDTO(ResultSet RS)
     {
         ShiftDTO output ;
->>>>>>> Stashed changes
         try {
             Map<String, Integer> constraints = getconstraintsList(RS.getInt(0)/*id*/);
             if (constraints == null) {
@@ -225,13 +217,6 @@ public class ShiftDAO extends DAO<ShiftDTO> {
 
 
     private List<Pair<String, String>> getcurrentShiftEmployeesList(int shiftId) {
-<<<<<<< Updated upstream
-        List<Pair<String, String>> ans = new LinkedList<>();
-        ResultSet rs = getWithInt("EmployeesInShift", "ShiftID", shiftId);
-        try {
-            while (rs.next()) {
-                Pair<String, String> p = new Pair<>(rs.getString(0), rs.getString(1)/*type of shift*/);
-=======
         List<Pair<String, String>> ans =new LinkedList<>();
         ResultSet rs=getWithInt("EmployeesInShift","ShiftID", shiftId  );
         try
@@ -239,7 +224,6 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             while (rs.next())
             {
                 Pair<String, String> p = new Pair<>(rs.getString(0),rs.getString(2)/*type of employee*/);
->>>>>>> Stashed changes
                 ans.add(p);
             }
         } catch (Exception e) {
@@ -247,24 +231,9 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         }
         return ans;
     }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
-
-    /*
-                    "\t\"ShiftID\"\tINTEGER,\n" +
-                    "\t\"TypeOfEmployee\"\tTEXT,\n" +
-                    "\t\"Amount\"\tINTEGER,\n" +
-    */
     private Map<String, Integer> getconstraintsList(int shiftId) {
-<<<<<<< Updated upstream
-        Map<String, Integer> ans = new HashMap<>();
-        ResultSet rs = getWithInt("EmployeesInShift", "ShiftID", shiftId);
-        try {
-            while (rs.next()) {
-                ans.put(rs.getString(1)/*type of employee*/, rs.getInt(2)/*amount*/);
-=======
+
         Map<String, Integer> ans= new HashMap<>();
         ResultSet rs=getWithInt("ShiftConstraints","ShiftID", shiftId  );
         try
@@ -272,7 +241,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             while (rs.next())
             {
                 ans.put(rs.getString(1)/*type of employee*/,rs.getInt(2)/*amount*/);
->>>>>>> Stashed changes
+
             }
         } catch (Exception e) {
             return null;

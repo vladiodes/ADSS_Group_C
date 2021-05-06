@@ -74,10 +74,6 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
 
 
     @Override
-<<<<<<< Updated upstream
-    public int update(EmployeeDTO updatedOb) {
-        return 0;
-=======
     public int update(EmployeeDTO updatedOb)//not allowed to change ID
     {
         Connection conn = Repository.getInstance().connect();
@@ -151,7 +147,6 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         catch (Exception e ){
             return 0;
         }
->>>>>>> Stashed changes
     }
     public int removeSkill(String empID, String skillToRemove)
     {

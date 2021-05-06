@@ -85,8 +85,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         }
     }
 
-<<<<<<< Updated upstream
-=======
+
     public int insertAvailableShifts(String empID, Date date, String typeOfShift)
     {
         Connection conn = Repository.getInstance().connect();
@@ -160,9 +159,6 @@ public class DriverDAO extends DAO<DriverDTO> {
 
     }
 
-
-
->>>>>>> Stashed changes
     @Override
     public DriverDTO makeDTO(ResultSet RS) {
         DriverDTO output = null;
@@ -215,13 +211,6 @@ public class DriverDAO extends DAO<DriverDTO> {
         return ans;
 
     }
-<<<<<<< Updated upstream
 
-    @Override
-    public int delete(DriverDTO ob) {
-        return 0;
-    }
-=======
-    
->>>>>>> Stashed changes
+
 }
