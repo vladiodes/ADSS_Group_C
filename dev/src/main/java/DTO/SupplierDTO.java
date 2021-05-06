@@ -3,8 +3,7 @@ import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.SuppliersModule.PaymentAgreement;
 import BusinessLayer.SuppliersModule.Supplier;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SupplierDTO {
     public String supplierName;
@@ -17,7 +16,8 @@ public class SupplierDTO {
     public Set<String> manufacturers;
     public Map<String,String> contactInfo;
     public Map<Double,Integer> discountsByPrice;
-
+    public List<Integer> orderIDs;//for loading from database
+    public Map<Integer,Integer> contracts;
     public SupplierDTO(Supplier supplier) {
         supplierName=supplier.getSupplierName();
         fixedDays=supplier.getFixedDays();
@@ -29,6 +29,47 @@ public class SupplierDTO {
         manufacturers=supplier.getManufacturers();
         contactInfo=supplier.getContactInfo();
         discountsByPrice=supplier.getDiscountsByPrice();
+    }
+
+    public SupplierDTO(String name, List<Integer> fixedDays, Boolean selfpickup, int id, String bankAccount, String paymentMethod, Set<String> categories, Set<String> manufacturures, Map<String, String> contactInfo, Map<Double, Integer> discountsByPrice, List<Integer> orderIDs,Map<Integer,Integer> contracts) {
+        this.supplierName=name;
+        this.fixedDays=new LinkedHashSet<>();
+        for (Integer day:
+             fixedDays) {
+            if(day==1){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+            else if(day==2){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+            else if(day==3){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+            else if(day==4){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+            else if(day==5){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+            else if(day==6){
+                this.fixedDays.add(DayOfWeek.Sunday);
+            }
+        }
+        this.selfPickUp=selfpickup;
+        this.SupplierID=id;
+        this.bankAccount=bankAccount;
+        if(paymentMethod=="PerOrder"){
+            this.paymentMethod=PaymentAgreement.PerOrder;
+        }
+        else {
+            this.paymentMethod=PaymentAgreement.Monthly;
+        }
+        this.categories=categories;
+        this.contactInfo=contactInfo;
+        this.manufacturers=manufacturures;
+        this.discountsByPrice=discountsByPrice;
+        this.orderIDs=orderIDs;
+        this.contracts = contracts;
     }
 
     public int getSupplierID() {

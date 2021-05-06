@@ -183,6 +183,10 @@ public class Supplier{
         ordersFromSupplier.add(new Order(date,isFixed,ID));
     }
 
+    public void addOrder(Order order){
+        addOrder(order.getDateOfOrder(),order.getisFixed(),order.getOrderID());
+    }
+
     /**
      * Reorders a fixed order (makes a deep copy of it)
      * @param newOrderID the id of the new order
@@ -302,6 +306,10 @@ public class Supplier{
                 throw new IllegalArgumentException("There's already a contract issued with the given product");
         }
         supplierContracts.add(new Contract(price,supplierProductID,quantityAgreement,product));
+    }
+
+    public void addContract(Contract contract){
+        addContract(contract.getProduct(),contract.getCatalogueIDBySupplier(),contract.getPricePerUnit(),contract.getDiscountByQuantity());
     }
 
     /**
