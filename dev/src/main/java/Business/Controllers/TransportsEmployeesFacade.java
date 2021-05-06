@@ -21,8 +21,8 @@ public class TransportsEmployeesFacade {
     private ScheduleController scheduleController;
     private StaffController staffController;
     private Sites Sit = new Sites();
-    private Transports Tra = new Transports();
     private Trucks Tru = new Trucks();
+    private Transports Tra = new Transports(Tru,Sit,staffController);
 
 
 
@@ -172,7 +172,7 @@ public class TransportsEmployeesFacade {
         return Sit.getSites();
     }
 
-    public ArrayList<String> getAllSections() {
+    public List<String> getAllSections() {
         return Sit.getSections();
     }
 
