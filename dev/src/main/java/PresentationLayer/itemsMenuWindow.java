@@ -71,18 +71,46 @@ public class itemsMenuWindow extends menuWindow {
                     deleteItem();
                     break;
                 case 16:
+                    addSpecificItem();
+                    break;
+                case 17:
+                    removeFaultyItems();
+                    break;
+                case 18:
                     if (scenario) {
                         //scenario1();
                         scenario = false;
                     } else
                         System.out.println("scenario can run only one time");
                     break;
-                case 17:
+                case 19:
                     terminate();
                     break;
             }
             closeWindow();
         }
+    }
+
+    private void removeFaultyItems() {
+        Response<Boolean> res = inventoryFacade.removeFaultyItems();
+        utills.printMessageOrSuccess(res, "Successfully Removed faulty items \n");
+    }
+
+    private void addSpecificItem() {
+        int itemID = utills.getNonNegativeNumber("please enter general item id\n");
+        int location = utills.getNonNegativeNumber("please enter item location:\n");
+        System.out.println("please enter producer:\n");
+        String producer = scanner.nextLine();
+        int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
+        int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
+
+
+        System.out.println("please enter expiration date: ");
+        LocalDate expDate = getDateFromUser();
+
+
+        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, location, storageAmount, shelfAmount, expDate,producer);
+        utills.printMessageOrSuccess(response, "Successfully added item of id " + itemID + "\n");
     }
 
     private void closeWindow() {
@@ -111,8 +139,10 @@ public class itemsMenuWindow extends menuWindow {
         menu.put(13, "show minimum amount items");
         menu.put(14, "Show Sales Report");
         menu.put(15, "delete item");
-        menu.put(16, "run scenario");
-        menu.put(17, "back to main menu");
+        menu.put(16,"add Specific Item");
+        menu.put(17, "remove faulty items");
+        menu.put(18, "run scenario");
+        menu.put(19, "back to main menu");
     }
 
     public static void printReport(Response<? extends Object> response) {
@@ -169,7 +199,7 @@ public class itemsMenuWindow extends menuWindow {
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
-        Response<Boolean> response = inventoryFacade.updateItem(itemID, name, location, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
+        Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, buyingPrice, sellingPrice);
         utills.printMessageOrSuccess(response, "Successfully update item : \n");
     }
 

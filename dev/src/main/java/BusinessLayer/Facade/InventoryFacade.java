@@ -6,6 +6,7 @@ import DTO.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.function.BinaryOperator;
 
 public class InventoryFacade {
     private static InventoryFacade inventoryFacadeInstance = null;
@@ -17,7 +18,6 @@ public class InventoryFacade {
         this.recordController= RecordController.getInstance();
         this.stockController= StockController.getInstance();
     }
-
     public static InventoryFacade getInstance()
     {
         if(inventoryFacadeInstance == null)
@@ -25,18 +25,34 @@ public class InventoryFacade {
         return inventoryFacadeInstance;
     }
 
-     public Response<ItemDTO> addItem(int categoryID, int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice, double sellingPrice) {
-         try {
-             Item item = stockController.addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,categoryID,buyingPrice,sellingPrice);
-             return new Response<>(new ItemDTO(item));
-         } catch (IllegalArgumentException e) {
-             return new Response<>(e);
-         }
-     }
-
-    public Response<Boolean> updateItem(int itemID, String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice, double sellingPrice){
+    public Response<Boolean> addSpecificItem(int generalItemID,int location,  int storageAmount, int shelfAmount, LocalDate expDate, String producer)
+    {
+        try
+        {
+            Boolean res = stockController.addSpecificItem(generalItemID,location,storageAmount,shelfAmount,expDate,producer);
+            return new Response<>(res);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return new Response<>(e);
+        }
+    }
+    public Response<ItemDTO> addItem(int categoryID, int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice, double sellingPrice) {
         try {
-            stockController.updateItem(itemID,name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+            Item item = stockController.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, categoryID, buyingPrice, sellingPrice);
+            return new Response<>(new ItemDTO(item));
+        } catch (IllegalArgumentException e) {
+            return new Response<>(e);
+        }
+    }
+    public Response<Boolean> removeFaultyItems()
+    {
+        stockController.removeFaultyItems();
+        return new Response<>(true);
+    }
+    public Response<Boolean> updateItem(int itemID, String name,  int minAmount,  double buyingPrice, double sellingPrice){
+        try {
+            stockController.updateItem(itemID,name,minAmount,buyingPrice,sellingPrice);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){

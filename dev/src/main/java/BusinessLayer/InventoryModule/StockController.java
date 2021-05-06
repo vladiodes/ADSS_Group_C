@@ -1,9 +1,16 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.SuppliersModule.Contract;
+import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
+import BusinessLayer.SuppliersModule.Order;
+import BusinessLayer.SuppliersModule.ProductInOrder;
+import BusinessLayer.SuppliersModule.Supplier;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import javafx.util.Pair;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class StockController {
     // -- fields
@@ -28,7 +35,13 @@ public class StockController {
 
 
     // -- public methods
-
+    //@TODO : add specific item option (FINISHED)
+    public boolean addSpecificItem(int generalItemID,int location,  int storageAmount, int shelfAmount, LocalDate expDate, String producer)
+    {
+        Item item = findItem(generalItemID);
+        item.addSpecificItem(location,storageAmount,shelfAmount,expDate,producer);
+        return true;
+    }
     public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double buyingPrice,double sellingPrice) {
 
 
@@ -41,9 +54,9 @@ public class StockController {
         return toReturn;
     }
 
-    public void updateItem(int itemID,String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double buyingPrice,double sellingPrice){
+    public void updateItem(int itemID,String name,   int minAmount, double buyingPrice,double sellingPrice){
 
-        this.getItemByID(itemID).updateItem(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+        this.getItemByID(itemID).updateItem(name,minAmount,buyingPrice,sellingPrice);
     }
 
     public void updateCategory(int categoryID,String categoryName){
@@ -119,12 +132,17 @@ public class StockController {
         for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
             Category value = entry.getValue();
             for (Map.Entry<Integer, Item> entry1 : value.getItems().entrySet()) {
-                if (entry1.getValue().getLocation()==location)
-                    return entry1.getValue();
+                List<SpecificItem> items = entry1.getValue().getSpecificItems();
+                for(SpecificItem item : items)
+                {
+                    if (item.getLocation()==location)
+                        return entry1.getValue();
+                }
+
             }
-    }
+        }
         throw new IllegalArgumentException("there is no item in this location");
-}
+    }
     private Item getItemByID(int id) {
         Item item = findItem(id);
         if(item == null)
@@ -137,8 +155,12 @@ public class StockController {
         for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
             Category value = entry.getValue();
             for (Map.Entry<Integer, Item> entry1 : value.getItems().entrySet()) {
-                if (entry1.getValue().getLocation()==location)
-                    return false;
+                List<SpecificItem> items = entry1.getValue().getSpecificItems();
+                for(SpecificItem item : items)
+                {
+                    if (item.getLocation()==location)
+                        return false;
+                }
             }
         }
         return true;
@@ -167,33 +189,82 @@ public class StockController {
 
     public void deleteItem(int itemID) {
         boolean deleted = false;
+        List<Supplier> allSuppliers = SuppliersController.getInstance().getAllSuppliers();
+        // check if the item exists in an order and if so remove it from the order
+        for(Supplier s : allSuppliers)
+        {
+            List<Order> allOrdersBySupplier = s.getOrders();
+            for(Order o : allOrdersBySupplier)
+            {
+                Set<ProductInOrder> allProductsInOrder = o.getProductsInOrder();
+                for(ProductInOrder p : allProductsInOrder)
+                {
+                    Contract c = p.getContract();
+                    if(c.getProduct().getId()== itemID)
+                    {
+                        o.removeProduct(c,s.getDiscountsByPrice());
+                    }
+                }
+            }
+        }
         for(Category cat : categories.values())
         {
             if(cat.containsItem(itemID)) {
                 cat.deleteItem(itemID);
+                this.findItem(itemID).setID(-1);
                 deleted = true;
             }
         }
         if(!deleted)
             throw new IllegalArgumentException("Item ID does not exist");
 
-        //@TODO: check if there's an expected order that arrives with the given id
-        //@TODO: a deleted item from the store is represented with id of -1
+        //@TODO: check if there's an expected order that arrives with the given id (FINISHED)
 
+
+        //@TODO: a deleted item from the store is represented with id of -1 (FINISHED)
+
+
+    }
+    public void removeFaultyItems()
+    {
+        for (Map.Entry<Integer, Category> entry : this.categories.entrySet()) {
+            Category value = entry.getValue();
+            for (Map.Entry<Integer, Item> entry1 : value.getItems().entrySet()) {
+                Item item = entry1.getValue();
+                item.removeFaultyItems();
+                if(item.getAmount() < item.getMinAmount())
+                {
+                    addOrder(item);
+                }
+            }
+        }
     }
 
     public void sellItem(int itemID,int quantity) {
-
+        boolean needToOrder = false;
         Item item = findItem(itemID);
         if (quantity<1)
             throw new IllegalArgumentException("invalid quantity");
-        if(item.getAvailableAmount()<quantity)
+        if(item.getAmount()<quantity)
             throw new IllegalArgumentException("No Available items for sale");
-        //@TODO sale item should return true/false upon missing items
-        item.SaleItem(quantity);
-        //@TODO open a new order for the low quantity item
+        needToOrder = item.SaleItem(quantity);
+        //@TODO : open a new order for the low quantity item (FINISHED)
+        //@TODO : need to get the SupplierFacade and supplierID (FINISHED)
+        if(needToOrder)
+        {
+            addOrder(item);
+        }
     }
-
+    private void addOrder(Item item)
+    {
+        if(item.getId() != -1) // if the item isn't deleted
+        {
+            Pair<Integer,Integer> supIDAndCatID = item.getCheapestSupplier();
+            SuppliersController controller = SuppliersController.getInstance();
+            int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDateTime.now(),false);
+            controller.addItemToOrder(supIDAndCatID.getKey(),newOrderID,item.getMinAmount()-item.getAmount(),supIDAndCatID.getValue());
+        }
+    }
     public void clear() {
         this.categories=new HashMap<>();
         this.categoryID=1;

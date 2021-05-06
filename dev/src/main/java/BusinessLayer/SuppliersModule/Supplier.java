@@ -3,6 +3,7 @@ package BusinessLayer.SuppliersModule;
 import BusinessLayer.InventoryModule.Item;
 import DTO.SupplierDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -200,11 +201,21 @@ public class Supplier{
      * @param supplierProductId the id of the product as it appears in the supplier's catalogue
      */
     public void addItemToOrder(int orderId, int quantity, int supplierProductId){
-        findOrder(orderId).addItem(findContract(supplierProductId),quantity,discountsByPrice);
-        //@TODO: when updating a fixed order - check if it's a fixed order and at least one day before
+        Order order = findOrder(orderId);
+        if(order.getisFixed() && order.getDateOfOrder().compareTo(LocalDateTime.now().plusDays(1)) >= 0)
+        {
+            order.addItem(findContract(supplierProductId),quantity,discountsByPrice);
+        }
+        else if(!order.getisFixed())
+            order.addItem(findContract(supplierProductId),quantity,discountsByPrice);
+        else
+            throw new IllegalArgumentException("Need to update order at least one day before arrival");
+
+        //@TODO: when updating a fixed order - check if it's a fixed order and at least one day before (FINISHED)
     }
 
-    //@TODO: add delete item from order function
+    //@TODO: add delete item from order function (???)
+
 
     /**
      *
@@ -301,7 +312,7 @@ public class Supplier{
             if(c.getProduct().equals(product))
                 throw new IllegalArgumentException("There's already a contract issued with the given product");
         }
-        supplierContracts.add(new Contract(price,supplierProductID,quantityAgreement,product));
+        supplierContracts.add(new Contract(price,this,supplierProductID,quantityAgreement,product));
     }
 
     /**

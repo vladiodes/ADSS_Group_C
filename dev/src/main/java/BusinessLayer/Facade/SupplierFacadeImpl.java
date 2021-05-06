@@ -22,7 +22,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
 
 
     public SupplierFacadeImpl(){
-        suppliersController=new SuppliersController();
+        suppliersController=SuppliersController.getInstance();
     }
 
     @Override
