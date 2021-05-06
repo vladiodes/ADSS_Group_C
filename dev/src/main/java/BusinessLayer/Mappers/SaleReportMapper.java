@@ -41,6 +41,7 @@ public class SaleReportMapper {
     public int addReport(SaleReport report){
         int id=dao.insert(new SaleReportDTO(report));
         saleReportMapper.put(id,report);
+        report.setReportID(id);
         return id;
     }
 

@@ -4,7 +4,9 @@ import BusinessLayer.InventoryModule.Sale;
 import DTO.SaleDTO;
 import DataAccessLayer.SaleDAO;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class SaleMapper {
     private static SaleMapper instance=null;
@@ -29,6 +31,7 @@ public class SaleMapper {
     public int addSale(Sale sale){
         int id=dao.insert(new SaleDTO(sale));
         saleMapper.put(id,sale);
+        sale.setItemID(id);
         return id;
     }
 
@@ -43,5 +46,15 @@ public class SaleMapper {
         if(dto==null)
             throw new IllegalArgumentException("No such sale in the database");
         return buildSale(dto);
+    }
+
+
+    public Collection<Sale> getAllSales(){
+        for(SaleDTO dto:dao.getAllSales()){
+            if(saleMapper.containsKey(dto.id))
+                continue;
+            buildSale(dto);
+        }
+        return saleMapper.values();
     }
 }

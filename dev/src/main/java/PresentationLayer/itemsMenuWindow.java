@@ -72,7 +72,7 @@ public class itemsMenuWindow extends menuWindow {
                     break;
                 case 16:
                     if (scenario) {
-                        //scenario1();
+                        scenario1();
                         scenario = false;
                     } else
                         System.out.println("scenario can run only one time");
@@ -145,7 +145,7 @@ public class itemsMenuWindow extends menuWindow {
 
 
         Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
-        utills.printMessageOrSuccess(response, "Successfully added item of id " + response.getValue().getID() + "\n");
+        utills.printMessageOrSuccess(response, "Successfully added item\n" + response.getValue());
     }
 
     private void updateItem() {
@@ -178,7 +178,7 @@ public class itemsMenuWindow extends menuWindow {
         String name = scanner.nextLine();
         int fatherID = utills.getNonNegativeNumber("please enter father-category ID\n");
         Response<CategoryDTO> response = inventoryFacade.addCategory(name, fatherID);
-        utills.printMessageOrSuccess(response, "Successfully added category : \n");
+        utills.printMessageOrSuccess(response, "Successfully added category:\n" + response.getValue());
     }
 
     private void updateCategory() {
@@ -302,7 +302,7 @@ public class itemsMenuWindow extends menuWindow {
         int month = scanner.nextInt();
         scanner.nextLine();
         while (month > 12 || month < 1) {
-            System.out.println("please enter valid day :");
+            System.out.println("please enter valid month :");
             day = scanner.nextInt();
             scanner.nextLine();
 
@@ -311,7 +311,7 @@ public class itemsMenuWindow extends menuWindow {
         int year = scanner.nextInt();
         scanner.nextLine();
         while (year < 2021 || year > 2023) {
-            System.out.println("please enter valid day :");
+            System.out.println("please enter valid year :");
             day = scanner.nextInt();
             scanner.nextLine();
 
@@ -320,19 +320,19 @@ public class itemsMenuWindow extends menuWindow {
         return date;
     }
 
-//    public void scenario1() {
-//        Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
-//        utills.printMessageOrSuccess(response1, "Successfully added category\n");
-//
-//        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().getID(), 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
-//        utills.printMessageOrSuccess(response2, "Successfully added item\n");
-//
-//        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
-//        utills.printMessageOrSuccess(response3, "successfully sale\n");
-//
-//        ArrayList categoriesList = new ArrayList();
-//        categoriesList.add(response1.getValue().getID());
-//        Response<ReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
-//        printReport(response4);
-//    }
+    public void scenario1() {
+        Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
+        utills.printMessageOrSuccess(response1, "Successfully added category\n");
+
+        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
+        utills.printMessageOrSuccess(response2, "Successfully added item\n");
+
+        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
+        utills.printMessageOrSuccess(response3, "successfully sale\n");
+
+        ArrayList<Integer> categoriesList = new ArrayList();
+        categoriesList.add(response1.getValue().id);
+        Response<amountReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
+        printReport(response4);
+    }
 }

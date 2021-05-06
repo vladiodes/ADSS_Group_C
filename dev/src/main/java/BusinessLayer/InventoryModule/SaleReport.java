@@ -16,7 +16,6 @@ public class SaleReport extends Report
         setEndDate(endDate);
         this.sales = new ArrayList<>();
         for (Sale sale : sales) this.sales.add(sale);
-        setReportID(SaleReportMapper.getInstance().addReport(this));
     }
     public SaleReport(SaleReportDTO dto,List<Sale> sales){
         super(dto.reportID);

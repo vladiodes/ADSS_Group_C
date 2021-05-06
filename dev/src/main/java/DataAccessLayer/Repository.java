@@ -23,13 +23,8 @@ public class Repository {
     protected Connection connect() {
         Connection conn = null;
         try {
-            //Class.forName("SQLite.JDBCDriver").newInstance();
-            // db parameters
             String url = "jdbc:sqlite:database.db";
-            // create a connection to the database
             conn = DriverManager.getConnection(url);
-            //debug
-            System.out.println("Connection to SQLite has been established.");
 
         } catch (SQLException e) {
             e.printStackTrace();}
@@ -42,7 +37,7 @@ public class Repository {
                 conn.close();
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
     public List<Integer> getIds(String query){
@@ -111,6 +106,7 @@ public class Repository {
                 "\t\"SellingPrice\"\tINTEGER NOT NULL,\n" +
                 "\t\"StorageAmmount\"\tINTEGER NOT NULL,\n" +
                 "\t\"CategoryID\"\tINTEGER NOT NULL,\n" +
+                "\t\"Alert\"\tINTEGER NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
                 "\tFOREIGN KEY(\"CategoryID\") REFERENCES \"Category\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
@@ -153,8 +149,9 @@ public class Repository {
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
                 "\t\"Quantity\"\tINTEGER NOT NULL,\n" +
                 "\t\"ItemID\"\tINTEGER NOT NULL,\n" +
-                "\tPRIMARY KEY(\"ID\",\"ItemID\"),\n" +
-                "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\") ON DELETE CASCADE\n" +
+                "\t\"SaleDate\"\tDateTime NOT NULL,\n" +
+                "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\") ON DELETE CASCADE,\n" +
+                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
                 ");";
         String SaleReportTable = "CREATE TABLE IF NOT EXISTS \"SaleReport\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
@@ -232,7 +229,7 @@ public class Repository {
             stmt.execute(SupplierManu);
             stmt.execute(SalesInReportTable);
         } catch (SQLException exception) {
-            System.out.println("SQLException");
+            exception.printStackTrace();
         } finally {
             closeConnection(conn);
         }

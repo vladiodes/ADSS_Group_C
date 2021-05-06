@@ -28,6 +28,12 @@ public class ReportDAO extends DAO<ReportDTO> {
             ps.setString(2, dto.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
             ps.executeUpdate();
             id=getInsertedID(con);
+            for(int itemID:dto.itemsIDS) {
+                PreparedStatement ps2=con.prepareStatement("INSERT into ItemsInReport (ItemID,ReportID) VALUES (?,?)");
+                ps2.setInt(1,itemID);
+                ps2.setInt(2,id);
+                ps2.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -33,7 +33,9 @@ public class StockController {
             throw new IllegalArgumentException("invalid category id");
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already taken");
-        Item toReturn = CategoryMapper.getInstance().getCategory(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
+        if(mapper.getCategory(categoryID)==null)
+            throw new IllegalArgumentException("No such category");
+        Item toReturn = mapper.getCategory(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,buyingPrice,sellingPrice);
         return toReturn;
     }
 
@@ -96,7 +98,6 @@ public class StockController {
 
     public void changeAlertTime(int itemID,int daysAmount){
         this.findItem(itemID).setAlertTime(daysAmount);
-        //@todo:add alert time to db
     }
 
 

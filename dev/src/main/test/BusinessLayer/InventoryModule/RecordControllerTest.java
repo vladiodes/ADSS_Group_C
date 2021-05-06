@@ -21,7 +21,6 @@ class RecordControllerTest {
 
     @AfterEach
     void tearDown() {
-        this.recordController.clear();
     }
 
 /*

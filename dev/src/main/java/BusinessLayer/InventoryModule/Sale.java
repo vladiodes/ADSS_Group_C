@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Sale {
-    private int saleID;
+    private int saleID=-1;
     private String itemName;
     private int itemID;
     private double sellingPrice;
@@ -20,7 +20,6 @@ public class Sale {
         this.sellingPrice=sellingPrice;
         this.saleDate=saleDate;
         this.quantity=quantity;
-        saleID= SaleMapper.getInstance().addSale(this);
     }
     public Sale(SaleDTO dto){
         this.itemName = dto.itemName;
@@ -29,6 +28,11 @@ public class Sale {
         this.saleDate=dto.saleDate;
         this.quantity=dto.quantity;
         saleID= dto.id;
+    }
+
+    public void setItemID(int itemID) {
+        if(this.itemID==-1)
+            this.itemID=itemID;
     }
 
     public double getSellingPrice() {

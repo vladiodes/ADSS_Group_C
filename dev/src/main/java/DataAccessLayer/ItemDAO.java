@@ -17,13 +17,13 @@ public class ItemDAO extends DAO<ItemDTO> {
     public static final String sellingPrice = "SellingPrice";
     public static final String Storage = "StorageAmmount";
     public static final String CategoryIDCOL = "CategoryID";
-    //@TODO: add alert time column
-    private final String INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?,?,?,?,?)", tableName, ExpirationCol, LocationCol,
-            NameCol, minCol, availableCol, ProducerCol, ShelfCol, sellingPrice, Storage, CategoryIDCOL);
+    public static final String alertCol="Alert";
+    private final String INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?,?,?,?,?,?)", tableName, ExpirationCol, LocationCol,
+            NameCol, minCol, availableCol, ProducerCol, ShelfCol, sellingPrice, Storage, CategoryIDCOL,alertCol);
 
-    private final String UPDATE_SQL = String.format("Update %s SET %s=?, %s=?, %s=?, %s=?, %s=?,%s=?, %s=?, %s=?, %s=?, %s=? WHERE ID=?",
+    private final String UPDATE_SQL = String.format("Update %s SET %s=?, %s=?, %s=?, %s=?, %s=?,%s=?, %s=?, %s=?, %s=?, %s=?, %s=? WHERE ID=?",
             tableName, ExpirationCol, LocationCol,
-            NameCol, minCol, availableCol, ProducerCol, ShelfCol, sellingPrice, Storage, CategoryIDCOL);
+            NameCol, minCol, availableCol, ProducerCol, ShelfCol, sellingPrice, Storage, CategoryIDCOL,alertCol);
 
     public ItemDAO() {
         super("Item");
@@ -46,6 +46,7 @@ public class ItemDAO extends DAO<ItemDTO> {
             ps.setDouble(8, dto.getSellingPrice());
             ps.setInt(9, dto.getStorageAmount());
             ps.setInt(10, dto.getCategoryID());
+            ps.setInt(11,dto.getAlertTime());
             ps.executeUpdate();
             id = getInsertedID(con);
         } catch (SQLException e) {
@@ -73,7 +74,8 @@ public class ItemDAO extends DAO<ItemDTO> {
             ps.setDouble(8, dto.getSellingPrice());
             ps.setInt(9, dto.getStorageAmount());
             ps.setInt(10, dto.getCategoryID());
-            ps.setInt(11, dto.getID());
+            ps.setInt(11,dto.getAlertTime());
+            ps.setInt(12, dto.getID());
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,7 +92,7 @@ public class ItemDAO extends DAO<ItemDTO> {
         try {
             if (!rs.isClosed())
                 output = new ItemDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(LocationCol), rs.getString(ProducerCol),
-                        rs.getInt(availableCol), rs.getInt(Storage), rs.getInt(ShelfCol), rs.getInt(minCol), LocalDate.parse(rs.getString(ExpirationCol)), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL));
+                        rs.getInt(availableCol), rs.getInt(Storage), rs.getInt(ShelfCol), rs.getInt(minCol), LocalDate.parse(rs.getString(ExpirationCol)), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL),rs.getInt(alertCol));
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -101,6 +103,6 @@ public class ItemDAO extends DAO<ItemDTO> {
     }
 
     public int delete(ItemDTO dto) {
-        return delete("ID", String.valueOf(dto.getID()));
+        return delete(DAO.idCol, String.valueOf(dto.getID()));
     }
 }

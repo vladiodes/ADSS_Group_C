@@ -1,5 +1,9 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.ReportMapper;
+import BusinessLayer.Mappers.SaleMapper;
+import BusinessLayer.Mappers.SaleReportMapper;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,17 +13,15 @@ import java.util.Map;
 public class RecordController {
     // -- fields
     private static RecordController recordControllerInstance = null;
-    private HashMap<Integer,Sale> sales;
-    private HashMap<Integer,Report> reports;
-    private HashMap<Integer,SaleReport> saleReports;
-    private HashMap<Integer,Item> faultyItems;
+    private SaleMapper salesMapper;
+    private ReportMapper reportsMapper;
+    private SaleReportMapper saleReportsMapper;
 
     // -- constructor
     private RecordController() {
-        this.sales=new HashMap<>();
-        this.reports=new HashMap<>();
-        this.faultyItems=new HashMap<>();
-        saleReports=new HashMap<>();
+        salesMapper=SaleMapper.getInstance();
+        reportsMapper=ReportMapper.getInstance();
+        saleReportsMapper=SaleReportMapper.getInstance();
     }
 
     public static RecordController getInstance(){
@@ -40,7 +42,7 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-        reports.put(toReturn.getReportID(),toReturn);
+        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -54,8 +56,7 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-
-        reports.put(toReturn.getReportID(),toReturn);
+        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -70,7 +71,7 @@ public class RecordController {
              }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now().minusWeeks(1),LocalDate.now());
-        reports.put(toReturn.getReportID(),toReturn);
+        reportsMapper.addReport(toReturn);
         return toReturn;
 
         }
@@ -78,7 +79,7 @@ public class RecordController {
 
     public Sale addSale(Item item,int quantity){
         Sale sale = new Sale(item.getId(),item.getName(),item.getSellingPrice(),LocalDate.now(),quantity);
-        this.sales.put(sale.getSaleID(),sale);
+        salesMapper.addSale(sale);
         return sale;
     }
 
@@ -92,7 +93,7 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-        reports.put(toReturn.getReportID(),toReturn);
+        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -100,29 +101,26 @@ public class RecordController {
     public SaleReport getSalesReport(ArrayList<Category> categories, LocalDate startDate, LocalDate endDate) {
         ArrayList<Sale> salesInReport = new ArrayList();
         for (Category c: categories) {
-            for(Sale sale : sales.values())
+            for(Sale sale : salesMapper.getAllSales())
             {
-                if(c.containsItem(sale.getItemID()) && sale.getSaleDate().compareTo(startDate) >=0 && sale.getSaleDate().compareTo(endDate) <=0){
-                    salesInReport.add(sale);
-                }
+                if (c.containsItem(sale.getItemID()))
+                    if (sale.getSaleDate().compareTo(startDate) >= 0)
+                        if (sale.getSaleDate().compareTo(endDate) <= 0) {
+                            salesInReport.add(sale);
+                        }
             }
 
         }
         SaleReport toReturn = new SaleReport(salesInReport,startDate,endDate);
         toReturn.setStartDate(startDate);
         toReturn.setEndDate(endDate);
-        saleReports.put(toReturn.getReportID(),toReturn);
+        saleReportsMapper.addReport(toReturn);
         return toReturn;
     }
 
     public ArrayList<Sale> getSales(ArrayList<Integer> categories) {
-        ArrayList<Sale> salesList = new ArrayList<>(sales.values());
+        ArrayList<Sale> salesList = new ArrayList<>(salesMapper.getAllSales());
         return salesList;
     }
 
-    public void clear() {
-        this.sales=new HashMap<>();
-        this.reports=new HashMap<>();
-        this.faultyItems=new HashMap<>();
-    }
 }

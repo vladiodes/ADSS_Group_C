@@ -1,28 +1,28 @@
 package BusinessLayer.InventoryModule;
 
-import BusinessLayer.Mappers.ReportMapper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Report {
 
-    private int reportID;
+    private int reportID=-1;
     private List<Item> items;
     private LocalDate startDate;
     private LocalDate endDate;
 
     public Report(int id){
         reportID=id;
+        items=new ArrayList<>();
     }
-    public Report(List<Item> items,LocalDate startDate,LocalDate endDate){
-        this.items=items;
-        this.startDate=startDate;
-        this.endDate=endDate;
-        reportID=ReportMapper.getInstance().addReport(this);
+    public Report(List<Item> items,LocalDate startDate,LocalDate endDate) {
+        this.items = items != null ? items : new ArrayList<>();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
     public Report(int reportID,List<Item> items,LocalDate startDate,LocalDate endDate){
-        this.items=items;
+        this.items=items!=null? items:new ArrayList<>();
         this.startDate=startDate;
         this.endDate=endDate;
         this.reportID=reportID;
@@ -53,7 +53,8 @@ public class Report {
     }
 
     public void setReportID(int reportID) {
-        this.reportID = reportID;
+        if (this.reportID == -1)
+            this.reportID = reportID;
     }
 
     public void setStartDate(LocalDate startDate) {

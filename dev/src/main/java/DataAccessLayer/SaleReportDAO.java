@@ -4,10 +4,7 @@ import DTO.ReportDTO;
 import DTO.SaleDTO;
 import DTO.SaleReportDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.format.DateTimeFormatter;
 
 public class SaleReportDAO extends DAO<SaleReportDTO> {
@@ -30,6 +27,12 @@ public class SaleReportDAO extends DAO<SaleReportDTO> {
             ps.setString(2, dto.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
             ps.executeUpdate();
             id=getInsertedID(con);
+            for(int saleId:dto.saleIDS) {
+                PreparedStatement ps2=con.prepareStatement("INSERT into SalesInReport (SaleID,SaleReportID) VALUES (?,?)");
+                ps2.setInt(1,saleId);
+                ps2.setInt(2,id);
+                ps2.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
