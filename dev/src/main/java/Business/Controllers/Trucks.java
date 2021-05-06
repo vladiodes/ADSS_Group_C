@@ -1,15 +1,19 @@
 package Business.Controllers;
 
 import Business.Objects.Truck;
+import Data.DAO.TrucksDAO;
+import Data.DTO.TruckDTO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Trucks implements Controller<Truck> {
     private HashMap<String, Truck> trucks;
-
+    private TrucksDAO DAO;
     public Trucks() {
         this.trucks = new HashMap<String, Truck>();
+        DAO = new TrucksDAO();
     }
 
     public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {
@@ -21,7 +25,11 @@ public class Trucks implements Controller<Truck> {
     public Truck getTruck(String plate) throws Exception {
         if (trucks.containsKey(plate))
             return trucks.get(plate);
-        else throw new Exception(plate + " doesn't exist");
+        TruckDTO output = DAO.getTruck(plate);
+        if(output == null)
+            throw new Exception(plate + " doesn't exist");
+        Truck toAdd = new Truck(output);
+        return trucks.put(toAdd.getPlateNum(),toAdd);
     }
 
     public ArrayList<Truck> getTrucks() {

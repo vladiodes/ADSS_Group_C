@@ -51,17 +51,14 @@ public abstract class DAO<T> {
                 "VALUES %s;", tableName, Values);
     }
 
-    protected ResultSet get(String nameOfTable, String colName, String value) {
-        String SELECT_SQL = String.format("SELECT * FROM %s WHERE %s=%s", nameOfTable, colName, value);
-        Connection con = Repository.getInstance().connect();
+    protected ResultSet get(String nameOfTable, String colName, String value, Connection con) {
+        String SELECT_SQL = String.format("SELECT * FROM %s WHERE \"%s\"=%s", nameOfTable, colName, value);
         ResultSet rs = null;
         try {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Repository.getInstance().closeConn(con);
         }
         return rs;
     }
