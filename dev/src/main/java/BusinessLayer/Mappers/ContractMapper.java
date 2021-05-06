@@ -17,7 +17,7 @@ public class ContractMapper {
         dao=new ContractDAO();
     }
 
-    public ContractMapper getInstance(){
+    public static ContractMapper getInstance(){
         if(instance==null){
             instance=new ContractMapper();
         }
@@ -45,11 +45,12 @@ public class ContractMapper {
         return buildContract(contract);
     }
 
-    public void addContract(Contract contract,int supplierID){
+    public int addContract(Contract contract,int supplierID){
         int id=dao.insert(new ContractDTO(contract,supplierID));
         if(!contractMapper.containsKey(supplierID)){
             contractMapper.put(supplierID,new HashMap<>());
         }
             contractMapper.get(supplierID).put(contract.getProduct().getId(),contract);
+        return id;
     }
 }
