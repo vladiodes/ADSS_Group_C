@@ -66,17 +66,14 @@ public abstract class DAO<T> {
         return rs;
     }
 
-    protected ResultSet getWithInt(String nameOfTable, String colName, int value) {
+    protected ResultSet getWithInt(String nameOfTable, String colName, int value, Connection con) {
         String SELECT_SQL = String.format("SELECT * FROM %s WHERE %s=%s", nameOfTable, colName, value);
-        Connection con = Repository.getInstance().connect();
         ResultSet rs = null;
         try {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Repository.getInstance().closeConn(con);
         }
         return rs;
     }
@@ -96,17 +93,14 @@ public abstract class DAO<T> {
         return rs;
     }
 
-    protected ResultSet get2int(String nameOfTable, String colName1, int value1, String colName2, int value2) {
+    protected ResultSet get2int(String nameOfTable, String colName1, int value1, String colName2, int value2, Connection con) {
         String SELECT_SQL = String.format("SELECT * FROM %s WHERE %s=%d AND %s=%d", nameOfTable, colName1, value1, colName2, value2);
-        Connection con = Repository.getInstance().connect();
         ResultSet rs = null;
         try {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            Repository.getInstance().closeConn(con);
         }
         return rs;
     }

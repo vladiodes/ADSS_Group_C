@@ -4,6 +4,8 @@ import Data.DTO.ItemContractDTO;
 import Data.DTO.SiteDTO;
 import Data.DTO.TransportDTO;
 import Data.Repository;
+
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -51,6 +53,7 @@ public class TransportsDAO extends DAO<TransportDTO> {
 
     public TransportDTO makeDTO(ResultSet RS) { //String date, int weight, String driver, String truck, List<ItemContractDTO> contracts, String source,int ID
         TransportDTO output = null;
+        Connection conn = Repository.getInstance().connect();
         try {
             String date = RS.getString(2);
             int weight = RS.getInt(1);
@@ -59,16 +62,16 @@ public class TransportsDAO extends DAO<TransportDTO> {
             String Source = RS.getString(5);
             int transportID = RS.getInt(3);
             List<ItemContractDTO> ItemContracts = new ArrayList<ItemContractDTO>();
-            ResultSet contractsRS = getWithInt("ItemContracts", "TransportID", transportID);
+            ResultSet contractsRS = getWithInt("ItemContracts", "TransportID", transportID,conn);
             while (contractsRS.next()) {
                 int itemContractID = contractsRS.getInt(1);
                 String destination = contractsRS.getString(3);
-                ResultSet itemsRS = get2int("ItemsInItemcontracts", "ItemContractID", itemContractID, "ItemContractTransportID", transportID);
+                ResultSet itemsRS = get2int("ItemsInItemcontracts", "ItemContractID", itemContractID, "ItemContractTransportID", transportID, conn);
                 Boolean passed = contractsRS.getBoolean(4);
                 HashMap<String, Integer> items = new HashMap<>();
                 while (itemsRS.next()) {
-                    int count = itemsRS.getInt(1);
-                    String name = itemsRS.getString(0);
+                    int count = itemsRS.getInt(2);
+                    String name = itemsRS.getString(1);
                     items.put(name, count);
                 }
                 ItemContracts.add(new ItemContractDTO(itemContractID, destination, items, passed));
@@ -77,10 +80,14 @@ public class TransportsDAO extends DAO<TransportDTO> {
         } catch (Exception e) {
             output = null;
         }
+        finally{
+            Repository.getInstance().closeConn(conn);
+        }
         return output;
     }
 
     public int delete(TransportDTO ob) {
         return 0;
     }
+    
 }

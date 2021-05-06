@@ -218,7 +218,8 @@ public class ShiftDAO extends DAO<ShiftDTO> {
 
     private List<Pair<String, String>> getcurrentShiftEmployeesList(int shiftId) {
         List<Pair<String, String>> ans =new LinkedList<>();
-        ResultSet rs=getWithInt("EmployeesInShift","ShiftID", shiftId  );
+        Connection conn = Repository.getInstance().connect();
+        ResultSet rs=getWithInt("EmployeesInShift","ShiftID", shiftId, conn  );
         try
         {
             while (rs.next())
@@ -228,14 +229,16 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             }
         } catch (Exception e) {
             return null;
+        } finally {
+            Repository.getInstance().closeConn(conn);
         }
         return ans;
     }
 
     private Map<String, Integer> getconstraintsList(int shiftId) {
-
+        Connection conn = Repository.getInstance().connect();
         Map<String, Integer> ans= new HashMap<>();
-        ResultSet rs=getWithInt("ShiftConstraints","ShiftID", shiftId  );
+        ResultSet rs=getWithInt("ShiftConstraints","ShiftID", shiftId,  conn);
         try
         {
             while (rs.next())
@@ -245,6 +248,8 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             }
         } catch (Exception e) {
             return null;
+        } finally{
+            Repository.getInstance().closeConn(conn);
         }
         return ans;
     }
