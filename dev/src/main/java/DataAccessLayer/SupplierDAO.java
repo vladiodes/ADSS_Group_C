@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class SupplierDAO extends DAO<SupplierDTO> {
     String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="paymentMethod",
     INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol),
-    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol);
+    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol,IDCol);
 
     public  SupplierDAO(){super("Supplier");}
     @Override
@@ -59,6 +59,6 @@ public class SupplierDAO extends DAO<SupplierDTO> {
     }
 
     public int delete(SupplierDTO dto) {
-        return 0;
+        return  delete("ID",String.valueOf(dto.getSupplierID()));
     }
 }

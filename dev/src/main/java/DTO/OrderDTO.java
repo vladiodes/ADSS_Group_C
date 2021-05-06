@@ -15,7 +15,7 @@ public class OrderDTO {
     public double priceBeforeDiscount;
     public double priceAfterDiscount;
     public int totalQuantity;
-    public List<String> productsInOrder;
+    public List<String> productsInOrder;//add the id's list(map store id to supplier catalog id) for db loading
     public boolean isFixed;
     public int supplierID;
 

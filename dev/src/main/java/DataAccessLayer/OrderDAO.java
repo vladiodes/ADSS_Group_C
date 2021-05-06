@@ -1,6 +1,8 @@
 package DataAccessLayer;
 
+import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
+import DTO.SupplierDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,7 +57,12 @@ public class OrderDAO extends DAO<OrderDTO> {
 
     public OrderDTO get(int id){
         //ResultSet rs=get("ID",String.valueOf(id));
-        //@TODO: continue from here
+        //get the order from the order table need to add price after discount column, go to PIO table get all relevant products id's,
+        //calc their quantity , save their id's (store and supplier catalog so we can create BusinessPIO) as well, add isFixed column to order table.
         return null;
+    }
+
+    public int delete(OrderDTO dto) {
+        return  delete("ID",String.valueOf(dto.orderID));
     }
 }
