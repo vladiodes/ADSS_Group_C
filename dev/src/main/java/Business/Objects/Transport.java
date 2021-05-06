@@ -23,7 +23,7 @@ public class Transport implements persistentObject<TransportDTO> {
         setWeight(weight);
         this.ID = ID;
     }
-
+/*
     public Transport(TransportDTO dto) throws Exception {
         setTruck(dto.truck);
         setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dto.date));
@@ -33,7 +33,7 @@ public class Transport implements persistentObject<TransportDTO> {
         setWeight(dto.weight);
         this.ID = dto.ID;
     }
-
+*/
     public void setDate(Date date) {
         this.date = date;
     }

@@ -212,12 +212,12 @@ public class Repository {
             Instance = new Repository();
         return Instance;
     }
-/*
+
     public static void main(String[] args) {
         //getInstance();
         TransportsDAO dao = new TransportsDAO();
 
         List<TransportDTO> i = dao.getAll();
         System.out.println(i.get(0).Contracts.get(0).passed);
-    }*/
+    }
 }

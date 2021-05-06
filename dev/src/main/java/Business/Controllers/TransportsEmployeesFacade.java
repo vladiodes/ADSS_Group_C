@@ -156,7 +156,7 @@ public class TransportsEmployeesFacade {
         Sit.addSection(section);
     }
 
-    public ArrayList<Transport> getTransportsOfDriver(int driverID) {
+    public ArrayList<Transport> getTransportsOfDriver(String driverID) {
         return Tra.getTransportsOfDriver(driverID);
     }
 

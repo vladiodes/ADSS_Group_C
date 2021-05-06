@@ -284,8 +284,7 @@ public class TransportsMain {
     public static void GetTransportsByDriver() {
         try {
             System.out.println("Please enter the id of the driver");
-            int id = in.nextInt();
-            in.nextLine();
+            String id = in.nextLine();
             System.out.println(API.getTransportsOfDriver(id));
         } catch (Exception e) {
             System.out.println(e.getMessage());

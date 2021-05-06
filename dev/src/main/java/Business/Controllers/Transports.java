@@ -15,10 +15,10 @@ public class Transports implements Controller<Transport> {
         ID ++;
     }
 
-    public ArrayList<Transport> getTransportsOfDriver(int driverID) {
+    public ArrayList<Transport> getTransportsOfDriver(String driverID) {
         ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
         for (Transport t : transports)
-            if (t.getDriver().getID() == driverID)
+            if (t.getDriver().getId() == driverID)
                 filteredTransports.add(t);
         return filteredTransports;
     }
