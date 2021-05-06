@@ -3,6 +3,7 @@ package Business.Controllers;
 import Business.Misc.Pair;
 import Business.Misc.TypeOfEmployee;
 import Business.Misc.TypeOfShift;
+import Business.Objects.Driver;
 import Business.Objects.Employee;
 import Business.Objects.Shift;
 
@@ -56,6 +57,19 @@ public class StaffController
             return e.getMessage();
         }
         return "Employee added successfully";
+    }
+    public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) {
+        try
+        {
+            Employee employee = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid
+            this.employees.put(id, employee);
+        }
+        catch (Exception e)
+        {
+            return e.getMessage();
+        }
+        //add insert
+        return "Driver Employee added successfully";
     }
 
     /**
@@ -341,7 +355,6 @@ public class StaffController
     public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
         this.typeOfLoggedIn = typeOfLoggedIn;
     }
-
 
 
 

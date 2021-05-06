@@ -13,6 +13,7 @@ import static java.lang.System.exit;
 
 public class Menus {
     private final int NUMBER_OF_EMPLOYEE_FIELDS =7; //magic number
+    private final int NUMBER_OF_DRIVER_FIELDS = 8; //magic number
 
     //================================================Fields===========================================================
     private Map menuMain ;
@@ -23,6 +24,9 @@ public class Menus {
 
     private Map AREmployee;
     private int AREmployeeOption;
+
+    private Map ARDriverEmployee;
+    private int ARDriverEmployeeOption;
 
     private Map ARAvailableShift;
     private int ARAvailableShiftOption;
@@ -138,7 +142,76 @@ public class Menus {
                     }
                     break;
                 }
-                case(2): //Edit employee details
+                case(2): //Add/Remove driver employee
+                {
+                    this.AREmployeeOption = printMenu(AREmployee);
+                    switch (this.AREmployeeOption)
+                    {
+                        case(1): //Add Driver Employee
+                        {
+                            String[] driverFields=new String[NUMBER_OF_DRIVER_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
+                            //First Name
+                            System.out.println("Please Enter First Name");
+                            driverFields[0]=s.nextLine();
+                            driverFields[0]=inValidInputLetters(driverFields[0]);
+                            //Last Name
+                            System.out.println("Please Enter Last Name");
+                            driverFields[1]=s.nextLine();
+                            driverFields[1]=inValidInputLetters(driverFields[1]);
+
+                            //ID
+                            System.out.println("Please Enter ID");
+                            driverFields[2]=s.nextLine();
+                            driverFields[2]=inValidInputDigits(driverFields[2]);
+
+                            //Bank Account Number
+                            System.out.println("Please Enter bank Account Number");
+                            driverFields[3]=s.nextLine();
+                            while (!checkBankAccountNumber(driverFields[3])) //Ask for valid input until received
+                            {
+                                System.out.println("Invalid Input, please enter again");
+                                driverFields[3]=s.nextLine();
+                            }
+
+                            //Salary
+                            System.out.println("Please Enter salary");
+                            driverFields[4]=s.nextLine();
+                            driverFields[4]=inValidInputDigits(driverFields[4]);
+
+                            //Employee Conditions
+                            System.out.println("Please Enter Employee conditions");
+                            driverFields[5]=s.nextLine();//free text , no need to check
+
+
+                            //License
+                            System.out.println("Please Enter License Number");
+                            driverFields[7]=s.nextLine();
+                            driverFields[7]=inValidInputDigits(driverFields[7]);
+
+                            //---------All input from user is ready-------------
+
+                            List<TypeOfEmployee> skills = new LinkedList<TypeOfEmployee>();
+                            skills.add(TypeOfEmployee.Driver); //Adding the skill to the new list created for the new employee
+                            System.out.println(facade.addDriverEmployee(driverFields[0], driverFields[1], driverFields[2], driverFields[3], Integer.parseInt(driverFields[4]), driverFields[5],new Date(System.currentTimeMillis()),skills, Integer.parseInt(driverFields[7])));
+
+                            break;
+                        }
+                        case(2): //Remove Driver Employee
+                        {
+                            System.out.println("Enter ID Of The Employee To Remove");
+                            String id=s.nextLine();
+                            id=inValidInputDigits(id);
+                            System.out.println(facade.RemoveEmployee(id));
+                            break;
+                        }
+                        case(3)://back To main menu
+                        {
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                case(3): //Edit employee details
                 {
                     String idToEdit=checkIdExist();
                     this.menuEditOption=printMenu(menuEdit);
@@ -209,7 +282,7 @@ public class Menus {
                     }
                     break;
                 }
-                case(3): //Add/Remove available shift
+                case(4): //Add/Remove available shift
                 {
                     String idToEdit=checkIdExist();
                     this.ARAvailableShiftOption=printMenu(ARAvailableShift);
@@ -274,7 +347,7 @@ public class Menus {
                     }
                     break;
                 }
-                case(4): //Add/Remove skills
+                case(5): //Add/Remove skills
                 {
                     String idToEdit=checkIdExist();
                     this.ARSkillOption=printMenu(ARSkills);
@@ -318,7 +391,7 @@ public class Menus {
 
                     break;
                 }
-                case(5): //Add/Remove employee to shift
+                case(6): //Add/Remove employee to shift
                 {
 
                     String idToEdit=checkIdExist();
@@ -379,7 +452,7 @@ public class Menus {
 
 
                 }
-                case(6): //Add/Remove constraints
+                case(7): //Add/Remove constraints
                 {
 
                     this.ARConstraintOption=printMenu(ARConstraint);
@@ -467,7 +540,7 @@ public class Menus {
                     break;
 
                 }
-                case(7): //Add/Remove shift
+                case(8): //Add/Remove shift
                 {
 
                     this.ARShiftOption=printMenu(ARShift);
@@ -518,7 +591,7 @@ public class Menus {
                     break;
 
                 }
-                case(8): //pre-made scenario
+                case(9): //pre-made scenario
                 {
                     TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
                     this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
@@ -569,19 +642,19 @@ public class Menus {
                     break;
 
                 }
-                case(9): //Print schedule
+                case(10): //Print schedule
                 {
                     System.out.println(this.facade.printSchedule());
                     break;
                 }
-                case(10): //Print Employee's Personal Details
+                case(11): //Print Employee's Personal Details
                 {
                     String idToPrint=checkIdExist();
                     System.out.println(this.facade.printPersonalDetails(idToPrint));
                     break;
                 }
 
-                case(11): //Exit The Program
+                case(12): //Exit The Program
                 {
                     exit(0);
                 }
@@ -777,6 +850,7 @@ public class Menus {
         createEditMenu();
         createEmployeeToShift();
         createAREmployee();
+        createARDriverEmployee();
         createARConstraint();
         createARShift();
     }
@@ -786,16 +860,17 @@ public class Menus {
     private void createMenuMain() {
         menuMain=new HashMap<>();
         menuMain.put(1,"Add/Remove Employee");
-        menuMain.put(2,"Edit employee details");
-        menuMain.put(3,"Add/Remove available shift");
-        menuMain.put(4,"Add/Remove skills");
-        menuMain.put(5,"Add/Remove Employee to shift");
-        menuMain.put(6,"Add/Remove Constraint To Existing shift - Only allowed for HRManger");
-        menuMain.put(7,"Add/Remove Shift - Only allowed for HRManger");
-        menuMain.put(8,"Initialize System with pre-made scenario");
-        menuMain.put(9,"Print Schedule");
-        menuMain.put(10,"Print Employee Personal Details");
-        menuMain.put(11,"Exit");
+        menuMain.put(2,"Add/Remove Driver Employee");
+        menuMain.put(3,"Edit employee details");
+        menuMain.put(4,"Add/Remove available shift");
+        menuMain.put(5,"Add/Remove skills");
+        menuMain.put(6,"Add/Remove Employee to shift");
+        menuMain.put(7,"Add/Remove Constraint To Existing shift - Only allowed for HRManger");
+        menuMain.put(8,"Add/Remove Shift - Only allowed for HRManger");
+        menuMain.put(9,"Initialize System with pre-made scenario");
+        menuMain.put(10,"Print Schedule");
+        menuMain.put(11,"Print Employee Personal Details");
+        menuMain.put(12,"Exit");
 
 
     }
@@ -804,6 +879,12 @@ public class Menus {
         AREmployee.put(1, "Add Employee");
         AREmployee.put(2, "Remove Employee");
         AREmployee.put(3, "Back to main menu");
+    }
+    private void createARDriverEmployee() {
+        ARDriverEmployee = new HashMap<>();
+        ARDriverEmployee.put(1, "Add Driver Employee");
+        ARDriverEmployee.put(2, "Remove Driver Employee");
+        ARDriverEmployee.put(3, "Back to main menu");
     }
     private void createEditMenu()
     {
