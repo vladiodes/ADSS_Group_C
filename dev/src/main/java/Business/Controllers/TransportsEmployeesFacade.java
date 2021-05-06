@@ -133,15 +133,15 @@ public class TransportsEmployeesFacade {
     }
 
     //========================================================Transports========================================================================
-    public void addSite(String Ad, int num, String c, String Sec) throws Exception {
-        Sit.addSite(Ad, num, c, Sec);
+    public void addSite(String Ad, String phonenum, String c, String Sec) throws Exception {
+        Sit.addSite(Ad, phonenum, c, Sec);
     }
 
-    public void addTruck(int plate, String model, int maxweight, String type, int factoryweight) throws Exception {
+    public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {
         Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
-    public String addTransport(Date date, int weight, String driverID, int TruckID, List<ItemContract> IC, String Source, TypeOfShift TransportationShift) throws Exception {
+    public String addTransport(Date date, int weight, String driverID, String TruckID, List<ItemContract> IC, String Source, TypeOfShift TransportationShift) throws Exception {
         if(!scheduleController.shiftContainsEmployee(driverID,date,TransportationShift))
             return "Driver not in shift at the time of the transport.";
         if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))

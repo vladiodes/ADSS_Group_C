@@ -12,7 +12,7 @@ public class Sites implements Controller<Site> {
         this.sections = new ArrayList<String>();
     }
 
-    public void addSite(String _ad, int _num, String _contact, String _section) throws Exception {
+    public void addSite(String _ad, String _num, String _contact, String _section) throws Exception {
         if (sites.containsKey(_ad))
             throw new Exception(_ad + " already has a record in the database.");
         String Section = getSection(_section);

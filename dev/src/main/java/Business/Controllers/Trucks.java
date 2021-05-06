@@ -6,19 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Trucks implements Controller<Truck> {
-    private HashMap<Integer, Truck> trucks;
+    private HashMap<String, Truck> trucks;
 
     public Trucks() {
-        this.trucks = new HashMap<Integer, Truck>();
+        this.trucks = new HashMap<String, Truck>();
     }
 
-    public void addTruck(int plate, String model, int maxweight, String type, int factoryweight) throws Exception {
+    public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {
         if (trucks.containsKey(plate))
             throw new Exception(plate + " already exists in the database.");
         trucks.put(plate, new Truck(plate, model, maxweight, type, factoryweight));
     }
 
-    public Truck getTruck(int plate) throws Exception {
+    public Truck getTruck(String plate) throws Exception {
         if (trucks.containsKey(plate))
             return trucks.get(plate);
         else throw new Exception(plate + " doesn't exist");

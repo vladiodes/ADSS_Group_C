@@ -1,8 +1,9 @@
 package Business.Objects;
 
+import Data.DTO.ItemContractDTO;
 import java.util.HashMap;
 
-public class ItemContract {
+public class ItemContract implements persistentObject<ItemContractDTO> {
     private int ID;
     private Site destination;
     private HashMap<String, Integer> items;
@@ -13,6 +14,13 @@ public class ItemContract {
         setDestination(destination);
         setItems(items);
         setPassed(passed);
+    }
+
+    public ItemContract(ItemContractDTO dto){
+        setID(dto.ID);
+        setDestination(dto.destination); //////////////// TODO ///////////////////////////////////
+        setItems(dto.items);
+        setPassed(dto.passed);
     }
 
     public int getID() {
@@ -55,5 +63,10 @@ public class ItemContract {
                 ", items=" + items +
                 ", passed=" + passed +
                 '}';
+    }
+
+    @Override
+    public ItemContractDTO toDTO() {
+        return new ItemContractDTO(getID(),getDestination().getAddress(),getItems(),getPassed());
     }
 }

@@ -1,8 +1,11 @@
 package Business.Objects;
 
+import Data.DTO.TransportDTO;
+import Data.DTO.ItemContractDTO;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Transport {
+public class Transport implements persistentObject<TransportDTO> {
     private Date date;
     private int weight;
     private Driver driver = null;
@@ -19,6 +22,16 @@ public class Transport {
         setSource(source);
         setWeight(weight);
         this.ID = ID;
+    }
+
+    public Transport(TransportDTO dto) throws Exception {
+        setTruck(dto.truck);
+        setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dto.date));
+        setDriver(dto.driver);
+        setContracts(dto.Contracts);
+        setSource(dto.source);
+        setWeight(dto.weight);
+        this.ID = dto.ID;
     }
 
     public void setDate(Date date) {
@@ -87,5 +100,14 @@ public class Transport {
                 ", Contracts=" + Contracts +
                 ", source=" + source +
                 '}';
+    }
+
+    @Override
+    public TransportDTO toDTO() {
+        LinkedList<ItemContractDTO> contractsDTO = new LinkedList<>();
+        for (ItemContract contract : Contracts) {
+            contractsDTO.add(new ItemContractDTO(ID, contract.getDestination().getAddress(), contract.getItems(), contract.getPassed()));
+        }
+        return new TransportDTO(getDate().toString(), getWeight(), getDriver().getId(), getTruck().getPlateNum(), contractsDTO, getSource().getAddress(), ID);
     }
 }

@@ -139,8 +139,7 @@ public class TransportsMain {
             System.out.println("Please enter the address of the site");
             String ad = in.nextLine();
             System.out.println("Please enter the contact phone number of the site (only numbers no -)");
-            int num = in.nextInt();
-            in.nextLine();
+            String num = in.nextLine();
             System.out.println("Please enter the contact name of the site");
             String c = in.nextLine();
             System.out.println("Please enter the section the site is in");
@@ -154,8 +153,7 @@ public class TransportsMain {
     public static void AddTruck() {
         try {
             System.out.println("Please enter the plate number of the truck");
-            int plate = in.nextInt();
-            in.nextLine();
+            String plate = in.nextLine();
             System.out.println("Please enter the model of the truck");
             String model = in.nextLine();
             System.out.println("Please enter max weight for the truck (only numbers!)");
@@ -196,8 +194,7 @@ public class TransportsMain {
             String driverID = in.nextLine();
             in.nextLine();
             System.out.println("Please enter the plate number of the truck");
-            int plateNum = in.nextInt();
-            in.nextLine();
+            String plateNum = in.nextLine();
             System.out.println("Please enter where the transport is going from");
             String source = in.nextLine();
 
@@ -316,10 +313,10 @@ public class TransportsMain {
             API.addSection("North");
             API.addSection("Center");
             API.addSection("South");
-            API.addSite("Nahariyya", 052123123, "Ilay", "North");
-            API.addSite("Tel-Aviv", 052555555, "Hadar", "Center");
-            API.addTruck(3212345, "Honda Ridgeline", 5000, "Pickup Truck", 1500);
-            API.addTruck(6942021, "Tesla", 10000, "Smart Car", 7500);
+            API.addSite("Nahariyya", "052123123", "Ilay", "North");
+            API.addSite("Tel-Aviv", "052555555", "Hadar", "Center");
+            API.addTruck("3212345", "Honda Ridgeline", 5000, "Pickup Truck", 1500);
+            API.addTruck("6942021", "Tesla", 10000, "Smart Car", 7500);
             DataInitialized = true;
         }
         catch (Exception e){
