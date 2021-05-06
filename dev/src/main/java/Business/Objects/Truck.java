@@ -1,6 +1,8 @@
 package Business.Objects;
 
-public class Truck {
+import Data.DTO.TruckDTO;
+
+public class Truck implements persistentObject<TruckDTO> {
     private String plateNum;
     private String model; // model of the truck
     private int maxWeight; // the truck can't carry more than this.
@@ -13,6 +15,14 @@ public class Truck {
         setMaxWeight(maxWeight);
         setType(type);
         setFactoryWeight(Fw);
+    }
+
+    public Truck(TruckDTO dto){
+        setPlateNum(dto.plateNum);
+        setModel(dto.model);
+        setMaxWeight(dto.maxWeight);
+        setType(dto.type);
+        setFactoryWeight(dto.factoryWeight);
     }
 
     public void setFactoryWeight(int factoryWeight) {
@@ -64,5 +74,10 @@ public class Truck {
                 ", type='" + type + '\'' +
                 ", factoryWeight=" + factoryWeight +
                 '}';
+    }
+
+    @Override
+    public TruckDTO toDTO() {
+        return new TruckDTO(getPlateNum(),getModel(),getMaxWeight(),getType(),getFactoryWeight());
     }
 }

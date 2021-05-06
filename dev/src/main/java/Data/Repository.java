@@ -214,10 +214,9 @@ public class Repository {
     }
 
     public static void main(String[] args) {
-        //getInstance();
+        getInstance();
         TransportsDAO dao = new TransportsDAO();
 
         List<TransportDTO> i = dao.getAll();
-        System.out.println(i.get(0).Contracts.get(0).passed);
     }
 }
