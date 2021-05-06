@@ -123,6 +123,8 @@ public class Repository {
                 "\t\"ShipmentStatus\"\tINTEGER NOT NULL,\n" +
                 "\t\"PriceBeforeDiscount\"\tREAL NOT NULL,\n" +
                 "\t\"SupplierID\"\tINTEGER NOT NULL,\n" +
+                "\t\"PriceAfterDiscount\"\tREAL NOT NULL,\n" +
+                "\t\"isFixed\"\tTEXT NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
                 "\tFOREIGN KEY(\"SupplierID\") REFERENCES \"Supplier\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";

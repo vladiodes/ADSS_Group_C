@@ -49,6 +49,17 @@ public class Order{
         isFixed=true;
     }
 
+    public Order(LocalDateTime dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed) {
+        this.dateOfOrder=dateOfOrder;
+        this.orderID=orderID;
+        this.shipmentStatus=shipmentStatus;
+        this.priceBeforeDiscount=priceBeforeDiscount;
+        this.priceAfterDiscount=priceAfterDiscount;
+        this.totalQuantity=totalQuantity;
+        this.productsInOrder=productsInOrder;
+        this.isFixed=isFixed;
+    }
+
     //simple getters
     public boolean getisFixed(){
         return isFixed;
