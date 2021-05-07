@@ -1,27 +1,43 @@
 package Business.Controllers;
 
 import Business.Objects.Truck;
+import Data.DAO.TrucksDAO;
+import Data.DTO.TruckDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Trucks implements Controller<Truck> {
     private HashMap<String, Truck> trucks;
-
+    private TrucksDAO DAO;
     public Trucks() {
         this.trucks = new HashMap<String, Truck>();
+        DAO = new TrucksDAO();
     }
 
     public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {
-        if (trucks.containsKey(plate))
-            throw new Exception(plate + " already exists in the database.");
-        trucks.put(plate, new Truck(plate, model, maxweight, type, factoryweight));
+        Truck temp = null;
+        try{
+            temp = getTruck(plate);
+        }
+        catch (Exception e){
+            //truck doesn't exist in the database
+        }
+        if(temp !=null)
+            throw new Exception("Truck already exists in the databse with the same plate num.");
+        Truck toAdd = new Truck(plate, model, maxweight, type, factoryweight);
+        trucks.put(plate, toAdd);
+        DAO.insert(toAdd.toDTO());
     }
 
     public Truck getTruck(String plate) throws Exception {
         if (trucks.containsKey(plate))
             return trucks.get(plate);
-        else throw new Exception(plate + " doesn't exist");
+        TruckDTO output = DAO.getTruck(plate);
+        if(output == null)
+            throw new Exception(plate + " doesn't exist");
+        Truck toAdd = new Truck(output);
+        return trucks.put(toAdd.getPlateNum(),toAdd);
     }
 
     public ArrayList<Truck> getTrucks() {
@@ -29,7 +45,9 @@ public class Trucks implements Controller<Truck> {
     }
 
     @Override
-    public List<Truck> Load() {
-        return null;
+    public void Load() {
+        List<TruckDTO> dtos = DAO.getAll();
+        for(TruckDTO element : dtos)
+            trucks.put(element.plateNum,new Truck(element));
     }
 }

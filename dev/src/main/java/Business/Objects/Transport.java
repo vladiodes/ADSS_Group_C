@@ -1,5 +1,6 @@
 package Business.Objects;
 
+import Business.Controllers.Sites;
 import Data.DTO.TransportDTO;
 import Data.DTO.ItemContractDTO;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ public class Transport implements persistentObject<TransportDTO> {
     private List<ItemContract> Contracts;
     private Site source = null;
     private int ID;
+    private Sites sitesController;
 
     public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source, int ID) throws Exception {
         setTruck(truck);

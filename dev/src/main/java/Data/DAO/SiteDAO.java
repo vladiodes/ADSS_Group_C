@@ -46,6 +46,20 @@ public class SiteDAO extends DAO<SiteDTO> {
         }
     }
 
+    public SiteDTO getSite(String address) {
+        SiteDTO output = null;
+        Connection conn = Repository.getInstance().connect();
+        ResultSet RS = this.get(this.tableName, "Address", address, conn);
+        try {
+            output = new SiteDTO(RS.getString(3), RS.getString(1), RS.getString(2), RS.getString(4));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            Repository.getInstance().closeConn(conn);
+        }
+        return output;
+    }
+
     public SiteDTO makeDTO(ResultSet RS) { //String address, String contact, String phoneNumber, String section
         SiteDTO output = null;
         try {

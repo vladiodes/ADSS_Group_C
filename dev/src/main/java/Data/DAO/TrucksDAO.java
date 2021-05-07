@@ -44,10 +44,25 @@ public class TrucksDAO extends DAO<TruckDTO> {
         }
     }
 
+    public TruckDTO getTruck(String PlateNum){
+        TruckDTO output = null;
+        Connection conn = Repository.getInstance().connect();
+        ResultSet RS = this.get(this.tableName,"Plate Num",PlateNum,conn);
+        try{
+            output = new TruckDTO(RS.getString(1), RS.getString(4), RS.getInt(3), RS.getString(5), RS.getInt(2));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        } finally {
+            Repository.getInstance().closeConn(conn);
+        }
+        return output;
+    }
+
     public TruckDTO makeDTO(ResultSet RS) { //int plateNum, String model, int maxWeight, String type, int factoryWeight
         TruckDTO output = null;
         try {
-            output = new TruckDTO(RS.getInt(1), RS.getString(4), RS.getInt(3), RS.getString(5), RS.getInt(2));
+            output = new TruckDTO(RS.getString(1), RS.getString(4), RS.getInt(3), RS.getString(5), RS.getInt(2));
         } catch (Exception e) {
             output = null;
         }

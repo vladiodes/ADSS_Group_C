@@ -1,7 +1,11 @@
 package Business.Objects;
 
+import Business.Misc.Pair;
 import Business.Misc.TypeOfEmployee;
+import Business.Misc.TypeOfShift;
 import Data.DTO.DriverDTO;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +48,14 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
 
     @Override
     public DriverDTO toDTO() {
-        return new DriverDTO("Oded", "Gal", "316327923", "123123", 10000, "sdfsdf", null, 10, null, null) ;
-                //new DriverDTO(getFirstName(), getLastName(), getId(), getBankAccountNumber(), getSalary(), getEmpConditions(), getStartWorkingDate(), getLicense(), getSkills(), getAvailableShifts());
+        ArrayList<String> stringSkills = new ArrayList<>();
+        ArrayList<Pair<Date, String>> stringShifts = new ArrayList<>();
+        for (TypeOfEmployee type : getSkills())
+            stringSkills.add(type.toString());
+        for (Pair<Date, TypeOfShift> pair : getAvailableShifts()) {
+            stringShifts.add(new Pair<Date, String>(pair.first, pair.second.toString()));
+        }
+        return new DriverDTO(getFirstName(), getLastName(), getId(), getBankAccountNumber(), getSalary(), getEmpConditions(), getStartWorkingDate(), getLicense(), stringSkills, stringShifts);
     }
 }
+
