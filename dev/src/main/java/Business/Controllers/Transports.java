@@ -49,6 +49,7 @@ public class Transports implements Controller<Transport> {
 
     @Override
     public void Load() {
+        ID = 0;
         try {
             List<TransportDTO> DTOS = DAO.getAll();
             for (TransportDTO el : DTOS) {
@@ -57,6 +58,7 @@ public class Transports implements Controller<Transport> {
                     ICS.add(new ItemContract(el2.ID,sitesController.getSite(el2.destination), el2.items, el2.passed));
                 }
                 this.transports.add(new Transport(new SimpleDateFormat("dd/MM/yyyy").parse(el.date), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ICS, sitesController.getSite(el.source), el.ID));
+                ID ++;
             }
         }
         catch (Exception e )
