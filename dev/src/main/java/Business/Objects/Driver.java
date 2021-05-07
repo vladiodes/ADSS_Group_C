@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Driver extends Employee implements persistentObject<DriverDTO> {
-    private String Name;
     private int License;
 
     public Driver(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) throws Exception {
@@ -22,16 +21,8 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
         setLicense(dto.License);
     }
 
-    public void setName(String name) {
-        Name = name;
-    }
-
     public void setLicense(int license) {
         License = license;
-    }
-
-    public String getName() {
-        return Name;
     }
 
     public int getLicense() {
@@ -40,8 +31,7 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
 
     @Override
     public String toString() {
-        return "Driver{" +
-                "Name='" + Name + '\'' +
+        return super.toString()+
                 ", License=" + License +
                 '}';
     }
