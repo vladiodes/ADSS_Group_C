@@ -568,8 +568,9 @@ public class Menus {
 
                     List<TypeOfEmployee> skillsTom = new LinkedList<TypeOfEmployee>();
                     skillsTom.add(TypeOfEmployee.Cashier);
-                    System.out.println(this.facade.addEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta));
+                    System.out.println(this.facade.addDriverEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta, 10000));
                     System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Storage));
+                    System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Driver));
                     System.out.println(this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar));
                     System.out.println(this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded));
                     System.out.println(this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom));
@@ -578,6 +579,8 @@ public class Menus {
                     System.out.println(this.facade.addConstraintToShift(date2, TypeOfShift.Morning, TypeOfEmployee.Cashier, 1));
                     System.out.println(this.facade.addEmployeeToShift("444444444", TypeOfEmployee.Cashier, date2, TypeOfShift.Morning));//22/04/2022
                     System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.ShiftManager, date2, TypeOfShift.Morning));
+                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Storage, date2, TypeOfShift.Morning));
+                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Driver, date2, TypeOfShift.Morning));
 
                     System.out.println(this.facade.addAvailableShift("111111111", date3, TypeOfShift.Evening));//25/04/2022
                     this.facade.setTypeOfLoggedIn(loggedIn);
