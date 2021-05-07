@@ -53,7 +53,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         try {
             output = new SiteDTO(RS.getString(3), RS.getString(1), RS.getString(2), RS.getString(4));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            output = null;
         } finally {
             Repository.getInstance().closeConn(conn);
         }
