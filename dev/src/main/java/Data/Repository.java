@@ -156,7 +156,7 @@ public class Repository {
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"ShiftID\"\tINTEGER,\n" +
                 "\t\"RoleInShift\"\tTEXT,\n" +
-                "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\"),\n" +
+                "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\",\"RoleInShift\"),\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\") ON DELETE CASCADE,\n" +
                 "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\") ON DELETE CASCADE \n" +
                 ");";
@@ -212,25 +212,33 @@ public class Repository {
 
     public static void main(String[] args) {
        Repository r = getInstance();
-
         r.generateTables();
-        //EmployeeDAO e = new EmployeeDAO();
+        EmployeeDAO emp = new EmployeeDAO();
         ShiftDAO e = new ShiftDAO();
         Date date = null;
         try
         {
-           date = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
+            date = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
         }
         catch (Exception ee)
         {
             System.out.println("Invalid date");
         }
-        //List<String> skills = new LinkedList<>();
-        //skills.add("HRManager");
-        //List<Pair<Date, String>> ava = new LinkedList<>();
-        //ava.add(new Pair<Date, String>(date, "Evening"));
-        //EmployeeDTO eDTO = new EmployeeDTO("Oded", "Gal", "316327923", "234234", 10000, "sdfsdf", date,skills, ava);
-        //int x= e.insert(eDTO);
+        Date date2 = null;
+        try
+        {
+            date2 = new SimpleDateFormat("dd/MM/yyyy").parse("22/05/2022");
+        }
+        catch (Exception ee)
+        {
+            System.out.println("Invalid date");
+        }
+        List<String> skills = new LinkedList<>();
+        skills.add("HRManager");
+        List<Pair<Date, String>> ava = new LinkedList<>();
+        ava.add(new Pair<Date, String>(date, "Evening"));
+        EmployeeDTO eDTO = new EmployeeDTO("Oded", "Gal", "316327923", "234234", 10000, "sdfsdf", date,skills, ava);
+        int x= emp.insert(eDTO);
         //int x2 = e.update(new EmployeeDTO("Oded", "GALLLLL", "316327923", "234234", 9000, "sdfsdf", date,skills, ava));
         //int x3 = e.addAvailableShifts("316327923", date, "Morning");
         //int x4 = e.removeAvailableShifts("316327923", date, "Morning");
@@ -246,14 +254,24 @@ public class Repository {
         Map<String,Integer> constraints = new HashMap<>();
         List<Pair<String, String>> currEmp = new LinkedList<>();
         currEmp.add(new Pair<String, String>("316327923","HRManager"));
-        ShiftDTO shiftDTO1 = new ShiftDTO(0,"Morning", date,constraints,currEmp);
-        ShiftDTO shiftDTO2 = new ShiftDTO(1,"Evening", date,constraints,currEmp);
-        ShiftDTO updatedShiftDTO = new ShiftDTO(1,"Evening", date,constraints,currEmp);
+        ShiftDTO shiftDTO1 = new ShiftDTO(0,"Morning", date,0,constraints,currEmp);
+        ShiftDTO shiftDTO2 = new ShiftDTO(1,"Evening", date,1,constraints,currEmp);
+        //ShiftDTO updatedShiftDTO = new ShiftDTO(0,"Evening", date,constraints,currEmp);
         //int y1 = e.insert(shiftDTO);
-        int y1=e.insert(shiftDTO1);
-        int y2=e.insert(shiftDTO2);
-        //int y1=e.update(updatedShiftDTO);
-        //System.out.println(y1);
+        //int y1=e.insert(shiftDTO1);
+        //int y2=e.insert(shiftDTO2);
+        //int y2=e.insert(shiftDTO2);
+        //int y3=e.update(updatedShiftDTO);
+        //int y3=e.updateConstraint(1,"ShiftManager", 5 );
+        //int count=e.getShiftIdByDateAndType(date2, "Evening");
+        //int count=e.removeEmployeeFromShift("316327923",date, "Evening", "kjsdhfkjds" );
+        //int xy=e.removeConstraints(date,"Evening", "Casjutg");
+        //System.out.println(xy);
+
+        Connection con=Repository.getInstance().connect();
+        ResultSet rs = e.get("Shifts", "ID", "1", con);
+        ShiftDTO shs = e.makeDTO(rs);
+        r.closeConn(con);
 
     }
 }

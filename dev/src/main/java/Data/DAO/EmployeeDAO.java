@@ -20,6 +20,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
 
     @Override
     public int insert(EmployeeDTO Ob) {
+        int ans=0;
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
         String toInsertEmp = Ob.fieldsToString();
@@ -31,11 +32,20 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
             int resAs = insertToAvailableShifts(Ob);
             int resES = insertToEmployeeSkills(Ob);
             if (resAs + resES == 2) //If both inserts worked
-                return 1;
-            return 0;
+                ans= 1;
+            else
+            {
+                ans=0;
+            }
+
         } catch (Exception e) {
-            return 0;
+            ans= 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+        return ans;
+
     }
 
     private int insertToAvailableShifts(EmployeeDTO Ob) {
@@ -199,7 +209,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
 
     private List<Pair<Date, String>> getavailableShiftList(String empId, Connection conn) {
         List<Pair<Date, String>> ans = new LinkedList<>();
-        ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId,conn);
+        ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId, conn);
         try {
             while (rs.next()) {
                 String dateSTR = rs.getString(2);
@@ -216,7 +226,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
 
     private List<String> getSkillsList(String empId, Connection conn) {
         List<String> ans = new LinkedList<>();
-        ResultSet rs = get("EmployeeSkills", "EmployeeID", empId,conn);
+        ResultSet rs = get("EmployeeSkills", "EmployeeID", empId, conn);
         try {
             while (rs.next()) {
                 ans.add(rs.getString(2));//have to check
