@@ -23,6 +23,8 @@ public class itemsMenuWindow extends menuWindow {
     }
 
     public void start() {
+        System.out.println("Welcome To items Menu , We Are currently Removing faulty items...");
+        removeFaultyItems(); // Remove all faulty items whenever entering the menu of the items
         while (!shouldTerminate) {
             switch (printMenu()) {
                 case 1:
@@ -71,18 +73,47 @@ public class itemsMenuWindow extends menuWindow {
                     deleteItem();
                     break;
                 case 16:
+                    addSpecificItem();
+                    break;
+//                case 17:
+//                    removeFaultyItems();
+//                    break;
+                case 17:
                     if (scenario) {
                         scenario1();
                         scenario = false;
                     } else
                         System.out.println("scenario can run only one time");
                     break;
-                case 17:
+                case 18:
                     terminate();
                     break;
             }
+
         }
         closeWindow();
+    }
+
+    private void removeFaultyItems() {
+        Response<Boolean> res = inventoryFacade.removeFaultyItems();
+        utills.printMessageOrSuccess(res, "Successfully Removed faulty items \n");
+    }
+
+    private void addSpecificItem() {
+        int itemID = utills.getNonNegativeNumber("please enter general item id\n");
+        int location = utills.getNonNegativeNumber("please enter item location:\n");
+        System.out.println("please enter producer:\n");
+        String producer = scanner.nextLine();
+        int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
+        int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
+
+
+        System.out.println("please enter expiration date: ");
+        LocalDate expDate = getDateFromUser();
+
+
+        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, location, storageAmount, shelfAmount, expDate,producer);
+        utills.printMessageOrSuccess(response, "Successfully added item of id " + itemID + "\n");
     }
 
     private void closeWindow() {
@@ -111,8 +142,10 @@ public class itemsMenuWindow extends menuWindow {
         menu.put(13, "show minimum amount items");
         menu.put(14, "Show Sales Report");
         menu.put(15, "delete item");
-        menu.put(16, "run scenario");
-        menu.put(17, "back to main menu");
+        menu.put(16,"add Specific Item");
+        //menu.put(17, "remove faulty items");
+        menu.put(17, "run scenario");
+        menu.put(18, "back to main menu");
     }
 
     public static void printReport(Response<? extends Object> response) {
@@ -145,7 +178,7 @@ public class itemsMenuWindow extends menuWindow {
 
 
         Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
-        utills.printMessageOrSuccess(response, "Successfully added item\n" + response.getValue());
+        utills.printMessageOrSuccess(response, "Successfully added item of id " + response.getValue().getId() + "\n");
     }
 
     private void updateItem() {
@@ -169,7 +202,7 @@ public class itemsMenuWindow extends menuWindow {
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
-        Response<Boolean> response = inventoryFacade.updateItem(itemID, name, location, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
+        Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, buyingPrice, sellingPrice);
         utills.printMessageOrSuccess(response, "Successfully update item : \n");
     }
 
@@ -178,7 +211,7 @@ public class itemsMenuWindow extends menuWindow {
         String name = scanner.nextLine();
         int fatherID = utills.getNonNegativeNumber("please enter father-category ID\n");
         Response<CategoryDTO> response = inventoryFacade.addCategory(name, fatherID);
-        utills.printMessageOrSuccess(response, "Successfully added category:\n" + response.getValue());
+        utills.printMessageOrSuccess(response, "Successfully added category : \n");
     }
 
     private void updateCategory() {
@@ -192,7 +225,7 @@ public class itemsMenuWindow extends menuWindow {
 
     private void findItemByLocation() {
         Response<ItemDTO> response = inventoryFacade.getItemByLocation(utills.getNonNegativeNumber("please enter item location\n"));
-        utills.printMessageOrSuccess(response, "Successfully finding item :\n" + response.getValue());
+        utills.printMessageOrSuccess(response, "Successfully finding item : \n");
     }
 
     private void changeAlertTime() {
@@ -302,7 +335,7 @@ public class itemsMenuWindow extends menuWindow {
         int month = scanner.nextInt();
         scanner.nextLine();
         while (month > 12 || month < 1) {
-            System.out.println("please enter valid month :");
+            System.out.println("please enter valid day :");
             day = scanner.nextInt();
             scanner.nextLine();
 
@@ -311,7 +344,7 @@ public class itemsMenuWindow extends menuWindow {
         int year = scanner.nextInt();
         scanner.nextLine();
         while (year < 2021 || year > 2023) {
-            System.out.println("please enter valid year :");
+            System.out.println("please enter valid day :");
             day = scanner.nextInt();
             scanner.nextLine();
 
@@ -327,12 +360,12 @@ public class itemsMenuWindow extends menuWindow {
         Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
         utills.printMessageOrSuccess(response2, "Successfully added item\n");
 
-        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
+        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getId(), 1);
         utills.printMessageOrSuccess(response3, "successfully sale\n");
 
-        ArrayList<Integer> categoriesList = new ArrayList();
+        ArrayList categoriesList = new ArrayList();
         categoriesList.add(response1.getValue().id);
-        Response<amountReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
+        Response<ReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
         printReport(response4);
     }
 }

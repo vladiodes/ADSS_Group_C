@@ -31,14 +31,22 @@ public class RecordController {
     }
 
 
-
+    // if one of the specific items of the Item is expired we will add the item to the report
     public Report showExpItems(ArrayList<Category> categories){
         List itemsInReport = new ArrayList();
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
-                if (value.isExp() & !value.isFaulty())
-                    itemsInReport.add(value);
+                List<SpecificItem> items = value.getSpecificItems();
+                for(SpecificItem item : items)
+                {
+                    if (item.isExp(value.getAlertTime()) & !item.isFaulty())
+                    {
+                        itemsInReport.add(value);
+                        break;
+                    }
+                }
+
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
@@ -51,8 +59,15 @@ public class RecordController {
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
-                if (value.isFaulty())
-                    itemsInReport.add(value);
+                List<SpecificItem> items = value.getSpecificItems();
+                for(SpecificItem item : items)
+                {
+                    if (item.isFaulty())
+                    {
+                        itemsInReport.add(value);
+                        break;
+                    }
+                }
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());

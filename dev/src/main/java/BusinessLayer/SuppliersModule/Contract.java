@@ -10,12 +10,15 @@ public class Contract{
     private int catalogueIDBySupplier;
     private Map<Integer,Integer> discountByQuantity;
     private Item product;
+    private Supplier supplier;
 
-    public Contract(double pricePerUnit,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Item product){
+    public Contract(double pricePerUnit,Supplier supplier,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Item product){
         setPricePerUnit(pricePerUnit);
         setCatalogueIDBySupplier(catalogueIDBySupplier);
         setDiscountByQuantity(discountByQuantity);
         setProduct(product);
+        setSupplier(supplier);
+        product.addContract(this);
     }
 
     //simple getters
@@ -33,6 +36,11 @@ public class Contract{
 
     public double getPricePerUnit(){
         return pricePerUnit;
+    }
+
+    public Supplier getSupplier()
+    {
+        return  this.supplier;
     }
 
 
@@ -59,6 +67,12 @@ public class Contract{
             throw new IllegalArgumentException("a price of a product cannot be negative.");
         }
         this.pricePerUnit=pricePerUnit;
+    }
+    private void setSupplier(Supplier supplier)
+    {
+        if(supplier == null)
+            throw new IllegalArgumentException("Supplier can't be null");
+        this.supplier = supplier;
     }
 
     private void setCatalogueIDBySupplier(int catalogueIDBySupplier){

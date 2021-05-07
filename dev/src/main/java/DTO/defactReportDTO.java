@@ -17,8 +17,8 @@ public class defactReportDTO extends ReportDTO {
         builder.append("Report End Date: "+ this.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "\n");
         builder.append("Report Items:\n");
         for(ItemDTO item : items){
-            builder.append("item id :"+item.getID() +" ");
-            builder.append("item name : " +item.getName() +" \n");
+            builder.append("item id :"+item.getId() +" ");
+            builder.append("item name : " +item.getItemName() +" \n");
         }
         return builder.toString();
     }

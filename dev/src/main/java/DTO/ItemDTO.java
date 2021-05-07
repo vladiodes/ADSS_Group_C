@@ -9,15 +9,8 @@ import java.time.format.DateTimeFormatter;
 public class ItemDTO {
     private int id;
     private String itemName;
-    private int location;
-    private String producer;
     private int availableAmount;
-    private int storageAmount;
-    private int shelfAmount;
-    private int minAmount;
-    private LocalDate expDate;
     private int alertTime;
-    private double sellingPrice;
     private int categoryID;
 
     public ItemDTO(int id, String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double sellingPrice, int categoryID, int alertTime){

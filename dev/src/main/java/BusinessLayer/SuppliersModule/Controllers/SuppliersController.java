@@ -17,14 +17,22 @@ import BusinessLayer.SuppliersModule.*;
 
 
 public class SuppliersController {
+    private static SuppliersController instance = null;
     private Map<Integer, Supplier> supplierMap;
     private int currID;
     private int currOrderID;
 
-    public SuppliersController() {
+    private SuppliersController() {
         supplierMap = new HashMap<>();
         currID = 0;
         currOrderID = 0;
+    }
+
+    public static SuppliersController getInstance()
+    {
+        if(instance == null)
+            instance = new SuppliersController();
+        return instance;
     }
 
     /**
