@@ -23,6 +23,8 @@ public class itemsMenuWindow extends menuWindow {
     }
 
     public void start() {
+        System.out.println("Welcome To items Menu , We Are currently Removing faulty items...");
+        removeFaultyItems(); // Remove all faulty items whenever entering the menu of the items
         while (!shouldTerminate) {
             switch (printMenu()) {
                 case 1:
@@ -73,17 +75,17 @@ public class itemsMenuWindow extends menuWindow {
                 case 16:
                     addSpecificItem();
                     break;
+//                case 17:
+//                    removeFaultyItems();
+//                    break;
                 case 17:
-                    removeFaultyItems();
-                    break;
-                case 18:
                     if (scenario) {
                         scenario1();
                         scenario = false;
                     } else
                         System.out.println("scenario can run only one time");
                     break;
-                case 19:
+                case 18:
                     terminate();
                     break;
             }
@@ -141,9 +143,9 @@ public class itemsMenuWindow extends menuWindow {
         menu.put(14, "Show Sales Report");
         menu.put(15, "delete item");
         menu.put(16,"add Specific Item");
-        menu.put(17, "remove faulty items");
-        menu.put(18, "run scenario");
-        menu.put(19, "back to main menu");
+        //menu.put(17, "remove faulty items");
+        menu.put(17, "run scenario");
+        menu.put(18, "back to main menu");
     }
 
     public static void printReport(Response<? extends Object> response) {
