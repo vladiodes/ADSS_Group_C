@@ -3,6 +3,7 @@ package Business.Controllers;
 import Business.Objects.Site;
 import Data.DAO.SectionsDAO;
 import Data.DAO.SiteDAO;
+import Data.DTO.SectionDTO;
 import Data.DTO.SiteDTO;
 
 import java.util.*;
@@ -44,7 +45,11 @@ public class Sites implements Controller<Site> {
         SiteDTO DTOoutput = SITDAO.getSite(Ad);
         if(DTOoutput == null) //doesn't exist in the DB
             return null;
-        else return new Site(DTOoutput);
+        else{
+            Site output = new Site(DTOoutput);
+            sites.put(output.getAddress(),output);
+            return output;
+        }
     }
 
     public ArrayList<Site> getSites() {
@@ -57,7 +62,11 @@ public class Sites implements Controller<Site> {
             if (t.equals(s))
                 return t;
         }
-        return  SECDAO.getSection(s);
+        SectionDTO output = SECDAO.getSection(s);
+        if(output == null)
+            return null;
+        sections.add(output.name);
+        return output.name;
     }
 
     public List<String> getSections() {
