@@ -187,7 +187,7 @@ public class DriverDAO extends DAO<DriverDTO> {
 
     private List<Pair<Date, String>> getavailableShiftList(String empId, Connection conn) {
         List<Pair<Date, String>> ans = new LinkedList<>();
-        ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId);
+        ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId,conn);
         try {
             while (rs.next()) {
                 Pair<Date, String> p = new Pair<>(new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString(1)), rs.getString(2));//have to check
@@ -201,7 +201,7 @@ public class DriverDAO extends DAO<DriverDTO> {
 
     private List<String> getSkillsList(String empId,Connection conn) {
         List<String> ans = new LinkedList<>();
-        ResultSet rs = get("EmployeeSkills", "EmployeeID", empId);
+        ResultSet rs = get("EmployeeSkills", "EmployeeID", empId, conn);
         try {
             while (rs.next()) {
                 ans.add(rs.getString(1));//have to check

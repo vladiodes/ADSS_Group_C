@@ -5,30 +5,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DriverDTO {
-    public String firstName;
-    public String lastName;
-    public String id;
-    public String bankAccountNumber;
-    public int salary;
-    public String empConditions;
-    public Date startWorkingDate;
-    public List<String> skills;
-    public List<Pair<Date, String>> availableShifts;
+public class DriverDTO extends EmployeeDTO{
     public int License;
 
     public DriverDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions,
                      Date startWorkingDate, int License, List<String> skills, List<Pair<Date, String>> availableShifts) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.id = id;
-        this.bankAccountNumber = bankAccountNumber;
-        this.salary = salary;
-        this.empConditions = empConditions;
-        this.startWorkingDate = startWorkingDate;
-        this.skills = skills;
+        super(firstName,lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate,skills,availableShifts);
         this.License = License;
-        this.availableShifts = availableShifts;
     }
 
     public String fieldsToString() {
