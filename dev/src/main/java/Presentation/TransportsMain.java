@@ -19,64 +19,56 @@ public class TransportsMain {
         while (true) {
             try {
                 System.out.println("Hello, write the number of the operation you would like to do");
-                System.out.println("1. Add driver");
-                System.out.println("2. Add site");
-                System.out.println("3. Add truck");
-                System.out.println("4. Add transport");
-                System.out.println("5. Add section");
-                System.out.println("6. Get all trucks");
-                System.out.println("7. Get all drivers");
-                System.out.println("8. Get all sites");
-                System.out.println("9. Get all sections");
-                System.out.println("10. Get all transports");
-                System.out.println("11. Get transport of driver");
-                System.out.println("12. Get transport by date");
-                System.out.println("13. Quit");
+                System.out.println("1. Add site");
+                System.out.println("2. Add truck");
+                System.out.println("3. Add transport");
+                System.out.println("4. Add section");
+                System.out.println("5. Get all trucks");
+                System.out.println("6. Get all sites");
+                System.out.println("7. Get all sections");
+                System.out.println("8. Get all transports");
+                System.out.println("9. Get transport of driver");
+                System.out.println("10. Get transport by date");
+                System.out.println("11. Quit");
                 if (!DataInitialized)
-                    System.out.println("14. Initialize data from instructions manual");
+                    System.out.println("12. Initialize data from instructions manual");
                 Scanner in = new Scanner(System.in);
                 int option = in.nextInt();
                 in.nextLine();
-                if (option == 13)
+                if (option == 11)
                     break;
                 switch (option) {
                     case 1:
-                        //AddDriver();
-                        break;
-                    case 2:
                         AddSite(API);
                         break;
-                    case 3:
+                    case 2:
                         AddTruck(API);
                         break;
-                    case 4:
+                    case 3:
                         AddTransport(API);
                         break;
-                    case 5:
+                    case 4:
                         AddSection(API);
                         break;
-                    case 6:
+                    case 5:
                         GetAllTrucks(API);
                         break;
-                    case 7:
-                        //GetAllDrivers();
-                        break;
-                    case 8:
+                    case 6:
                         GetAllSites(API);
                         break;
-                    case 9:
+                    case 7:
                         GetAllSections(API);
                         break;
-                    case 10:
+                    case 8:
                         GetAllTransports(API);
                         break;
-                    case 11:
+                    case 9:
                         GetTransportsByDriver(API);
                         break;
-                    case 12:
+                    case 10:
                         GetTransportsByDate(API);
                         break;
-                    case 14:
+                    case 12:
                         InitializeData(API);
                         break;
                     default:
@@ -116,24 +108,6 @@ public class TransportsMain {
         return contracts;
     }
 
-    /*
-        public static void AddDriver() {
-
-            try {
-                System.out.println("Please enter the name of the new driver");
-                String name = in.nextLine();
-                System.out.println("Please enter the id of the new driver");
-                String id = in.nextLine();
-                in.nextLine();
-                System.out.println("Please enter the license of the new driver");
-                int license = in.nextInt();
-                in.nextLine();
-                API.addDriver(name, id, license);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    */
     public static void AddSite(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the address of the site");
@@ -249,15 +223,6 @@ public class TransportsMain {
         }
     }
 
-    /*
-        public static void GetAllDrivers() {
-            try {
-                System.out.println(API.getAllDrivers());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    */
     public static void GetAllSites(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllSites());
@@ -307,7 +272,6 @@ public class TransportsMain {
             return;
         }
         try {
-            //         API.addDriver("Ami Rozis", 123123123, 5000);
             API.addSection("North");
             API.addSection("Center");
             API.addSection("South");
