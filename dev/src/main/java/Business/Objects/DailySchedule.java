@@ -1,6 +1,6 @@
 package Business.Objects;
 
-import Business.Misc.TypeOfShift;
+import Misc.TypeOfShift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

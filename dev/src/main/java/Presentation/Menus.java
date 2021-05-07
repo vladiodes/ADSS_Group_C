@@ -1,8 +1,8 @@
 package Presentation;
 
 import Business.Controllers.TransportsEmployeesFacade;
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
+import Misc.TypeOfEmployee;
+import Misc.TypeOfShift;
 
 
 import java.text.SimpleDateFormat;

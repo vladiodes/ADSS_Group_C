@@ -1,14 +1,9 @@
 package Data.DTO;
 
-import Business.Misc.Pair;
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
-import Business.Objects.Employee;
+import Misc.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static Business.Misc.TypeOfEmployee.ShiftManager;
 
 public class ShiftDTO {
     //==================================================================Fields==================================================================

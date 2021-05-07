@@ -6,7 +6,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
-import Business.Misc.Pair;
+import Misc.Pair;
 
 public class Repository {
     private static Repository Instance = null;

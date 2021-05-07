@@ -1,7 +1,7 @@
 package Presentation;
 
 import Business.Controllers.TransportsEmployeesFacade;
-import Business.Misc.TypeOfEmployee;
+import Misc.TypeOfEmployee;
 
 import java.util.Scanner;
 

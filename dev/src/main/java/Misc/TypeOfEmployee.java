@@ -1,4 +1,4 @@
-package Business.Misc;
+package Misc;
 
 public enum TypeOfEmployee
 {

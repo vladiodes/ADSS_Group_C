@@ -1,15 +1,15 @@
 package Business.Controllers;
 
 
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
+import Misc.TypeOfEmployee;
+import Misc.TypeOfShift;
 import Business.Objects.DailySchedule;
 import Business.Objects.Shift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import static Business.Misc.TypeOfEmployee.*;
+import static Misc.TypeOfEmployee.*;
 public class ScheduleController {
 
     //========================================================Fields====================================================
