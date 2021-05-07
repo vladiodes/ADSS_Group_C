@@ -51,7 +51,7 @@ public abstract class DAO<T> {
                 "VALUES %s;", tableName, Values);
     }
 
-    protected ResultSet get(String nameOfTable, String colName, String value, Connection con) {
+    public ResultSet get(String nameOfTable, String colName, String value, Connection con) {
         String SELECT_SQL = String.format("SELECT * FROM %s WHERE \"%s\"=\"%s\"", nameOfTable, colName, value);
         ResultSet rs = null;
         try {

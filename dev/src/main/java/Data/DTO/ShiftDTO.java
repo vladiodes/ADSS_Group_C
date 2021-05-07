@@ -22,14 +22,14 @@ public class ShiftDTO {
 
 
     //==================================================================Constructor==============================================================
-    public ShiftDTO(int shiftId,String type, Date date, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
+    public ShiftDTO(int shiftId,String type, Date date, int isSealed, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
         this.shiftId=shiftId;
         this.type = type;
         this.date = date;
         this.currentShiftEmployees = currentShiftEmployees;
         this.constraints = constraints;
         this.constraints.put("ShiftManager", 1); //Default constraint
-        this.isSealed = false;
+        this.isSealed = isSealed==1 ? true : false;
 
     }
 

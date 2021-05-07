@@ -1,6 +1,7 @@
 package Data.DAO;
 
 import Business.Misc.Pair;
+import Business.Misc.TypeOfShift;
 import Data.DTO.EmployeeDTO;
 import Data.DTO.ShiftDTO;
 import Data.Repository;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class ShiftDAO extends DAO<ShiftDTO> {
 
-    int idAI=0;
+    private int idAI=0;
     public ShiftDAO() {
         this.tableName = "Shifts";
     }
@@ -71,17 +72,23 @@ public class ShiftDAO extends DAO<ShiftDTO> {
     private int insertToEmployeeInShift(ShiftDTO Ob, int shiftId) {
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
-        for (int index = 0; index < Ob.getNumberOfEmpInShift(); index++) {
-            String toInsert = String.format("INSERT INTO %s \n" +
-                    "VALUES %s;", "EmployeesInShift", Ob.getEmployees(index,shiftId));
-            Statement s;
-            try {
-                s = conn.createStatement();
-                s.executeUpdate(toInsert);
-            } catch (Exception e) {
-                return 0;
+        try {
+            for (int index = 0; index < Ob.getNumberOfEmpInShift(); index++) {
+                String toInsert = String.format("INSERT INTO %s \n" +
+                        "VALUES %s;", "EmployeesInShift", Ob.getEmployees(index,shiftId));
+                Statement s;
+
+                    s = conn.createStatement();
+                    s.executeUpdate(toInsert);
+
             }
+        } catch (Exception e) {
+            return 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
         return 1;
     }
 
@@ -94,11 +101,11 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         if(updatedOb == null) return 0;
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String updateString = String.format("UPDATE %s" +
-                        " SET  Date= %s " +
-                        ", TypeOfShift=\"%s\", IsSealed=\"%s\"" +
-                        " WHERE Date == \"%s\" AND TypeOfShift == \"%s\";",
+                        " SET  Date= \"%s\" " +
+                        ", TypeOfShift=\"%s\", IsSealed=%s" +
+                        " WHERE ID == %s ;",
                 tableName,formatter.format(updatedOb.date),updatedOb.type,
-                updatedOb.isSealed ? 1 : 0, formatter.format(updatedOb.date), updatedOb.type);
+                updatedOb.isSealed ? 1 : 0, updatedOb.shiftId);
         Statement s;
         try {
             s = conn.createStatement();
@@ -107,18 +114,47 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         catch (Exception e ){
             return 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
     }
 
-    public int updateConstraint(int ShiftID,String TypeOfEmployee, int amount)
+    public int getShiftIdByDateAndType(Date date, String type)
     {
+        Connection conn = Repository.getInstance().connect();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String updateString = String.format("select ID From Shifts where Date = \"%s\" AND TypeOfShift==\"%s\"",formatter.format(date),type);
+        ResultSet rs=null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(updateString);
+            if(rs==null)
+            {
+                return -1;
+            }
+            int x =  rs.getInt(1);
+            return x;
+
+        }
+        catch (Exception e ){
+            return -1;
+        }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
+    }
+    public int updateConstraint(Date date,String typeOfShift, String TypeOfEmployee, int amount)
+    {
+        int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
         Connection conn = Repository.getInstance().connect();
         if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
         String updateString = String.format("UPDATE %s" +
                         " SET  \"ShiftID\"= %s " +
-                        ", \"TypeOfEmployee\"=\"%s\",  \"Amount\"=\"%s\"" +
-                        "WHERE \"ShiftID\" == \"%s\" AND \"TypeOfEmployee\" == \"%s\";",
-                "ShiftConstraints",ShiftID,TypeOfEmployee,
-                amount, ShiftID, TypeOfEmployee);
+                        ", \"TypeOfEmployee\"=\"%s\",  \"Amount\"=%s" +
+                        " WHERE \"ShiftID\" == %s ;",
+                "ShiftConstraints", ShiftID,TypeOfEmployee,amount, ShiftID);
         Statement s;
         try {
             s = conn.createStatement();
@@ -127,16 +163,21 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         catch (Exception e ){
             return 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
     }
 
 
-    public int insertEmployeeToShift(String EmployeeID,int ShiftID,String RoleInShift)
+    public int addEmployeeToShift(String EmployeeID,Date date, String typeOfShift,String RoleInShift)
     {
         Connection conn = Repository.getInstance().connect();
+        int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
         String updateString;
         if(EmployeeID == null || ShiftID < 0 || RoleInShift == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "EmployeesInShift", EmployeeID, ShiftID,RoleInShift);
+                "VALUES (\"%s\",%s,\"%s\");", "EmployeesInShift", EmployeeID, ShiftID,RoleInShift);
         Statement s;
         try
         {
@@ -146,16 +187,21 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         catch (Exception e ){
             return 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
     }
 
 
-    public int removeEmployeeToShift(String EmployeeID,int ShiftID,String RoleInShift)
+    public int removeEmployeeFromShift( String EmployeeID,Date date, String typeOfShift,String RoleInShift)
     {
+        int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
         Connection conn = Repository.getInstance().connect();
         String updateString;
         if(EmployeeID == null || ShiftID < 0 || RoleInShift==null) return 0;
         updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=%s AND %s=%s AND %s=%s;", "EmployeesInShift", "EmployeeID", EmployeeID,"ShiftID" ,ShiftID, "RoleInShift", RoleInShift);
+                "WHERE %s=\"%s\" AND %s=%s AND %s=\"%s\";", "EmployeesInShift", "EmployeeID", EmployeeID,"ShiftID" ,ShiftID, "RoleInShift", RoleInShift);
         Statement s;
         try
         {
@@ -166,37 +212,22 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         {
             return 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
     }
 
 
 
-    public int insertConstraints(int ShiftID,String TypeOfEmployee, int amount)
+    public int addConstraints(Date date, String typeOfShift,String TypeOfEmployee, int amount)
     {
         Connection conn = Repository.getInstance().connect();
+        int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
         String updateString;
         if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "ShiftConstraints", ShiftID, TypeOfEmployee,amount);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-    }
-
-
-
-    public int removeConstraints(int ShiftID,String TypeOfEmployee)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(TypeOfEmployee == null || ShiftID < 0 ) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=%s AND %s=%s;", "ShiftConstraints", "ShiftID", ShiftID,"TypeOfEmployee" ,TypeOfEmployee);
+                "VALUES (%s,\"%s\",%s);", "ShiftConstraints", ShiftID, TypeOfEmployee,amount);
         Statement s;
         try
         {
@@ -207,6 +238,39 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         {
             return 0;
         }
+        finally
+        {
+            Repository.getInstance().closeConn(conn);
+        }
+
+    }
+
+
+
+    public int removeConstraints(Date date, String typeOfShift,String TypeOfEmployee)
+    {
+        Connection conn = Repository.getInstance().connect();
+        int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
+
+        String updateString;
+        if(TypeOfEmployee == null || ShiftID < 0 ) return 0;
+        updateString= String.format("DELETE FROM %s \n" +
+                "WHERE %s=%s AND %s=\"%s\";", "ShiftConstraints", "ShiftID", ShiftID,"TypeOfEmployee" ,TypeOfEmployee);
+        Statement s;
+        try
+        {
+            s = conn.createStatement();
+            return s.executeUpdate(updateString);
+        }
+        catch (Exception e )
+        {
+            return 0;
+        }
+        finally
+        {
+            Repository.getInstance().closeConn(conn);
+        }
+
     }
 
 
@@ -217,7 +281,8 @@ public class ShiftDAO extends DAO<ShiftDTO> {
     {
         ShiftDTO output ;
         try {
-            Map<String, Integer> constraints = getconstraintsList(RS.getInt(1)/*id*/);
+            int id = RS.getInt(1);
+            Map<String, Integer> constraints = getconstraintsList(id);
             if (constraints == null) {
                 return null;
             }
@@ -228,7 +293,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             /*
              public ShiftDTO(Integer Id,String type, Date date)
              */
-            output = new ShiftDTO(RS.getInt(1),/*type*/RS.getString(2),/*date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(3)), constraints, currentShiftEmployees);
+            output = new ShiftDTO(/*id*/RS.getInt(1),/*type*/RS.getString(3),/*date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(2)), RS.getInt(4), constraints, currentShiftEmployees);
         } catch (Exception e) {
             output = null;
         }
@@ -263,7 +328,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         {
             while (rs.next())
             {
-                ans.put(rs.getString(2)/*type of employee*/,rs.getInt(4)/*amount*/);
+                ans.put(rs.getString(2)/*type of employee*/,rs.getInt(3)/*amount*/);
 
             }
         } catch (Exception e) {
