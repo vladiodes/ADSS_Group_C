@@ -4,7 +4,6 @@ import Business.Misc.Pair;
 import Business.Misc.TypeOfEmployee;
 import Business.Misc.TypeOfShift;
 import Data.DTO.DriverDTO;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,8 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
     }
 
     public Driver(DriverDTO dto) throws Exception {
-        super(dto); /////////////////////////////////// TODO ///////////////////////////////////////////////////
+        super(dto);
+        setLicense(dto.License);
     }
 
     public void setName(String name) {
@@ -57,4 +57,4 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
         }
         return new DriverDTO(getFirstName(), getLastName(), getId(), getBankAccountNumber(), getSalary(), getEmpConditions(), getStartWorkingDate(), getLicense(), stringSkills, stringShifts);
     }
-}y
+}
