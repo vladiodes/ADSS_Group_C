@@ -32,7 +32,7 @@ public abstract class DAO<T> {
 
 
     public int delete(String colName,String value){
-        String DELETE_SQL=String.format("Delete From %s WHERE %s=%s",tableName,colName,value);
+        String DELETE_SQL=String.format("Delete From %s WHERE %s=\"%s\"",tableName,colName,value);
         int rowsAffected=-1;
         Connection con=Repository.getInstance().connect();
         try {
@@ -51,18 +51,20 @@ public abstract class DAO<T> {
                 "VALUES %s;", tableName, Values);
     }
 
-    protected ResultSet get(String nameOfTable, String colName, String value) {
-        String SELECT_SQL = String.format("SELECT * FROM %s WHERE %s=%s", nameOfTable, colName, value);
+    public ResultSet get(String nameOfTable, String colName, String value) {
         Connection con = Repository.getInstance().connect();
+        String SELECT_SQL = String.format("SELECT * FROM %s WHERE %s=\"%s\"", nameOfTable, colName, value);
         ResultSet rs = null;
         try {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             Repository.getInstance().closeConn(con);
         }
+
         return rs;
     }
 

@@ -161,13 +161,14 @@ public class DriverDAO extends DAO<DriverDTO> {
 
     @Override
     public DriverDTO makeDTO(ResultSet RS) {
+        Connection conn = Repository.getInstance().connect();
         DriverDTO output = null;
         try {
-            List<String> skills = getSkillsList(RS.getString(2)/*id*/);
+            List<String> skills = getSkillsList(RS.getString(2)/*id*/,conn);
             if (skills == null) {
                 return null;
             }
-            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(2)/*id*/);
+            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(2)/*id*/, conn);
             if (availableShifts == null) {
                 return null;
             }
@@ -184,7 +185,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         return output;
     }
 
-    private List<Pair<Date, String>> getavailableShiftList(String empId) {
+    private List<Pair<Date, String>> getavailableShiftList(String empId, Connection conn) {
         List<Pair<Date, String>> ans = new LinkedList<>();
         ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId);
         try {
@@ -198,7 +199,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         return ans;
     }
 
-    private List<String> getSkillsList(String empId) {
+    private List<String> getSkillsList(String empId,Connection conn) {
         List<String> ans = new LinkedList<>();
         ResultSet rs = get("EmployeeSkills", "EmployeeID", empId);
         try {

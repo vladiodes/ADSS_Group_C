@@ -1,6 +1,8 @@
 package Data.DTO;
 
 import Business.Misc.Pair;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,14 +31,16 @@ public class EmployeeDTO {
     }
 
     public String fieldsToString() {
-        return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", this.firstName, this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions, this.startWorkingDate.toString());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",%s,\"%s\",\"%s\")", this.firstName, this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions,formatter.format(this.startWorkingDate));
     }
 
     public String getAvailableShifts(int index) {
         Pair<Date, String> p = this.availableShifts.get(index);
-        String currDate = p.first.toString();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date currDate = p.first;
         String currType = p.second;
-        return String.format("(\"%s\",\"%s\",\"%s\")", this.id, currDate, currType);
+        return String.format("(\"%s\",\"%s\",\"%s\")", this.id, formatter.format(currDate), currType);
     }
 
     public int getNumberOfAvailableShifts() {

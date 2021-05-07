@@ -4,6 +4,8 @@ import Business.Misc.Pair;
 import Business.Misc.TypeOfEmployee;
 import Business.Misc.TypeOfShift;
 import Business.Objects.Employee;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static Business.Misc.TypeOfEmployee.ShiftManager;
@@ -11,7 +13,7 @@ import static Business.Misc.TypeOfEmployee.ShiftManager;
 public class ShiftDTO {
     //==================================================================Fields==================================================================
 
-    public Integer Id;
+    public int shiftId;
     public String type;
     public Date date;
     public Map<String, Integer> constraints;
@@ -19,10 +21,9 @@ public class ShiftDTO {
     public boolean isSealed;
 
 
-
     //==================================================================Constructor==============================================================
-    public ShiftDTO(Integer Id, String type, Date date, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
-        this.Id = Id;
+    public ShiftDTO(int shiftId,String type, Date date, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
+        this.shiftId=shiftId;
         this.type = type;
         this.date = date;
         this.currentShiftEmployees = currentShiftEmployees;
@@ -32,21 +33,22 @@ public class ShiftDTO {
 
     }
 
-    public String fieldsToString() {
-        return String.format("(\"%s\",\"%s\",\"%s\")", this.type, date.toString(), isSealed ? "True" : "False");
+    public String fieldsToString(int id) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return String.format("(%s,\"%s\",\"%s\",%s)", id, formatter.format(date),this.type, isSealed ? 1 : 0);
     }
 
     public int getNumberOfEmpInShift() {
         return this.currentShiftEmployees.size();
     }
 
-    public String getEmployees(int index) {
-        return String.format("(\"%s\",\"%s\")", this.Id, this.currentShiftEmployees.get(index).first);
+    public String getEmployees(int index,int shiftId ) {
+        return String.format("(\"%s\",%s,\"%s\")", this.currentShiftEmployees.get(index).first, shiftId, this.currentShiftEmployees.get(index).second);
     }
 
-    public String getConstraint(String type) {
+    public String getConstraint(String type, int id) {
         Integer amount = this.constraints.get(type);
-        return String.format("(\"%s\",\"%s\")", this.Id, type, amount);
+        return String.format("(%s,\"%s\",%s)",id, type, amount);
 
     }
 

@@ -14,9 +14,9 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
         setLicense(license);
     }
 
-    public Driver(DriverDTO dto) throws Exception {
+    /*public Driver(DriverDTO dto) throws Exception {
         super(dto); /////////////////////////////////// TODO ///////////////////////////////////////////////////
-    }
+    }*/
 
     public void setName(String name) {
         Name = name;
@@ -44,6 +44,7 @@ public class Driver extends Employee implements persistentObject<DriverDTO> {
 
     @Override
     public DriverDTO toDTO() {
-        return new DriverDTO(getFirstName(), getLastName(), getId(), getBankAccountNumber(), getSalary(), getEmpConditions(), getStartWorkingDate(), getLicense(), getSkills(), getAvailableShifts());
+        return new DriverDTO("Oded", "Gal", "316327923", "123123", 10000, "sdfsdf", null, 10, null, null) ;
+                //new DriverDTO(getFirstName(), getLastName(), getId(), getBankAccountNumber(), getSalary(), getEmpConditions(), getStartWorkingDate(), getLicense(), getSkills(), getAvailableShifts());
     }
 }
