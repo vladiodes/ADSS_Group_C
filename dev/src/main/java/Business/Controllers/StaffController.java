@@ -1,8 +1,8 @@
 package Business.Controllers;
 
-import Business.Misc.Pair;
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
+import Misc.Pair;
+import Misc.TypeOfEmployee;
+import Misc.TypeOfShift;
 import Business.Objects.Driver;
 import Business.Objects.Employee;
 import Business.Objects.Shift;

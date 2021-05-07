@@ -1,19 +1,5 @@
 package UnitTests;
 
-import Business.Controllers.Sites;
-import Business.Controllers.Transports;
-import Business.Controllers.Trucks;
-import Business.Misc.TypeOfEmployee;
-import Business.Objects.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class TransportsTest {
 /*//String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license
     List<TypeOfEmployee> driver = new ArrayList<TypeOfEmployee>();

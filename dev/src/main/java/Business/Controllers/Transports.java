@@ -20,17 +20,20 @@ public class Transports implements Controller<Transport> {
         trucksController = tc;
         sitesController = sitesc;
         staffController = sc;
+        DAO = new TransportsDAO();
     }
 
     public void addTransport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source) throws Exception {
-        transports.add(new Transport(date, weight, driver, truck, contracts, source, ID));
+        Transport toAdd = new Transport(date, weight, driver, truck, contracts, source, ID);
+        transports.add(toAdd);
         ID ++;
+        DAO.insert(toAdd.toDTO());
     }
 
     public ArrayList<Transport> getTransportsOfDriver(String driverID) {
         ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
         for (Transport t : transports)
-            if (t.getDriver().getId() == driverID)
+            if (t.getDriver().getId().equals(driverID))
                 filteredTransports.add(t);
         return filteredTransports;
     }
@@ -57,7 +60,7 @@ public class Transports implements Controller<Transport> {
                 for (ItemContractDTO el2 : el.Contracts) {
                     ICS.add(new ItemContract(el2.ID,sitesController.getSite(el2.destination), el2.items, el2.passed));
                 }
-                this.transports.add(new Transport(new SimpleDateFormat("dd/MM/yyyy").parse(el.date), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ICS, sitesController.getSite(el.source), el.ID));
+                this.transports.add(new Transport(Misc.Functions.StringToDate(el.date), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ICS, sitesController.getSite(el.source), el.ID));
                 ID ++;
             }
         }

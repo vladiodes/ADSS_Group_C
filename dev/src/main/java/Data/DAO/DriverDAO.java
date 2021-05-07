@@ -1,8 +1,7 @@
 package Data.DAO;
 
-import Business.Misc.Pair;
+import Misc.Pair;
 import Data.DTO.DriverDTO;
-import Data.DTO.EmployeeDTO;
 import Data.Repository;
 import java.sql.Connection;
 import java.sql.ResultSet;

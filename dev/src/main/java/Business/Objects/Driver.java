@@ -1,8 +1,8 @@
 package Business.Objects;
 
-import Business.Misc.Pair;
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
+import Misc.Pair;
+import Misc.TypeOfEmployee;
+import Misc.TypeOfShift;
 import Data.DTO.DriverDTO;
 import java.util.ArrayList;
 import java.util.Date;

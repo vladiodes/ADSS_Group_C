@@ -1,12 +1,11 @@
 package Business.Controllers;
 
-import Business.Controllers.ScheduleController;
-import Business.Controllers.StaffController;
-import Business.Misc.Pair;
-import Business.Misc.TypeOfEmployee;
-import Business.Misc.TypeOfShift;
+import Misc.Pair;
+import Misc.TypeOfEmployee;
+import Misc.TypeOfShift;
 import Business.Objects.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,9 +21,7 @@ public class TransportsEmployeesFacade {
     private StaffController staffController;
     private Sites Sit = new Sites();
     private Trucks Tru = new Trucks();
-    private Transports Tra = new Transports(Tru,Sit,staffController);
-
-
+    private Transports Tra;
 
     //When creating the assignment screen add the skills of each employee
     public TransportsEmployeesFacade(TypeOfEmployee typeOfLoggedIn)
@@ -32,6 +29,7 @@ public class TransportsEmployeesFacade {
         this.typeOfLoggedIn=typeOfLoggedIn;
         this.staffController=new StaffController(typeOfLoggedIn);
         this.scheduleController=new ScheduleController(typeOfLoggedIn, this.staffController);
+        Tra = new Transports(Tru,Sit,staffController);
     }
 
 
@@ -188,5 +186,30 @@ public class TransportsEmployeesFacade {
         return Sit.getSite(s);
     }
 
+    public void Load(){
+        this.Tru.Load();
+        this.Sit.Load();
+        this.Tra.Load();
+    }
 
+    public static void main(String[] args) throws Exception {
+        TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
+        List<TypeOfEmployee> toe = new ArrayList<>();
+        toe.add(TypeOfEmployee.Driver);
+        toe.add(TypeOfEmployee.Storage);
+        facade.addDriverEmployee("oded","Nisim","123456789","45807731",2,"melech", new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022"),toe,500);
+        facade.addShift(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
+        facade.addEmployeeToShift("123456789",TypeOfEmployee.Driver,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
+        facade.addEmployeeToShift("123456789",TypeOfEmployee.Storage,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
+        /*//facade.addTruck("5123","mazda",400,"car",1);
+        //facade.addSection("North");
+        //facade.addSite("Nahariyya","123","ilay","North");
+        List<ItemContract> ICS = new ArrayList<>();
+        HashMap<String,Integer> items = new HashMap<>();
+        items.put("Tea",1);
+        items.put("coffee",2);
+        ICS.add(new ItemContract(0,facade.getSite("Nahariyya"),items,true));
+        facade.addTransport(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),50,"123456789","5123",ICS,"Nahariyya",TypeOfShift.Morning);*/
+         facade.Load();
+    }
 }

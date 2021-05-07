@@ -1,10 +1,9 @@
 package Data.DTO;
 
-import Business.Misc.Pair;
+import Misc.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class EmployeeDTO {
