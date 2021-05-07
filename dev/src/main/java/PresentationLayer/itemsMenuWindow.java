@@ -78,7 +78,7 @@ public class itemsMenuWindow extends menuWindow {
                     break;
                 case 18:
                     if (scenario) {
-                        //scenario1();
+                        scenario1();
                         scenario = false;
                     } else
                         System.out.println("scenario can run only one time");
@@ -87,8 +87,9 @@ public class itemsMenuWindow extends menuWindow {
                     terminate();
                     break;
             }
-            closeWindow();
+
         }
+        closeWindow();
     }
 
     private void removeFaultyItems() {
@@ -175,7 +176,7 @@ public class itemsMenuWindow extends menuWindow {
 
 
         Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
-        utills.printMessageOrSuccess(response, "Successfully added item of id " + response.getValue().getID() + "\n");
+        utills.printMessageOrSuccess(response, "Successfully added item of id " + response.getValue().getId() + "\n");
     }
 
     private void updateItem() {
@@ -350,19 +351,19 @@ public class itemsMenuWindow extends menuWindow {
         return date;
     }
 
-//    public void scenario1() {
-//        Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
-//        utills.printMessageOrSuccess(response1, "Successfully added category\n");
-//
-//        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().getID(), 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
-//        utills.printMessageOrSuccess(response2, "Successfully added item\n");
-//
-//        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
-//        utills.printMessageOrSuccess(response3, "successfully sale\n");
-//
-//        ArrayList categoriesList = new ArrayList();
-//        categoriesList.add(response1.getValue().getID());
-//        Response<ReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
-//        printReport(response4);
-//    }
+    public void scenario1() {
+        Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
+        utills.printMessageOrSuccess(response1, "Successfully added category\n");
+
+        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
+        utills.printMessageOrSuccess(response2, "Successfully added item\n");
+
+        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getId(), 1);
+        utills.printMessageOrSuccess(response3, "successfully sale\n");
+
+        ArrayList categoriesList = new ArrayList();
+        categoriesList.add(response1.getValue().id);
+        Response<ReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
+        printReport(response4);
+    }
 }

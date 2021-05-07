@@ -18,6 +18,7 @@ public class Contract{
         setDiscountByQuantity(discountByQuantity);
         setProduct(product);
         setSupplier(supplier);
+        product.addContract(this);
     }
 
     //simple getters

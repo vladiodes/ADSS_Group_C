@@ -17,13 +17,12 @@ public class amountReportDTO extends ReportDTO {
         builder.append("Report End Date: "+ this.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "\n");
         builder.append("Report Items:\n");
         for(ItemDTO item : items){
-            builder.append("item id :"+item.getID() +", ");
-            builder.append("item name : " +item.getName() +", ");
-            builder.append("Available Amount : " +item.getAvailableAmount() +", ");
-            builder.append("Shelf Amount : " +item.getShelfAmount() +", ");
-            builder.append("Storage Amount : " +item.getStorageAmount() +" \n");
+            builder.append("item id :"+item.getId() +", ");
+            builder.append("item name : " +item.getItemName() +", ");
+            builder.append("Available Amount : " +item.getAvailableAmount() +"\n");
 
         }
+
         return builder.toString();
     }
 }

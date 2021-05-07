@@ -47,8 +47,15 @@ public class InventoryFacade {
     }
     public Response<Boolean> removeFaultyItems()
     {
-        stockController.removeFaultyItems();
-        return new Response<>(true);
+        try
+        {
+            stockController.removeFaultyItems();
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return new Response<>(e);
+        }
     }
     public Response<Boolean> updateItem(int itemID, String name,  int minAmount,  double buyingPrice, double sellingPrice){
         try {

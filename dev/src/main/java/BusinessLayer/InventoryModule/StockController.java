@@ -210,8 +210,9 @@ public class StockController {
         for(Category cat : categories.values())
         {
             if(cat.containsItem(itemID)) {
+                Item toDelete = this.findItem(itemID);
                 cat.deleteItem(itemID);
-                this.findItem(itemID).setID(-1);
+                toDelete.setID(-1);
                 deleted = true;
             }
         }

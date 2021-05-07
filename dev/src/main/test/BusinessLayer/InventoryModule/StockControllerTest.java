@@ -12,7 +12,7 @@ class StockControllerTest {
     private StockController stockController;
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-         stockController = StockController.getInstance();
+        stockController = StockController.getInstance();
 
     }
 
