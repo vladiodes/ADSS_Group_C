@@ -79,7 +79,6 @@ public class TransportsMain {
                 System.out.println("Please enter a valid number");
             }
         }
-        in.close();
     }
 
     public static ArrayList<ItemContract> makeItemContract(TransportsEmployeesFacade API) throws Exception {
@@ -166,7 +165,6 @@ public class TransportsMain {
             in.nextLine();
             System.out.println("Please enter the id of the driver");
             String driverID = in.nextLine();
-            in.nextLine();
             System.out.println("Please enter the plate number of the truck");
             String plateNum = in.nextLine();
             System.out.println("Please enter where the transport is going from");

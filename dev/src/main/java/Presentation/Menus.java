@@ -599,7 +599,7 @@ public class Menus {
                 }
                 case (12): //Exit The Program
                 {
-                    exit(0);
+                    return;
                 }
             }
         }
