@@ -1,6 +1,8 @@
 package Business.Objects;
 
 
+import Business.Controllers.StaffController;
+import Data.DTO.ShiftDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
@@ -11,26 +13,58 @@ import java.util.*;
 
 import static Misc.TypeOfEmployee.*;
 
-public class Shift {
+
+public class Shift implements persistentObject {
 
     //==================================================================Fields==================================================================
+    private int id;
     private TypeOfShift type;
     private Date date;
     private Map<TypeOfEmployee, Integer> constraints;
-    private List<Pair<Employee,TypeOfEmployee>> currentShiftEmployees;
+    private List<Pair<String,TypeOfEmployee>> currentShiftEmployees;
     private boolean isSealed;
 
 
     //==================================================================Constructor==============================================================
-    public Shift(TypeOfShift type, Date date) throws Exception
+    public Shift(int id,TypeOfShift type, Date date) throws Exception
     {
+
         shiftValidityCheck(date);
+        this.id=id;
         this.type = type;
         this.date = date;
         this.currentShiftEmployees = new LinkedList<>();
         this.constraints = new HashMap<>(); //init
         this.constraints.put(ShiftManager, 1); //Default constraint
         this.isSealed = false;
+    }
+    public Shift(ShiftDTO shift)
+    {
+        this.id=shift.shiftId;
+        this.type = TypeOfShift.valueOf(shift.type);
+        this.date = shift.date;
+        this.currentShiftEmployees = currShiftEmpDTOToBuss(shift.currentShiftEmployees);
+        this.constraints = constraintDTOToBuss(shift.constraints);
+        this.isSealed = shift.isSealed;
+    }
+
+    private Map<TypeOfEmployee, Integer> constraintDTOToBuss(Map<String, Integer> constraints) {
+        Map<TypeOfEmployee, Integer> toReturn = new HashMap<>();
+        for (String type:constraints.keySet())
+        {
+            toReturn.put(TypeOfEmployee.valueOf(type), constraints.get(type));
+        }
+        return toReturn;
+    }
+
+    private List<Pair<String, TypeOfEmployee>> currShiftEmpDTOToBuss(List<Pair<String, String>> currentShiftEmployees) {
+        List<Pair<String, TypeOfEmployee>> toReturn = new LinkedList<>();
+        for (Pair<String, String> p:currentShiftEmployees)
+        {
+            toReturn.add(new Pair<String, TypeOfEmployee>(p.first,TypeOfEmployee.valueOf(p.second)));
+
+        }
+        return toReturn;
     }
 
 
@@ -76,8 +110,9 @@ public class Shift {
         {
             throw new Exception("employee cant be assigned to a skill he doesnt have");
         }
-        currentShiftEmployees.add((new Pair<Employee, TypeOfEmployee>(toAdd,type)));
+        currentShiftEmployees.add((new Pair<String, TypeOfEmployee>(toAdd.getId(),type)));
         isSealed=sealShift();
+
 
     }
 
@@ -155,11 +190,11 @@ public class Shift {
     }
 
     public boolean removeEmployee(String id) {
-        Pair toRemove=null;
-        for (Pair p:currentShiftEmployees) {
+        Pair<String, TypeOfEmployee> toRemove=null;
+        for (Pair<String, TypeOfEmployee> p:currentShiftEmployees) {
             {
-                Employee cur = (Employee)p.first;
-                if (cur.getId().equals(id))
+                String currId = p.first;
+                if (currId.equals(id))
                 {
                     toRemove=p;
                     break;
@@ -227,7 +262,7 @@ public class Shift {
         return this.checkFull();
     }
 
-    public String toString() {
+    public String toString(StaffController staffController) {
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder=new StringBuilder();
@@ -242,12 +277,14 @@ public class Shift {
         }
         builder.append("\n");
         builder.append("\n\t\tCurrent Shift Employees:");
-        for(Pair<Employee, TypeOfEmployee> p:currentShiftEmployees)
+
+        for(Pair<String, TypeOfEmployee> p:currentShiftEmployees)
         {
-            builder.append("\n\t\t\tName: " + p.first.getFirstName() +" "+ p.first.getLastName());
+            Employee emp = staffController.getEmployeeByID(p.first);
+            builder.append("\n\t\t\tName: " + emp.getFirstName() +" "+ emp.getLastName());
             builder.append("\n\t\t\tType: " + p.second.toString());
 
-            List<TypeOfEmployee> currentEmpSkills = p.first.getSkills();
+            List<TypeOfEmployee> currentEmpSkills = emp.getSkills();
             builder.append("\n\t\t\tSkills: \n\t\t\t\t");
             for(TypeOfEmployee type:currentEmpSkills)
             {
@@ -270,7 +307,7 @@ public class Shift {
         return date;
     }
 
-    public List<Pair<Employee, TypeOfEmployee>> getCurrentShiftEmployees() {
+    public List<Pair<String, TypeOfEmployee>> getCurrentShiftEmployees() {
         return currentShiftEmployees;
     }
 
@@ -309,7 +346,7 @@ public class Shift {
         this.constraints = constraints;
     }
 
-    public void setCurrentShiftEmployees(List<Pair<Employee, TypeOfEmployee>> currentShiftEmployees) throws Exception {
+    public void setCurrentShiftEmployees(List<Pair<String, TypeOfEmployee>> currentShiftEmployees) throws Exception {
         if(currentShiftEmployees == null)
         {
             throw new Exception("currentShiftEmployees list is null");
@@ -348,5 +385,48 @@ public class Shift {
         }
         return false;
 
+    }
+
+    @Override
+    public ShiftDTO toDTO() {
+        return new ShiftDTO(this.id, this.type.toString(), this.date, this.isSealed ? 1 :0 ,constraintsBussToDTO(this.constraints) , currEmpBusinessToDTO(this.currentShiftEmployees));
+    }
+    private Map<String, Integer> constraintsBussToDTO(Map<TypeOfEmployee, Integer> constraintsBusiness)
+    {
+        Map<String, Integer> toReturn = new HashMap<>();
+        for(TypeOfEmployee currType : constraintsBusiness.keySet())
+        {
+            toReturn.put(currType.toString(), constraintsBusiness.get(currType));
+        }
+        return toReturn;
+    }
+    private List<Pair<String,String>> currEmpBusinessToDTO (List<Pair<String,TypeOfEmployee>> currEmpBusiness)
+    {
+        List<Pair<String,String>> toReturn = new LinkedList<>();
+        for(Pair<String,TypeOfEmployee> p : currEmpBusiness)
+        {
+            toReturn.add(new Pair(p.first, p.second.toString()));
+        }
+        return toReturn;
+    }
+
+
+    public int getID() {
+        return this.id;
+    }
+
+    public TypeOfEmployee getTypeOfSpecificEmployee(String empID)
+    {
+        if(this.isEmployeeInShift(empID))
+        {
+            for(Pair<String,TypeOfEmployee>  p : getCurrentShiftEmployees())
+            {
+                if (p.first.equals(empID))
+                {
+                    return p.second;
+                }
+            }
+        }
+        return null;
     }
 }

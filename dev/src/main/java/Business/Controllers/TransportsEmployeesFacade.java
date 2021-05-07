@@ -52,10 +52,6 @@ public class TransportsEmployeesFacade {
         return staffController.editLastName(idToEdit,lastName);
     }
 
-    public String editID(String idToEdit, String newId) {
-        return staffController.editID(idToEdit, newId);
-    }
-
     public String editBankAccountNumber(String idToEdit, String newBankAccountNumber) {
         return staffController.editBankAccountNumber(idToEdit, newBankAccountNumber);
     }

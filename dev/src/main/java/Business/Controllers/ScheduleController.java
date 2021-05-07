@@ -1,6 +1,9 @@
 package Business.Controllers;
 
 
+import Business.Objects.Employee;
+import Data.DAO.ShiftDAO;
+import Data.DTO.ShiftDTO;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import Business.Objects.DailySchedule;
@@ -12,10 +15,12 @@ import java.util.*;
 import static Misc.TypeOfEmployee.*;
 public class ScheduleController {
 
+    private int shiftId=0;
     //========================================================Fields====================================================
     private TypeOfEmployee typeOfLoggedIn;
     private Map<Date, DailySchedule> schedule;
     private StaffController staffController;
+    private ShiftDAO shiftDAO = new ShiftDAO();
 
     //========================================================Constructor====================================================
 
@@ -35,9 +40,9 @@ public class ScheduleController {
      * @param type
      * @return Success/Fail message
      */
+
     public String addShift(Date date, TypeOfShift type)
     {
-
         if(this.typeOfLoggedIn!=HRManager)//Only HRManager can add shifts
         {
             return "Only HRManager can add shifts";
@@ -48,7 +53,8 @@ public class ScheduleController {
         }
         try
         {
-            Shift toAddShift = new Shift(type, date);
+            Shift toAddShift = new Shift(shiftId, type, date);
+
             if(!schedule.containsKey(date))
             {
                 DailySchedule dailySchedule = new DailySchedule(toAddShift);
@@ -58,11 +64,13 @@ public class ScheduleController {
             {
                 schedule.get(date).addShift(toAddShift);
             }
+            this.shiftDAO.insert(toAddShift.toDTO());
         }
         catch(Exception e)
         {
             return e.getMessage();
         }
+        shiftId++;// ----------------- AI -----------------------------
         return "Shift added successfully";
     }
 
@@ -96,6 +104,7 @@ public class ScheduleController {
         }
         DailySchedule dailySchedule = this.schedule.get(date);
         dailySchedule.removeShift(date,type);
+        this.shiftDAO.removeShift(dailySchedule.getShift(type).getID());
         return "Shift was removed successfully";
     }
 
@@ -117,7 +126,9 @@ public class ScheduleController {
         try
         {
             Shift s= getShift(date,type);
-            s.addEmployeeToShift(staffController.getEmployeeByID(id), toSkill);
+            Employee toAdd = staffController.getEmployeeByID(id);
+            s.addEmployeeToShift(toAdd, toSkill);
+            this.shiftDAO.addEmployeeToShift(id,s.getID(),toSkill.toString());
         }
         catch(Exception e)
         {
@@ -150,6 +161,8 @@ public class ScheduleController {
         {
             return "Employee was not removed from shift";
         }
+        TypeOfEmployee typeOfEmp = s.getTypeOfSpecificEmployee(id);//already check if shift contain this employee
+        this.shiftDAO.removeEmployeeFromShift(id,s.getID(),typeOfEmp.toString());
         return "Employee removed successfully from shift";
     }
 
@@ -180,6 +193,7 @@ public class ScheduleController {
             }
             Shift shift = dailySchedule.getShift(typeOfShift);
             shift.addConstraint(typeOfEmployee, numOfEmp);
+            this.shiftDAO.addConstraints(shift.getID(), typeOfEmployee.toString(), numOfEmp);
         }
         catch (Exception e)
         {
@@ -214,6 +228,7 @@ public class ScheduleController {
             }
             Shift shift = dailySchedule.getShift(typeOfShift);
             shift.removeConstraint(typeOfEmployee);
+            this.shiftDAO.removeConstraints(shift.getID(), typeOfEmployee.toString());
         }
         catch (Exception e)
         {
@@ -254,7 +269,7 @@ public class ScheduleController {
         for(Date d:schedule.keySet())
         {
             builder.append("\nDate Of Daily Schedule: " + dateFormat.format(d));
-            builder.append("\n"+ schedule.get(d).toString());
+            builder.append("\n"+ schedule.get(d).toString(this.staffController));
         }
         builder.append("\n");
         return builder.toString();
@@ -309,6 +324,51 @@ public class ScheduleController {
 
         }
         return toReturn;
+    }
+    /*
+     private int shiftId=0;
+    //========================================================Fields====================================================
+    private TypeOfEmployee typeOfLoggedIn;
+    private Map<Date, DailySchedule> schedule;
+    private StaffController staffController;
+    private ShiftDAO shiftDAO = new ShiftDAO();
+     */
+    public void getAllShifts()
+    {
+
+
+        Map<Date, List<Shift>> shiftsBus = new HashMap<>();
+        List<ShiftDTO> allShiftsDTO = this.shiftDAO.getAll();
+        this.restoreMaxShiftID(allShiftsDTO);
+        for(ShiftDTO s : allShiftsDTO) //Getting shifts from DB
+        {
+            if(!shiftsBus.containsKey(s.date))
+            {
+                shiftsBus.put(s.date,new LinkedList<Shift>());
+            }
+            shiftsBus.get(s.date).add(new Shift(s));
+        }
+       for(Date d : shiftsBus.keySet())
+       {
+           DailySchedule ds = new DailySchedule(shiftsBus.get(d));
+           this.schedule.put(d,ds);
+       }
+    }
+
+    private void restoreMaxShiftID(List<ShiftDTO> allShift)
+    {
+        int max=0;
+        int currId=0;
+        for (ShiftDTO s:allShift)
+        {
+           currId=s.shiftId;
+           if (currId>max)
+           {
+               max=currId;
+           }
+        }
+        this.shiftId = max+1;
+
     }
 
 

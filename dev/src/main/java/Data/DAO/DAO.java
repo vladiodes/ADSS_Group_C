@@ -31,7 +31,8 @@ public abstract class DAO<T> {
     public abstract T makeDTO(ResultSet RS);
 
 
-    public int delete(String colName,String value){
+    public int delete(String colName,String value)
+    {
         String DELETE_SQL=String.format("Delete From %s WHERE %s=\"%s\"",tableName,colName,value);
         int rowsAffected=-1;
         Connection con=Repository.getInstance().connect();

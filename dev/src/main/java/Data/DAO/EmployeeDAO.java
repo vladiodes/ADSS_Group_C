@@ -142,7 +142,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         }
     }
 
-    public int insertSkill(String empID, String skillToAdd)
+    public int addSkill(String empID, String skillToAdd)
     {
         Connection conn = Repository.getInstance().connect();
         String updateString;

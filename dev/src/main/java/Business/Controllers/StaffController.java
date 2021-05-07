@@ -1,5 +1,8 @@
 package Business.Controllers;
 
+import Data.DAO.EmployeeDAO;
+import Data.DAO.ShiftDAO;
+import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
@@ -20,6 +23,10 @@ public class StaffController
     //==================================================================Fields=============================================================
     private Map<String, Employee> employees;
     private TypeOfEmployee typeOfLoggedIn;
+
+    private EmployeeDAO employeeDAO = new EmployeeDAO();
+    private ShiftDAO shiftDAO = new ShiftDAO();
+
     //==================================================================Constructor============================================
 
 
@@ -51,11 +58,13 @@ public class StaffController
         {
             Employee employee = new Employee(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills); //throws exception if fields are invalid
             this.employees.put(id, employee);
+            this.employeeDAO.insert(employee.toDTO());//add to DB
         }
         catch (Exception e)
         {
             return e.getMessage();
         }
+
         return "Employee added successfully";
     }
     public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) {
@@ -63,12 +72,12 @@ public class StaffController
         {
             Employee employee = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid
             this.employees.put(id, employee);
+            this.employeeDAO.insert(employee.toDTO());//add to DB check
         }
         catch (Exception e)
         {
             return e.getMessage();
         }
-        //add insert
         return "Driver Employee added successfully";
     }
 
@@ -85,8 +94,11 @@ public class StaffController
         List<Shift> shiftWithEmp = scheduleController.getShiftWithEmp(id);
         for (Shift s:shiftWithEmp) {
             s.removeEmployee(id);
+            TypeOfEmployee type = s.getTypeOfSpecificEmployee(id);
+            this.shiftDAO.removeEmployeeFromShift(id, s.getID(), type.toString());//DB
 
         }
+        this.employeeDAO.delete("ID", id);//DB
         return "Employee removed successfully";
     }
 
@@ -102,6 +114,8 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.setFirstName(firstName);
+            EmployeeDTO updatedOb= e.toDTO();
+            this.employeeDAO.update(updatedOb);//DB
         }
         catch (Exception e)
         {
@@ -122,6 +136,8 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.setLastName(lastName);
+            EmployeeDTO updatedOb= e.toDTO();
+            this.employeeDAO.update(updatedOb);//DB
         }
         catch (Exception e)
         {
@@ -131,27 +147,6 @@ public class StaffController
     }
 
 
-    /**
-     * Edit ID of employee by ID
-     * @param oldId
-     * @param newId
-     * @return Success/Fail Message
-     */
-    public String editID(String oldId, String newId)
-    {
-        try
-        {
-            Employee e = getEmpIfExists(oldId);
-            this.employees.remove(oldId);
-            e.setId(newId);
-            this.employees.put(newId, e);
-        }
-        catch (Exception e)
-        {
-            return e.getMessage();
-        }
-        return "ID was edited successfully";
-    }
 
     /**
      * Edit Bank Account Number of employee by ID
@@ -165,6 +160,8 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.setBankAccountNumber(bankAccountNumber);
+            EmployeeDTO updatedOb= e.toDTO();
+            this.employeeDAO.update(updatedOb);//DB
         }
         catch (Exception e)
         {
@@ -187,6 +184,8 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.setSalary(salary);
+            EmployeeDTO updatedOb= e.toDTO();
+            this.employeeDAO.update(updatedOb);//DB
         }
         catch (Exception e)
         {
@@ -210,6 +209,8 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.setEmpConditions(empConditions);
+            EmployeeDTO updatedOb= e.toDTO();
+            this.employeeDAO.update(updatedOb);//DB
         }
         catch (Exception e)
         {
@@ -233,6 +234,7 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.addSkill(type);
+            this.employeeDAO.addSkill(id,type.toString());//DB
         }
         catch (Exception e)
         {
@@ -255,6 +257,7 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.removeSkill(type);
+            this.employeeDAO.removeSkill(id, type.toString());//DB
         }
         catch (Exception e)
         {
@@ -276,6 +279,7 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.addAvailableShift(shift);
+            this.employeeDAO.addAvailableShifts(id, shift.first, shift.second.toString());//DB
         }
         catch (Exception e)
         {
@@ -296,6 +300,7 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.removeAvailableShift(shift);
+            this.employeeDAO.removeAvailableShifts(id, shift.first, shift.second.toString());//DB
         }
         catch (Exception e)
         {
@@ -348,14 +353,24 @@ public class StaffController
 
 
 
-    public void setEmployees(Map<String, Employee> employees) {
-        this.employees = employees;
-    }
 
     public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
         this.typeOfLoggedIn = typeOfLoggedIn;
     }
 
 
+    /*
+     private Map<String, Employee> employees;
+    private TypeOfEmployee typeOfLoggedIn;
 
+     */
+    public void getAllEmployees()
+    {
+        List<EmployeeDTO> allEmps = this.employeeDAO.getAll();
+        for (EmployeeDTO emp:allEmps)
+        {
+            this.employees.put(emp.id, new Employee(emp));
+        }
+
+    }
 }

@@ -235,16 +235,7 @@ public class Menus {
                             break;
 
                         }
-                        case(3)://Edit ID
-                        {
-                            System.out.println("Enter new ID");
-                            String newId = s.nextLine();
-                            newId=inValidInputDigits(newId);
-                            System.out.println(facade.editID(idToEdit, newId));
-                            break;
-
-                        }
-                        case(4)://Edit Bank Account Number
+                        case(3)://Edit Bank Account Number
                         {
                             System.out.println("Enter new Bank Account Number");
                             String newBankAccountNumber = s.nextLine();
@@ -257,7 +248,7 @@ public class Menus {
                             break;
 
                         }
-                        case(5)://Edit Salary
+                        case(4)://Edit Salary
                         {
                             System.out.println("Enter new Salary");
                             String newSalary = s.nextLine();
@@ -266,7 +257,7 @@ public class Menus {
                             break;
 
                         }
-                        case(6)://Edit Employee Conditions
+                        case(5)://Edit Employee Conditions
                         {
                             System.out.println("Enter new Employee Conditions");
                             String newEmpConditions = s.nextLine();
@@ -274,7 +265,7 @@ public class Menus {
                             break;
 
                         }
-                        case(7)://Back To Main Menu
+                        case(6)://Back To Main Menu
                         {
                             continue;
                         }
@@ -891,11 +882,10 @@ public class Menus {
         menuEdit=new HashMap<>();
         menuEdit.put(1,"Edit First Name");
         menuEdit.put(2,"Edit Last Name");
-        menuEdit.put(3,"Edit ID");
-        menuEdit.put(4,"Edit Bank Account Number");
-        menuEdit.put(5,"Edit Salary");
-        menuEdit.put(6,"Edit Employee Conditions");
-        menuEdit.put(7,"Back To Main Menu");
+        menuEdit.put(3,"Edit Bank Account Number");
+        menuEdit.put(4,"Edit Salary");
+        menuEdit.put(5,"Edit Employee Conditions");
+        menuEdit.put(6,"Back To Main Menu");
     }
     private void createARAvailableShift()
     {

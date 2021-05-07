@@ -28,22 +28,22 @@ public class ShiftDTO {
 
     }
 
-    public String fieldsToString(int id) {
+    public String fieldsToString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return String.format("(%s,\"%s\",\"%s\",%s)", id, formatter.format(date),this.type, isSealed ? 1 : 0);
+        return String.format("(%s,\"%s\",\"%s\",%s)", this.shiftId, formatter.format(date),this.type, isSealed ? 1 : 0);
     }
 
     public int getNumberOfEmpInShift() {
         return this.currentShiftEmployees.size();
     }
 
-    public String getEmployees(int index,int shiftId ) {
-        return String.format("(\"%s\",%s,\"%s\")", this.currentShiftEmployees.get(index).first, shiftId, this.currentShiftEmployees.get(index).second);
+    public String getEmployees(int index ) {
+        return String.format("(\"%s\",%s,\"%s\")", this.currentShiftEmployees.get(index).first, this.shiftId, this.currentShiftEmployees.get(index).second);
     }
 
-    public String getConstraint(String type, int id) {
+    public String getConstraint(String type) {
         Integer amount = this.constraints.get(type);
-        return String.format("(%s,\"%s\",%s)",id, type, amount);
+        return String.format("(%s,\"%s\",%s)",this.shiftId, type, amount);
 
     }
 

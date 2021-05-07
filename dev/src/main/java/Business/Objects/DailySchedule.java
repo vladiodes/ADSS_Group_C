@@ -1,5 +1,6 @@
 package Business.Objects;
 
+import Business.Controllers.StaffController;
 import Misc.TypeOfShift;
 
 import java.text.DateFormat;
@@ -25,6 +26,10 @@ public class DailySchedule {
     {
         shifts=new LinkedList<Shift>();
         addShift(shift);
+    }
+    public DailySchedule(List<Shift> shifts) //Assumes shifts is not null and in not empty
+    {
+        this.shifts = shifts;
     }
 
     //==========================================================Methods===========================================================
@@ -83,14 +88,13 @@ public class DailySchedule {
         return shifts;
     }
 
-    @Override
-    public String toString() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    public String toString(StaffController staffController) {
         StringBuilder builder=new StringBuilder();
         builder.append("Daily Schedule: \n\t");
         for(Shift s :shifts)
         {
-            builder.append("\n\t" + s.toString());
+            builder.append("\n\t" + s.toString(staffController));
         }
         builder.append("\n");
         return builder.toString();

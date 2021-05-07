@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Employee {
+public class Employee implements persistentObject{
     final int ID_LENGTH = 9;//magic number
     //======================================================Fields=================================================================
     private String firstName;
@@ -290,5 +290,29 @@ public class Employee {
             throw new Exception("Date was not inserted");
         }
         this.startWorkingDate = startWorkingDate;
+    }
+
+    @Override
+    public EmployeeDTO toDTO() {
+        return new EmployeeDTO(this.firstName, this.lastName, this.id, this.bankAccountNumber, this.salary, this.empConditions, this.startWorkingDate, skillsToDTO(this.skills),availableShiftsToDTO(this.availableShifts));
+    }
+    private List<String> skillsToDTO (List<TypeOfEmployee> skillsBusiness)
+    {
+        List<String > skills = new LinkedList<>();
+        for (TypeOfEmployee type: skillsBusiness)
+        {
+            skills.add(type.toString());
+        }
+        return skills;
+    }
+    private List<Pair<Date, String>> availableShiftsToDTO (List<Pair<Date, TypeOfShift>>availableShiftBusiness)
+    {
+        List<Pair<Date, String>> availableShift = new LinkedList<>();
+        for (Pair<Date, TypeOfShift> p: availableShiftBusiness)
+        {
+
+            availableShift.add(new Pair<Date, String>(p.first, p.second.toString()));
+        }
+        return availableShift;
     }
 }
