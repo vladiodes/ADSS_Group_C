@@ -194,14 +194,14 @@ public class TransportsEmployeesFacade {
 
     public static void main(String[] args) throws Exception {
         TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
-        List<TypeOfEmployee> toe = new ArrayList<>();
+        /*List<TypeOfEmployee> toe = new ArrayList<>();
         toe.add(TypeOfEmployee.Driver);
         toe.add(TypeOfEmployee.Storage);
         facade.addDriverEmployee("oded","Nisim","123456789","45807731",2,"melech", new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022"),toe,500);
         facade.addShift(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
         facade.addEmployeeToShift("123456789",TypeOfEmployee.Driver,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
         facade.addEmployeeToShift("123456789",TypeOfEmployee.Storage,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
-        /*//facade.addTruck("5123","mazda",400,"car",1);
+        //facade.addTruck("5123","mazda",400,"car",1);
         //facade.addSection("North");
         //facade.addSite("Nahariyya","123","ilay","North");
         List<ItemContract> ICS = new ArrayList<>();
