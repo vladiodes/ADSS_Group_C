@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 import Misc.Pair;
+import org.sqlite.SQLiteConfig;
 
 public class Repository {
     private static Repository Instance = null;
@@ -21,7 +22,11 @@ public class Repository {
             // db parameters
             String url = "jdbc:sqlite:database.db";
             // create a connection to the database
-            conn = DriverManager.getConnection(url);
+
+            SQLiteConfig config = new SQLiteConfig();
+            config.enforceForeignKeys(true);
+
+            conn = DriverManager.getConnection(url,config.toProperties());
 
             System.out.println("Connection to SQLite has been established.");
 
@@ -213,8 +218,9 @@ public class Repository {
     public static void main(String[] args) {
        Repository r = getInstance();
         r.generateTables();
+       /*
         EmployeeDAO emp = new EmployeeDAO();
-        ShiftDAO e = new ShiftDAO();
+        ShiftDAO shift = new ShiftDAO();
         Date date = null;
         try
         {
@@ -239,39 +245,25 @@ public class Repository {
         ava.add(new Pair<Date, String>(date, "Evening"));
         EmployeeDTO eDTO = new EmployeeDTO("Oded", "Gal", "316327923", "234234", 10000, "sdfsdf", date,skills, ava);
         int x= emp.insert(eDTO);
-        //int x2 = e.update(new EmployeeDTO("Oded", "GALLLLL", "316327923", "234234", 9000, "sdfsdf", date,skills, ava));
-        //int x3 = e.addAvailableShifts("316327923", date, "Morning");
-        //int x4 = e.removeAvailableShifts("316327923", date, "Morning");
-        //int x5 = e.insertSkill("316327923", "Driver");
-        //int x6 = e.removeSkill("316327923", "Driver");
-        //ResultSet rs = e.get("Employees", "ID", "316327923");
-        //EmployeeDTO eee = e.makeDTO(rs);
-        //e.delete("ID", "316327923");
-        //System.out.println(x6);
-        //System.out.println(x4);
-        //System.out.println(x4);
-        //System.out.println(x4);
+        int x3 = emp.addAvailableShifts("316327923", date, "Morning");
+        int x5 = emp.addSkill("316327923", "Driver");
+
         Map<String,Integer> constraints = new HashMap<>();
         List<Pair<String, String>> currEmp = new LinkedList<>();
         currEmp.add(new Pair<String, String>("316327923","HRManager"));
         ShiftDTO shiftDTO1 = new ShiftDTO(0,"Morning", date,0,constraints,currEmp);
-        ShiftDTO shiftDTO2 = new ShiftDTO(1,"Evening", date,1,constraints,currEmp);
+        ShiftDTO shiftDTO2 = new ShiftDTO(1,"Evening", date2,1,constraints,currEmp);
         //ShiftDTO updatedShiftDTO = new ShiftDTO(0,"Evening", date,constraints,currEmp);
         //int y1 = e.insert(shiftDTO);
-        //int y1=e.insert(shiftDTO1);
-        //int y2=e.insert(shiftDTO2);
-        //int y2=e.insert(shiftDTO2);
-        //int y3=e.update(updatedShiftDTO);
-        //int y3=e.updateConstraint(1,"ShiftManager", 5 );
+        int y1=shift.insert(shiftDTO1);
+        int y2=shift.insert(shiftDTO2);
+        int y3=shift.updateConstraint(date,"Morning","ShiftManager", 5 );
         //int count=e.getShiftIdByDateAndType(date2, "Evening");
         //int count=e.removeEmployeeFromShift("316327923",date, "Evening", "kjsdhfkjds" );
         //int xy=e.removeConstraints(date,"Evening", "Casjutg");
         //System.out.println(xy);
+        */
 
-        Connection con=Repository.getInstance().connect();
-        ResultSet rs = e.get("Shifts", "ID", "1", con);
-        ShiftDTO shs = e.makeDTO(rs);
-        r.closeConn(con);
 
     }
 }

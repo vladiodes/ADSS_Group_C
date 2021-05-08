@@ -69,10 +69,11 @@ public class DailySchedule {
      * @param type
      * @return shift's location or -1
      */
-    private int getShiftLocation( TypeOfShift type)
+    private int getShiftLocation(TypeOfShift type)
     {
         for(int i=0; i<shifts.size(); i++)
         {
+
             if(this.shifts.get(i).getType() == type)
                 return i;
         }
@@ -90,6 +91,8 @@ public class DailySchedule {
 
 
     public String toString(StaffController staffController) {
+        if(staffController==null)
+            return "StaffControlerIsNull";
         StringBuilder builder=new StringBuilder();
         builder.append("Daily Schedule: \n\t");
         for(Shift s :shifts)

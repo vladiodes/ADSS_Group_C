@@ -50,7 +50,18 @@ public class Employee implements persistentObject{
         for (String el : DTO.skills)
             TypeList.add(TypeOfEmployee.valueOf(el));
         this.skills = TypeList;
-        this.availableShifts = new LinkedList<>();
+        this.availableShifts = availableShiftsFromDTOToBus(DTO.availableShifts);
+
+    }
+
+    private List<Pair<Date, TypeOfShift>> availableShiftsFromDTOToBus(List<Pair<Date, String>> DTOAvaShifts)
+    {
+        List<Pair<Date, TypeOfShift>> toReturn = new LinkedList<>();
+        for(Pair<Date,String> p : DTOAvaShifts)
+        {
+            toReturn.add(new Pair(p.first, TypeOfShift.valueOf(p.second)));
+        }
+        return toReturn;
     }
 
     //======================================================Methods=================================================================
@@ -122,6 +133,10 @@ public class Employee implements persistentObject{
     }
 
     public void addSkill(TypeOfEmployee type) throws Exception {
+        if (type==TypeOfEmployee.Driver)
+        {
+            throw new Exception("Driver skill can not be added");
+        }
         if (this.skills.contains(type)) {
             throw new Exception("Skill already exists");
         }
@@ -129,6 +144,13 @@ public class Employee implements persistentObject{
     }
 
     public void removeSkill(TypeOfEmployee type) throws Exception {
+        if (this.skills.contains(TypeOfEmployee.Driver))//driver
+        {
+            if (type==TypeOfEmployee.Driver)
+            {
+                throw new Exception("Driver can't remove his driver skill");
+            }
+        }
         if (this.skills.size() <= 1) //Cant have an employee without skills
         {
             throw new Exception("Employee only has 1 skill and it cannot be removed");
@@ -136,6 +158,7 @@ public class Employee implements persistentObject{
         if (!this.skills.contains(type)) {
             throw new Exception("Skill doesn't exist");
         }
+
         this.skills.remove(type);
     }
 

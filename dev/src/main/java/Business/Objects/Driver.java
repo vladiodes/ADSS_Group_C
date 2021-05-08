@@ -32,8 +32,7 @@ public class Driver extends Employee implements persistentObject {
     @Override
     public String toString() {
         return super.toString()+
-                ", License=" + License +
-                '}';
+                "\tLicense=" + License ;
     }
 
     @Override

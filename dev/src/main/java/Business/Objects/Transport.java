@@ -50,13 +50,13 @@ public class Transport implements persistentObject<TransportDTO> {
 
     public void setDriver(Driver driver) throws Exception {
         if (truck != null && truck.getFactoryWeight() >= driver.getLicense())
-            throw new Exception(driver.getName() + " Doesn't have a license to drive " + truck.getPlateNum());
+            throw new Exception(driver.getId() + " Doesn't have a license to drive " + truck.getPlateNum());
         this.driver = driver;
     }
 
     public void setTruck(Truck _truck) throws Exception {
         if (driver != null && _truck.getFactoryWeight() >= driver.getLicense())
-            throw new Exception(driver.getName() + " Doesn't have a license to drive " + truck.getPlateNum());
+            throw new Exception(driver.getId() + " Doesn't have a license to drive " + truck.getPlateNum());
         this.truck = _truck;
     }
 

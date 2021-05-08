@@ -23,7 +23,6 @@ public class ShiftDTO {
         this.date = date;
         this.currentShiftEmployees = currentShiftEmployees;
         this.constraints = constraints;
-        this.constraints.put("ShiftManager", 1); //Default constraint
         this.isSealed = isSealed==1 ? true : false;
 
     }

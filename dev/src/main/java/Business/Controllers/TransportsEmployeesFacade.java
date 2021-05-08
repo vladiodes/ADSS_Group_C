@@ -208,4 +208,10 @@ public class TransportsEmployeesFacade {
         facade.addTransport(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),50,"123456789","5123",ICS,"Nahariyya",TypeOfShift.Morning);*/
          facade.Load();
     }
+
+    public void loadAllControllers() {
+        this.staffController.getAllEmployees();
+        this.scheduleController.getAllShifts();
+
+    }
 }

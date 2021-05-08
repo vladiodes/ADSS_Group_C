@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static Misc.Functions.DateToString;
+
 public class EmployeeDAO extends DAO<EmployeeDTO> {
 
 
@@ -111,7 +113,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         String updateString;
         if(empID == null || date == null || typeOfShift == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, date,typeOfShift);
+                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift);
         Statement s;
         try
         {

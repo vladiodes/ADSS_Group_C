@@ -3,6 +3,7 @@ package Business.Controllers;
 import Business.Objects.Site;
 import Data.DAO.SectionsDAO;
 import Data.DAO.SiteDAO;
+import Data.DTO.SectionDTO;
 import Data.DTO.SiteDTO;
 
 import java.util.*;
@@ -21,52 +22,74 @@ public class Sites implements Controller<Site> {
     }
 
     public void addSite(String _ad, String _num, String _contact, String _section) throws Exception {
-        if (sites.containsKey(_ad))
+        if (getSite(_ad) !=null)
             throw new Exception(_ad + " already has a record in the database.");
         String Section = getSection(_section);
+        if (Section == null)
+            throw new Exception(Section + " Section doesn't exist in the database.");
         Site toAdd =new Site(_ad, _num, _contact, Section);
         sites.put(_ad, toAdd);
         SITDAO.insert(toAdd.toDTO());
     }
 
     public void addSection(String section) throws Exception {
-        for (String curr : sections)
-            if (curr.equals(section))
-                throw new Exception("Section already exists in the Database.");
+        if(getSection(section) != null)
+            throw new Exception(section+" already exists in the databsase.");
         sections.add(section);
         SECDAO.insert(section);
     }
 
-    public Site getSite(String Ad) throws Exception {
-        if (!sites.containsKey(Ad))
-            throw new Exception(Ad + " doesn't exist in the database.");
-        else return sites.get(Ad);
+    public Site getSite(String Ad) {
+        if (sites.containsKey(Ad))
+            return sites.get(Ad);
+        SiteDTO DTOoutput = SITDAO.getSite(Ad);
+        if(DTOoutput == null) //doesn't exist in the DB
+            return null;
+        else{
+            Site output = new Site(DTOoutput);
+            sites.put(output.getAddress(),output);
+            return output;
+        }
     }
 
     public ArrayList<Site> getSites() {
+        LoadSites();
         return new ArrayList<Site>(sites.values());
     }
 
-    public String getSection(String s) throws Exception {
+    public String getSection(String s) {
         for (String t : sections) {
             if (t.equals(s))
                 return t;
         }
-        throw new Exception("Section doesn't exist.");
+        SectionDTO output = SECDAO.getSection(s);
+        if(output == null)
+            return null;
+        sections.add(output.name);
+        return output.name;
     }
 
     public List<String> getSections() {
+        LoadSections();
         return sections;
     }
 
-    @Override
-    public void Load() {
-        this.sections = SECDAO.getAll();
+    private void LoadSites(){
         List<SiteDTO> dtos = SITDAO.getAll();
         this.sites = new HashMap<>();
         for(SiteDTO element : dtos)
         {
             sites.put(element.address,new Site(element));
         }
+    }
+
+    private void LoadSections(){
+        this.sections = SECDAO.getAll();
+    }
+
+    @Override
+    public void Load() {
+        LoadSections();
+       LoadSites();
     }
 }

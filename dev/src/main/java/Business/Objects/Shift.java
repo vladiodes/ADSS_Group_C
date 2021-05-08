@@ -263,6 +263,8 @@ public class Shift implements persistentObject {
     }
 
     public String toString(StaffController staffController) {
+        if(staffController==null)
+            return "StaffControlerIsNull";
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder=new StringBuilder();

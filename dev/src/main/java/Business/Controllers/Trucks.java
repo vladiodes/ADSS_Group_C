@@ -41,6 +41,8 @@ public class Trucks implements Controller<Truck> {
     }
 
     public ArrayList<Truck> getTrucks() {
+        this.trucks = new HashMap<>();
+        Load();
         return new ArrayList<Truck>(trucks.values());
     }
 

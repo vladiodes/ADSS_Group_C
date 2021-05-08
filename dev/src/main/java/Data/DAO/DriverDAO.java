@@ -1,5 +1,6 @@
 package Data.DAO;
 
+import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Data.DTO.DriverDTO;
 import Data.Repository;
@@ -11,11 +12,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static Misc.Functions.DateToString;
+
 public class DriverDAO extends DAO<DriverDTO> {
+
+    @Override
     public int insert(DriverDTO Ob) {
+        int ans=0;
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
-        String toInsertEmp = this.InsertStatement(Ob.fieldsToString());
+        String toInsertEmp = Ob.fieldsToString();
+
         Statement s;
         try {
             s = conn.createStatement();
@@ -23,11 +30,20 @@ public class DriverDAO extends DAO<DriverDTO> {
             int resAs = insertToAvailableShifts(Ob);
             int resES = insertToEmployeeSkills(Ob);
             if (resAs + resES == 2) //If both inserts worked
-                return 1;
-            return 0;
+                ans= 1;
+            else
+            {
+                ans=0;
+            }
+
         } catch (Exception e) {
-            return 0;
+            ans= 0;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+        return ans;
+
     }
 
     private int insertToAvailableShifts(DriverDTO Ob) {
@@ -47,6 +63,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         return 1;
     }
 
+
     private int insertToEmployeeSkills(DriverDTO Ob) {
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
@@ -56,7 +73,7 @@ public class DriverDAO extends DAO<DriverDTO> {
             Statement s;
             try {
                 s = conn.createStatement();
-                s.executeUpdate(InsertStatement(toInsertSkills));
+                s.executeUpdate(toInsertSkills);
             } catch (Exception e) {
                 return 0;
             }
@@ -64,16 +81,17 @@ public class DriverDAO extends DAO<DriverDTO> {
         return 1;
     }
 
-    @Override
-    public int update(DriverDTO updatedOb) {
+
+    public int update(DriverDTO updatedOb)//not allowed to change ID
+    {
         Connection conn = Repository.getInstance().connect();
         if(updatedOb == null) return 0;
         String updateString = String.format("UPDATE %s" +
-                        " SET \"FirstName\"= \"%s\", \"LastName\"= %s " +
-                        ", \"BankAccountNumber\"=\"%s\", \"Salary\",  \"EmpConditions\"=\"%s\", \"StartWorkingDate\"=\"%s\", \"License\"=\"%s\"  " +
+                        " SET \"FirstName\"= \"%s\", \"LastName\"= \"%s\" " +
+                        ", \"BankAccountNumber\"=\"%s\", \"Salary\"=%s,  \"EmpConditions\"=\"%s\", \"StartWorkingDate\"=\"%s\", \"License\"=%s " +
                         "WHERE \"ID\" == \"%s\";",
                 tableName,updatedOb.firstName,updatedOb.lastName,
-                updatedOb.bankAccountNumber,updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate,updatedOb.License , updatedOb.id);
+                updatedOb.bankAccountNumber,updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate, updatedOb.id, updatedOb.License);
         Statement s;
         try {
             s = conn.createStatement();
@@ -85,13 +103,13 @@ public class DriverDAO extends DAO<DriverDTO> {
     }
 
 
-    public int insertAvailableShifts(String empID, Date date, String typeOfShift)
+    public int addAvailableShifts(String empID, Date date, String typeOfShift)
     {
         Connection conn = Repository.getInstance().connect();
         String updateString;
         if(empID == null || date == null || typeOfShift == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, date,typeOfShift);
+                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift);
         Statement s;
         try
         {
@@ -109,7 +127,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         String updateString;
         if(empID == null || date == null || typeOfShift==null) return 0;
         updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=%s AND %s=%s AND %s=%s;", "AvailableShiftsForEmployees", "EmpID", empID,"Date" ,date, "Type", typeOfShift);
+                "WHERE %s=\"%s\" AND %s=\"%s\" AND %s=\"%s\";", "AvailableShiftsForEmployees", "EmpID", empID,"Date" ,date, "Type", typeOfShift);
         Statement s;
         try
         {
@@ -122,7 +140,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         }
     }
 
-    public int insertSkill(String empID, String skillToAdd)
+    public int addSkill(String empID, String skillToAdd)
     {
         Connection conn = Repository.getInstance().connect();
         String updateString;
@@ -139,13 +157,15 @@ public class DriverDAO extends DAO<DriverDTO> {
             return 0;
         }
     }
+
+
     public int removeSkill(String empID, String skillToRemove)
     {
         Connection conn = Repository.getInstance().connect();
         String updateString;
         if(empID == null || skillToRemove == null) return 0;
         updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=%s AND %s=%s;", "EmployeeSkills", "EmployeeID", empID,"TypeOfEmployee" ,skillToRemove);
+                "WHERE %s=\"%s\" AND %s=\"%s\";", "EmployeeSkills", "EmployeeID", empID,"TypeOfEmployee" ,skillToRemove);
         Statement s;
         try
         {
@@ -158,29 +178,31 @@ public class DriverDAO extends DAO<DriverDTO> {
 
     }
 
+
     @Override
     public DriverDTO makeDTO(ResultSet RS) {
-        Connection conn = Repository.getInstance().connect();
         DriverDTO output = null;
+        Connection conn = Repository.getInstance().connect();
         try {
-            List<String> skills = getSkillsList(RS.getString(2)/*id*/,conn);
+            String id=RS.getString(3);
+            List<String> skills = getSkillsList(id, conn);
             if (skills == null) {
                 return null;
             }
-            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(2)/*id*/, conn);
+            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
             if (availableShifts == null) {
                 return null;
             }
-            /*
-             public DriverDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions,
-                     Date startWorkingDate,int License, List<String> skills, List<Pair<Date, String>> availableShifts)
-            */
             output = new DriverDTO(/*first name*/RS.getString(0), /*last name*/RS.getString(1), /*Id*/RS.getString(2),
                     /*bank account number*/RS.getString(3), /*salary*/RS.getInt(4),/*empConditions*/ RS.getString(5),
                     /*start working date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(6)), RS.getInt(7), skills, availableShifts);
         } catch (Exception e) {
             output = null;
         }
+        finally {
+            Repository.getInstance().closeConn(conn);
+        }
+
         return output;
     }
 

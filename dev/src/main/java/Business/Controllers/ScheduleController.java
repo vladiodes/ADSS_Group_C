@@ -20,7 +20,7 @@ public class ScheduleController {
     private TypeOfEmployee typeOfLoggedIn;
     private Map<Date, DailySchedule> schedule;
     private StaffController staffController;
-    private ShiftDAO shiftDAO = new ShiftDAO();
+    private ShiftDAO shiftDAO;
 
     //========================================================Constructor====================================================
 
@@ -29,6 +29,7 @@ public class ScheduleController {
         this.staffController = sc;
         this.typeOfLoggedIn =type;
         this.schedule = new HashMap<>();
+        this.shiftDAO = new ShiftDAO();
     }
     //========================================================Methods====================================================
 
@@ -103,8 +104,9 @@ public class ScheduleController {
             return "Shift doesn't exist";
         }
         DailySchedule dailySchedule = this.schedule.get(date);
+        int shiftIdToRemove=dailySchedule.getShift(type).getID();
         dailySchedule.removeShift(date,type);
-        this.shiftDAO.removeShift(dailySchedule.getShift(type).getID());
+        this.shiftDAO.removeShift(shiftIdToRemove);
         return "Shift was removed successfully";
     }
 
@@ -262,7 +264,8 @@ public class ScheduleController {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder=new StringBuilder();
 
@@ -350,7 +353,8 @@ public class ScheduleController {
         }
        for(Date d : shiftsBus.keySet())
        {
-           DailySchedule ds = new DailySchedule(shiftsBus.get(d));
+           List<Shift> toAdd = shiftsBus.get(d);
+           DailySchedule ds = new DailySchedule(toAdd);
            this.schedule.put(d,ds);
        }
     }

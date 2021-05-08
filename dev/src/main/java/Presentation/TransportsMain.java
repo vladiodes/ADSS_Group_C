@@ -9,75 +9,67 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TransportsMain {
-    private static TransportsEmployeesFacade API = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
     public static int ICID = 0;
     private static Scanner in;
     private static Boolean DataInitialized = false;
 
-    public static void start() {
+    public static void start(TransportsEmployeesFacade facade) {
+        TransportsEmployeesFacade API = facade;
         in = new Scanner(System.in);
         while (true) {
             try {
                 System.out.println("Hello, write the number of the operation you would like to do");
-                System.out.println("1. Add driver");
-                System.out.println("2. Add site");
-                System.out.println("3. Add truck");
-                System.out.println("4. Add transport");
-                System.out.println("5. Add section");
-                System.out.println("6. Get all trucks");
-                System.out.println("7. Get all drivers");
-                System.out.println("8. Get all sites");
-                System.out.println("9. Get all sections");
-                System.out.println("10. Get all transports");
-                System.out.println("11. Get transport of driver");
-                System.out.println("12. Get transport by date");
-                System.out.println("13. Quit");
-                if(!DataInitialized)
-                    System.out.println("14. Initialize data from instructions manual");
+                System.out.println("1. Add site");
+                System.out.println("2. Add truck");
+                System.out.println("3. Add transport");
+                System.out.println("4. Add section");
+                System.out.println("5. Get all trucks");
+                System.out.println("6. Get all sites");
+                System.out.println("7. Get all sections");
+                System.out.println("8. Get all transports");
+                System.out.println("9. Get transport of driver");
+                System.out.println("10. Get transport by date");
+                System.out.println("11. Quit");
+                if (!DataInitialized)
+                    System.out.println("12. Initialize data from instructions manual");
                 Scanner in = new Scanner(System.in);
                 int option = in.nextInt();
                 in.nextLine();
-                if (option == 13)
+                if (option == 11)
                     break;
                 switch (option) {
                     case 1:
-                        //AddDriver();
+                        AddSite(API);
                         break;
                     case 2:
-                        AddSite();
+                        AddTruck(API);
                         break;
                     case 3:
-                        AddTruck();
+                        AddTransport(API);
                         break;
                     case 4:
-                        AddTransport();
+                        AddSection(API);
                         break;
                     case 5:
-                        AddSection();
+                        GetAllTrucks(API);
                         break;
                     case 6:
-                        GetAllTrucks();
+                        GetAllSites(API);
                         break;
                     case 7:
-                        //GetAllDrivers();
+                        GetAllSections(API);
                         break;
                     case 8:
-                        GetAllSites();
+                        GetAllTransports(API);
                         break;
                     case 9:
-                        GetAllSections();
+                        GetTransportsByDriver(API);
                         break;
                     case 10:
-                        GetAllTransports();
-                        break;
-                    case 11:
-                        GetTransportsByDriver();
+                        GetTransportsByDate(API);
                         break;
                     case 12:
-                        GetTransportsByDate();
-                        break;
-                    case 14:
-                            InitializeData();
+                        InitializeData(API);
                         break;
                     default:
                         System.out.println("Please enter a valid number");
@@ -87,10 +79,9 @@ public class TransportsMain {
                 System.out.println("Please enter a valid number");
             }
         }
-        in.close();
     }
 
-    public static ArrayList<ItemContract> makeItemContract() throws Exception {
+    public static ArrayList<ItemContract> makeItemContract(TransportsEmployeesFacade API) throws Exception {
         ArrayList<ItemContract> contracts = new ArrayList<ItemContract>();
         while (true) {
             System.out.println("Please enter the destination address");
@@ -115,25 +106,8 @@ public class TransportsMain {
         }
         return contracts;
     }
-/*
-    public static void AddDriver() {
 
-        try {
-            System.out.println("Please enter the name of the new driver");
-            String name = in.nextLine();
-            System.out.println("Please enter the id of the new driver");
-            String id = in.nextLine();
-            in.nextLine();
-            System.out.println("Please enter the license of the new driver");
-            int license = in.nextInt();
-            in.nextLine();
-            API.addDriver(name, id, license);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-*/
-    public static void AddSite() {
+    public static void AddSite(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the address of the site");
             String ad = in.nextLine();
@@ -149,7 +123,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTruck() {
+    public static void AddTruck(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the plate number of the truck");
             String plate = in.nextLine();
@@ -169,7 +143,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTransport() {
+    public static void AddTransport(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the date of the transport in the following format: dd/MM/yyyy");
             String date = in.nextLine();
@@ -181,7 +155,7 @@ public class TransportsMain {
                 transDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
             }
             TypeOfShift typeOfShift = null;
-            while(typeOfShift == null) {
+            while (typeOfShift == null) {
                 System.out.println("Please Enter a valid Type Of Shift The transporation is at:");
                 String type = in.nextLine();
                 typeOfShift = parseTypeOfShift(type);
@@ -191,17 +165,16 @@ public class TransportsMain {
             in.nextLine();
             System.out.println("Please enter the id of the driver");
             String driverID = in.nextLine();
-            in.nextLine();
             System.out.println("Please enter the plate number of the truck");
             String plateNum = in.nextLine();
             System.out.println("Please enter where the transport is going from");
             String source = in.nextLine();
 
             System.out.println("Please follow the instructions to add item contracts to the current transportation:");
-            ArrayList<ItemContract> contracts = makeItemContract();
+            ArrayList<ItemContract> contracts = makeItemContract(API);
             while (true) {
                 try {
-                    API.addTransport(transDate, weight, driverID, plateNum, contracts, source,typeOfShift);
+                    API.addTransport(transDate, weight, driverID, plateNum, contracts, source, typeOfShift);
                     System.out.println("The transport was successfuly recorded!");
                     break;
                 } catch (Exception e) {
@@ -215,7 +188,7 @@ public class TransportsMain {
                         int tempoption = in.nextInt();
                         in.nextLine();
                         contracts.get(tempoption).setPassed(false);
-                        contracts.addAll(makeItemContract());
+                        contracts.addAll(makeItemContract(API));
                         System.out.println("Please enter the new weight of the transportation");
                         weight = in.nextInt();
                         in.nextLine();
@@ -230,7 +203,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddSection() {
+    public static void AddSection(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the name of the new section");
             String section = in.nextLine();
@@ -240,23 +213,15 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTrucks() {
+    public static void GetAllTrucks(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllTrucks());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-/*
-    public static void GetAllDrivers() {
-        try {
-            System.out.println(API.getAllDrivers());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-*/
-    public static void GetAllSites() {
+
+    public static void GetAllSites(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllSites());
         } catch (Exception e) {
@@ -264,7 +229,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllSections() {
+    public static void GetAllSections(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllSections());
         } catch (Exception e) {
@@ -272,7 +237,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTransports() {
+    public static void GetAllTransports(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllTransports());
         } catch (Exception e) {
@@ -280,7 +245,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetTransportsByDriver() {
+    public static void GetTransportsByDriver(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the id of the driver");
             String id = in.nextLine();
@@ -290,7 +255,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetTransportsByDate() {
+    public static void GetTransportsByDate(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please type the Date in the following format - dd/MM/yyyy");
             String sDate1 = in.nextLine();
@@ -300,14 +265,11 @@ public class TransportsMain {
         }
     }
 
-    public static void InitializeData(){
-        if(DataInitialized)
-        {
+    public static void InitializeData(TransportsEmployeesFacade API) {
+        if (DataInitialized) {
             return;
         }
-        try
-        {
-   //         API.addDriver("Ami Rozis", 123123123, 5000);
+        try {
             API.addSection("North");
             API.addSection("Center");
             API.addSection("South");
@@ -316,22 +278,17 @@ public class TransportsMain {
             API.addTruck("3212345", "Honda Ridgeline", 5000, "Pickup Truck", 1500);
             API.addTruck("6942021", "Tesla", 10000, "Smart Car", 7500);
             DataInitialized = true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private  static TypeOfShift parseTypeOfShift(String type)
-    {
+    private static TypeOfShift parseTypeOfShift(String type) {
         TypeOfShift typeOfShift;
-        try
-        {
-            typeOfShift=TypeOfShift.valueOf(type);
-        }
-        catch (Exception e)
-        {
-            typeOfShift=null;
+        try {
+            typeOfShift = TypeOfShift.valueOf(type);
+        } catch (Exception e) {
+            typeOfShift = null;
         }
         return typeOfShift;
     }

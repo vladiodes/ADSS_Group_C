@@ -1,7 +1,9 @@
 package Business.Controllers;
 
+import Data.DAO.DriverDAO;
 import Data.DAO.EmployeeDAO;
 import Data.DAO.ShiftDAO;
+import Data.DTO.DriverDTO;
 import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
@@ -25,6 +27,7 @@ public class StaffController
     private TypeOfEmployee typeOfLoggedIn;
 
     private EmployeeDAO employeeDAO = new EmployeeDAO();
+    private DriverDAO driverDAO = new DriverDAO();
     private ShiftDAO shiftDAO = new ShiftDAO();
 
     //==================================================================Constructor============================================
@@ -56,6 +59,7 @@ public class StaffController
     {
         try
         {
+
             Employee employee = new Employee(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills); //throws exception if fields are invalid
             this.employees.put(id, employee);
             this.employeeDAO.insert(employee.toDTO());//add to DB
@@ -70,9 +74,9 @@ public class StaffController
     public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) {
         try
         {
-            Employee employee = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid
-            this.employees.put(id, employee);
-            this.employeeDAO.insert(employee.toDTO());//add to DB check
+            Driver driver = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid
+            this.employees.put(id, driver);
+            this.driverDAO.insert(driver.toDTO());//add to DB check
         }
         catch (Exception e)
         {
@@ -88,18 +92,28 @@ public class StaffController
      */
     public String removeEmployee(String id, ScheduleController scheduleController)
     {
+        Employee emp=getEmployeeByID(id);
         if(employees.remove(id)==null)
             return "Employee not found";
         //remove the employee from all of its shifts
         List<Shift> shiftWithEmp = scheduleController.getShiftWithEmp(id);
         for (Shift s:shiftWithEmp) {
             s.removeEmployee(id);
-            TypeOfEmployee type = s.getTypeOfSpecificEmployee(id);
-            this.shiftDAO.removeEmployeeFromShift(id, s.getID(), type.toString());//DB
+            //TypeOfEmployee type = s.getTypeOfSpecificEmployee(id);
+            //this.shiftDAO.removeEmployeeFromShift(id, s.getID(), type.toString());//DB
 
         }
-        this.employeeDAO.delete("ID", id);//DB
-        return "Employee removed successfully";
+        if(emp.getSkills().contains(TypeOfEmployee.Driver))
+        {
+            this.driverDAO.delete("ID",id);
+            return "Driver removed successfully";
+        }
+        else
+        {
+            this.employeeDAO.delete("ID", id);//DB
+            return "Employee removed successfully";
+        }
+
     }
 
     /**
@@ -115,7 +129,8 @@ public class StaffController
             Employee e = getEmpIfExists(id);
             e.setFirstName(firstName);
             EmployeeDTO updatedOb= e.toDTO();
-            this.employeeDAO.update(updatedOb);//DB
+            checkIfDriverAndUpdateDAO(e, updatedOb);
+
         }
         catch (Exception e)
         {
@@ -137,7 +152,8 @@ public class StaffController
             Employee e = getEmpIfExists(id);
             e.setLastName(lastName);
             EmployeeDTO updatedOb= e.toDTO();
-            this.employeeDAO.update(updatedOb);//DB
+            checkIfDriverAndUpdateDAO(e, updatedOb);
+
         }
         catch (Exception e)
         {
@@ -161,7 +177,7 @@ public class StaffController
             Employee e = getEmpIfExists(id);
             e.setBankAccountNumber(bankAccountNumber);
             EmployeeDTO updatedOb= e.toDTO();
-            this.employeeDAO.update(updatedOb);//DB
+            checkIfDriverAndUpdateDAO(e, updatedOb);
         }
         catch (Exception e)
         {
@@ -185,7 +201,7 @@ public class StaffController
             Employee e = getEmpIfExists(id);
             e.setSalary(salary);
             EmployeeDTO updatedOb= e.toDTO();
-            this.employeeDAO.update(updatedOb);//DB
+            checkIfDriverAndUpdateDAO(e, updatedOb);
         }
         catch (Exception e)
         {
@@ -210,7 +226,7 @@ public class StaffController
             Employee e = getEmpIfExists(id);
             e.setEmpConditions(empConditions);
             EmployeeDTO updatedOb= e.toDTO();
-            this.employeeDAO.update(updatedOb);//DB
+            checkIfDriverAndUpdateDAO(e, updatedOb);
         }
         catch (Exception e)
         {
@@ -234,7 +250,15 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.addSkill(type);
-            this.employeeDAO.addSkill(id,type.toString());//DB
+            if(e.getSkills().contains(TypeOfEmployee.Driver))//driver
+            {
+                this.driverDAO.addSkill(id,type.toString());//DB
+            }
+            else
+            {
+                this.employeeDAO.addSkill(id,type.toString());//DB
+            }
+
         }
         catch (Exception e)
         {
@@ -257,7 +281,14 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.removeSkill(type);
-            this.employeeDAO.removeSkill(id, type.toString());//DB
+            if(e.getSkills().contains(TypeOfEmployee.Driver))//driver
+            {
+                this.driverDAO.removeSkill(id,type.toString());//DB
+            }
+            else
+            {
+                this.employeeDAO.removeSkill(id,type.toString());//DB
+            }
         }
         catch (Exception e)
         {
@@ -279,7 +310,15 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.addAvailableShift(shift);
-            this.employeeDAO.addAvailableShifts(id, shift.first, shift.second.toString());//DB
+            if(e.getSkills().contains(TypeOfEmployee.Driver))//driver
+            {
+                this.driverDAO.addAvailableShifts(id, shift.first, shift.second.toString());//DB
+            }
+            else
+            {
+                this.employeeDAO.addAvailableShifts(id, shift.first, shift.second.toString());//DB
+            }
+
         }
         catch (Exception e)
         {
@@ -300,7 +339,14 @@ public class StaffController
         {
             Employee e = getEmpIfExists(id);
             e.removeAvailableShift(shift);
-            this.employeeDAO.removeAvailableShifts(id, shift.first, shift.second.toString());//DB
+            if(e.getSkills().contains(TypeOfEmployee.Driver))//driver
+            {
+                this.driverDAO.removeAvailableShifts(id, shift.first, shift.second.toString());//DB
+            }
+            else
+            {
+                this.employeeDAO.removeAvailableShifts(id, shift.first, shift.second.toString());//DB
+            }
         }
         catch (Exception e)
         {
@@ -373,4 +419,18 @@ public class StaffController
         }
 
     }
+    private void checkIfDriverAndUpdateDAO(Employee e, EmployeeDTO updatedOb)
+    {
+        if(e.getSkills().contains(TypeOfEmployee.Driver))//driver
+        {
+            this.driverDAO.update((DriverDTO)updatedOb);//DB
+        }
+        else
+        {
+            this.employeeDAO.update(updatedOb);//DB
+        }
+    }
+
+
+
 }

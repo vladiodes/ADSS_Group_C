@@ -1,5 +1,6 @@
 package Data.DAO;
 
+import Data.DTO.SectionDTO;
 import Data.Repository;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -35,6 +36,20 @@ public class SectionsDAO extends  DAO<String> {
             output = RS.getString(1);
         } catch (Exception e) {
             output = null;
+        }
+        return output;
+    }
+
+    public SectionDTO getSection(String section) {
+        SectionDTO output = null;
+        Connection conn = Repository.getInstance().connect();
+        ResultSet RS = this.get(this.tableName, "Sections", section, conn);
+        try {
+            output = new SectionDTO(RS.getString(1));
+        } catch (Exception e) {
+            output = null;
+        } finally {
+            Repository.getInstance().closeConn(conn);
         }
         return output;
     }
