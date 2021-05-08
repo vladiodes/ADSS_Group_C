@@ -70,8 +70,8 @@ public class TransportsDAO extends DAO<TransportDTO> {
                 Boolean passed = contractsRS.getBoolean(4);
                 HashMap<String, Integer> items = new HashMap<>();
                 while (itemsRS.next()) {
-                    int count = itemsRS.getInt(2);
-                    String name = itemsRS.getString(1);
+                    int count = itemsRS.getInt(1);
+                    String name = itemsRS.getString(2);
                     items.put(name, count);
                 }
                 ItemContracts.add(new ItemContractDTO(itemContractID, destination, items, passed));

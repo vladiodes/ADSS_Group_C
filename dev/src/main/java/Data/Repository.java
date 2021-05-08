@@ -107,9 +107,7 @@ public class Repository {
                 "\t\"Name\"\tTEXT,\n" +
                 "\t\"ItemContractID\"\tINTEGER,\n" +
                 "\t\"ItemContractTransportID\"\tINTEGER,\n" +
-                "\tPRIMARY KEY(\"Name\",\"ItemContractID\",\"ItemContractTransportID\"),\n" +
-                "\tFOREIGN KEY(\"ItemContractID\") REFERENCES \"ItemContracts\"(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"ItemContractTransportID\") REFERENCES \"ItemContracts\"(\"TransportID\")\n" +
+                "\tPRIMARY KEY(\"Name\",\"ItemContractID\",\"ItemContractTransportID\")\n" +
                 ");";
 
         //Employees Tables ------------------------------------------------------------------------------------------------------------------
