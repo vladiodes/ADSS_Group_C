@@ -9,7 +9,6 @@ public class main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
-
         facade.loadAllControllers();
         while (true)
         {

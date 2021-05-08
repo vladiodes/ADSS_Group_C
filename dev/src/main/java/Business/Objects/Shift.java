@@ -181,7 +181,7 @@ public class Shift implements persistentObject {
     }
 
     public boolean isEmployeeInShift(String id) {
-        for (Pair p: currentShiftEmployees)
+        for (Pair<String,TypeOfEmployee> p: currentShiftEmployees)
         {
             if(p.first.equals(id))
             {
@@ -392,10 +392,11 @@ public class Shift implements persistentObject {
 
     public boolean isTypeEmployeeInShift(TypeOfEmployee empType) {
 
-        for (Pair p: currentShiftEmployees)
+        for (Pair<String,TypeOfEmployee> p: currentShiftEmployees)
         {
-            Employee currEmp = (Employee)p.first;
-            if(currEmp.getSkills().contains(empType))
+           // Employee currEmp = (Employee)p.first;
+            //if(currEmp.getSkills().contains(empType))
+            if(p.second==empType)
             {
                 return true;
             }

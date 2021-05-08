@@ -360,7 +360,11 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         {
             while (rs.next())
             {
-                Pair<String, String> p = new Pair<>(rs.getString(1),rs.getString(3)/*type of employee*/);
+                Pair<String, String> p;
+                if(rs.getString(1) != null) //Employee is not a driver
+                    p = new Pair<>(rs.getString(1),rs.getString(3)/*type of employee*/);
+                else //driver
+                    p = new Pair<>(rs.getString(4),rs.getString(3)/*type of employee*/);
                 ans.add(p);
             }
         } catch (Exception e) {

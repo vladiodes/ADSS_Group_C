@@ -58,6 +58,10 @@ public class StaffController
         {
 
             Employee employee = new Employee(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills); //throws exception if fields are invalid
+            if(this.employees.containsKey(id))
+            {
+                throw new Exception("ID already exists");
+            }
             this.employees.put(id, employee);
             this.employeeDAO.insert(employee.toDTO());//add to DB
         }
@@ -71,6 +75,10 @@ public class StaffController
     public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, int license) {
         try
         {
+            if(this.employees.containsKey(id))
+            {
+                throw new Exception("ID already exists");
+            }
             List<TypeOfEmployee> skills=new LinkedList<>();
             skills.add(TypeOfEmployee.Driver);
             Driver driver = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid

@@ -212,6 +212,9 @@ public class TransportsEmployeesFacade {
     public void loadAllControllers() {
         this.staffController.getAllEmployees();
         this.scheduleController.getAllShifts();
+        this.Sit.Load();
+        this.Tru.Load();
+        this.Tra.Load();
 
     }
 }
