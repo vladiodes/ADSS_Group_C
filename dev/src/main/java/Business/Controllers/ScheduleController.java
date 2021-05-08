@@ -4,6 +4,7 @@ package Business.Controllers;
 import Business.Objects.Employee;
 import Data.DAO.ShiftDAO;
 import Data.DTO.ShiftDTO;
+import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import Business.Objects.DailySchedule;
@@ -390,8 +391,18 @@ public class ScheduleController {
            }
         }
         this.shiftId = max+1;
-
     }
 
-
+    public void incNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType) throws Exception {
+        Shift s = getShift(date, type);
+        Map<TypeOfEmployee, Integer> cons = s.getConstraints();
+        for(TypeOfEmployee currType:cons.keySet())
+        {
+            if (empType==currType)
+            {
+                int curr =cons.get(currType);
+                s.addConstraint(empType,curr+1);
+            }
+        }
+    }
 }
