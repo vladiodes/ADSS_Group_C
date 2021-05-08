@@ -1,6 +1,5 @@
 package Data.DAO;
 
-import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Data.DTO.DriverDTO;
 import Data.Repository;
@@ -16,8 +15,13 @@ import static Misc.Functions.DateToString;
 
 public class DriverDAO extends DAO<DriverDTO> {
 
+    private AvailableShiftForEmployeeDAO availableShiftForEmployeeDAO;
+    private EmployeesSkillsDAO employeesSkillsDAO;
     public DriverDAO() {
+
         super.tableName = "Drivers";
+        availableShiftForEmployeeDAO=new AvailableShiftForEmployeeDAO();
+        employeesSkillsDAO=new EmployeesSkillsDAO();
     }
 
     @Override
@@ -67,7 +71,6 @@ public class DriverDAO extends DAO<DriverDTO> {
         return 1;
     }
 
-
     private int insertToEmployeeSkills(DriverDTO Ob) {
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
@@ -84,7 +87,6 @@ public class DriverDAO extends DAO<DriverDTO> {
         }
         return 1;
     }
-
 
     public int update(DriverDTO updatedOb)//not allowed to change ID
     {
@@ -105,7 +107,6 @@ public class DriverDAO extends DAO<DriverDTO> {
             return 0;
         }
     }
-
 
     public int addAvailableShifts(String empID, Date date, String typeOfShift)
     {
@@ -161,8 +162,6 @@ public class DriverDAO extends DAO<DriverDTO> {
             return 0;
         }
     }
-
-
     public int removeSkill(String empID, String skillToRemove)
     {
         Connection conn = Repository.getInstance().connect();
@@ -181,7 +180,6 @@ public class DriverDAO extends DAO<DriverDTO> {
         }
 
     }
-
 
     @Override
     public DriverDTO makeDTO(ResultSet RS) {

@@ -17,11 +17,6 @@ public class DailySchedule {
 
     //==========================================================Constructor===========================================================
 
-    public  DailySchedule()
-    {
-        shifts=new LinkedList<Shift>();
-    }
-
     public DailySchedule(Shift shift)
     {
         shifts=new LinkedList<Shift>();

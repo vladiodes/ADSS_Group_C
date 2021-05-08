@@ -2,9 +2,6 @@ package Data.DAO;
 
 
 import Misc.Pair;
-import Misc.TypeOfShift;
-import Data.DTO.EmployeeDTO;
-import Misc.Pair;
 import Data.DTO.ShiftDTO;
 import Data.Repository;
 import java.sql.Connection;
@@ -14,10 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ShiftDAO extends DAO<ShiftDTO> {
+    private ShiftConstraintsDAO shiftConstraintsDAO;
+    private EmployeesInShiftDAO employeesInShiftDAO;
 
     public ShiftDAO() {
         this.tableName = "Shifts";
+        shiftConstraintsDAO=new ShiftConstraintsDAO();
+        employeesInShiftDAO=new EmployeesInShiftDAO();
     }
+    //=================================shift===================================
     @Override
     public int insert(ShiftDTO Ob) {
         Connection conn = Repository.getInstance().connect();
@@ -40,57 +42,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             Repository.getInstance().closeConn(conn);
         }
     }
-    private int insertToShiftConstraints(ShiftDTO Ob) {
-        Connection conn = Repository.getInstance().connect();
-        if (Ob == null) return 0;
-        try {
-            for (String type : Ob.getConstraintsMap().keySet()) {
-                String toInsertConstraints = String.format("INSERT INTO %s \n" +
-                        "VALUES %s;", "ShiftConstraints", Ob.getConstraint(type));
-
-                Statement s;
-
-                    s = conn.createStatement();
-                    s.executeUpdate(toInsertConstraints);
-
-
-            }
-        } catch (Exception e) {
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-
-
-        return 1;
-    }
-    private int insertToEmployeeInShift(ShiftDTO Ob) {
-        Connection conn = Repository.getInstance().connect();
-        if (Ob == null) return 0;
-        try {
-            for (int index = 0; index < Ob.getNumberOfEmpInShift(); index++) {
-                String toInsert = String.format("INSERT INTO %s \n" +
-                        "VALUES %s;", "EmployeesInShift", Ob.getEmployees(index));
-                Statement s;
-
-                    s = conn.createStatement();
-                    s.executeUpdate(toInsert);
-
-            }
-        } catch (Exception e) {
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-        return 1;
-    }
-
     @Override
-
     public int update(ShiftDTO updatedOb)//not allowed to change ID
     {
         Connection conn = Repository.getInstance().connect();
@@ -115,7 +67,6 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         }
 
     }
-
     public int getShiftIdByDateAndType(Date date, String type)
     {
         Connection conn = Repository.getInstance().connect();
@@ -165,144 +116,6 @@ public class ShiftDAO extends DAO<ShiftDTO> {
 
     }
 
-    public int addEmployeeToShift(String EmployeeID,int ShiftID ,String RoleInShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(EmployeeID == null || ShiftID < 0 || RoleInShift == null) return 0;
-        updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",%s,\"%s\",%s);", "EmployeesInShift", EmployeeID, ShiftID,RoleInShift, null);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-    public int addDriverToShift(String EmployeeID,int ShiftID ,String RoleInShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(EmployeeID == null || ShiftID < 0 || RoleInShift == null) return 0;
-        updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (%s,%s,\"%s\",\"%s\");", "EmployeesInShift",null, ShiftID,RoleInShift,  EmployeeID);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-
-
-    public int removeEmployeeFromShift( String EmployeeID,int ShiftID,String RoleInShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(EmployeeID == null || ShiftID < 0 || RoleInShift==null) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=%s AND %s=\"%s\";", "EmployeesInShift", "EmployeeID", EmployeeID,"ShiftID" ,ShiftID, "RoleInShift", RoleInShift);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e )
-        {
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-    public int removeDriverFromShift( String EmployeeID,int ShiftID,String RoleInShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(EmployeeID == null || ShiftID < 0 || RoleInShift==null) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=%s AND %s=\"%s\";", "EmployeesInShift", "DriverID", EmployeeID,"ShiftID" ,ShiftID, "RoleInShift", RoleInShift);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e )
-        {
-            return 0;
-        }
-        finally {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-    public int addConstraints(int ShiftID,String TypeOfEmployee, int amount)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
-        updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (%s,\"%s\",%s);", "ShiftConstraints", ShiftID, TypeOfEmployee,amount);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e )
-        {
-            return 0;
-        }
-        finally
-        {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-
-    public int removeConstraints(int ShiftID,String TypeOfEmployee)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(TypeOfEmployee == null || ShiftID < 0 ) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=%s AND %s=\"%s\";", "ShiftConstraints", "ShiftID", ShiftID,"TypeOfEmployee" ,TypeOfEmployee);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e )
-        {
-            return 0;
-        }
-        finally
-        {
-            Repository.getInstance().closeConn(conn);
-        }
-
-    }
-
-
-
     @Override
 
     public ShiftDTO makeDTO(ResultSet RS)
@@ -351,6 +164,58 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             Repository.getInstance().closeConn(conn);
         }
     }
+
+
+    //==================================shiftConstraints
+    public int insertToShiftConstraints(ShiftDTO Ob) {
+        return shiftConstraintsDAO.insertToShiftConstraints(Ob);
+    }
+    public int insertToEmployeeInShift(ShiftDTO Ob) {
+        return shiftConstraintsDAO.insertToEmployeeInShift(Ob);
+    }
+
+    public int addConstraints(int ShiftID,String TypeOfEmployee, int amount)
+    {
+        return shiftConstraintsDAO.addConstraints(ShiftID,TypeOfEmployee, amount );
+
+    }
+
+    public int removeConstraints(int ShiftID,String TypeOfEmployee)
+    {
+        return shiftConstraintsDAO.removeConstraints(ShiftID, TypeOfEmployee);
+    }
+
+    //====================================empInShift
+
+    public int addEmployeeToShift(String EmployeeID,int ShiftID ,String RoleInShift)
+    {
+        return employeesInShiftDAO.addEmployeeToShift(EmployeeID, ShiftID, RoleInShift);
+    }
+    public int addDriverToShift(String EmployeeID,int ShiftID ,String RoleInShift)
+    {
+        return employeesInShiftDAO.addDriverToShift(EmployeeID,ShiftID,RoleInShift );
+
+    }
+
+
+    public int removeEmployeeFromShift( String EmployeeID,int ShiftID,String RoleInShift)
+    {
+        return employeesInShiftDAO.removeEmployeeFromShift(EmployeeID, ShiftID, RoleInShift);
+
+    }
+    public int removeDriverFromShift( String EmployeeID,int ShiftID,String RoleInShift)
+    {
+        return employeesInShiftDAO.removeDriverFromShift(EmployeeID, ShiftID, RoleInShift);
+
+    }
+
+
+
+
+
+
+   //==============================misc=======================================
+
 
     private List<Pair<String, String>> getcurrentShiftEmployeesList(int shiftId) {
         List<Pair<String, String>> ans =new LinkedList<>();

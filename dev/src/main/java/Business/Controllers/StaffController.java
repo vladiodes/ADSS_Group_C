@@ -375,48 +375,6 @@ public class StaffController
         }
     }
 
-
-    //-----------------------------------------------------------getters------------------------------------------------------------
-
-
-    private Employee getEmpIfExists(String id) throws Exception
-    {
-        if(!this.employees.containsKey(id))
-        {
-            throw new Exception("No such employee");
-        }
-        return this.employees.get(id);
-    }
-
-    public Employee getEmployeeByID(String id)
-    {
-        if(!this.employees.containsKey(id))
-            return null;
-        return this.employees.get(id);
-    }
-
-    public Map<String, Employee> getEmployees() {
-        return employees;
-    }
-
-    public TypeOfEmployee getTypeOfLoggedIn() {
-        return typeOfLoggedIn;
-    }
-    //------------------------------------------------------------setters------------------------------------------------------------
-
-
-
-
-    public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
-        this.typeOfLoggedIn = typeOfLoggedIn;
-    }
-
-
-    /*
-     private Map<String, Employee> employees;
-    private TypeOfEmployee typeOfLoggedIn;
-
-     */
     public void getAllEmployees()
     {
         List<EmployeeDTO> allEmps = this.employeeDAO.getAll();
@@ -444,6 +402,39 @@ public class StaffController
             this.employeeDAO.update(updatedOb);//DB
         }
     }
+
+    //-----------------------------------------------------------getters------------------------------------------------------------
+
+
+    private Employee getEmpIfExists(String id) throws Exception
+    {
+        if(!this.employees.containsKey(id))
+        {
+            throw new Exception("No such employee");
+        }
+        return this.employees.get(id);
+    }
+
+    public Employee getEmployeeByID(String id)
+    {
+        if(!this.employees.containsKey(id))
+            return null;
+        return this.employees.get(id);
+    }
+
+    public Map<String, Employee> getEmployees() {
+        return employees;
+    }
+
+
+    //------------------------------------------------------------setters------------------------------------------------------------
+
+    public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
+        this.typeOfLoggedIn = typeOfLoggedIn;
+    }
+
+
+
 
 
 

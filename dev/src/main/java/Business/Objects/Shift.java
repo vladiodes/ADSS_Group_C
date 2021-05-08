@@ -316,85 +316,11 @@ public class Shift implements persistentObject {
         return builder.toString();
     }
 
-
-    //-------------------------------------------------------------------------getters-------------------------------------------------------------------------
-
-
-    public Date getDate() {
-        return date;
-    }
-
-    public List<Pair<String, TypeOfEmployee>> getCurrentShiftEmployees() {
-        return currentShiftEmployees;
-    }
-
-    public Map<TypeOfEmployee, Integer> getConstraints() {
-        return constraints;
-    }
-
-    public TypeOfShift getType() {
-        return type;
-    }
-
-    public boolean isSealed()
-    {
-        return this.isSealed;
-    }
-    //--------------------------------------------------------------------------------setters---------------------------------------------------------------------
-
-
-    public void setConstraints(Map<TypeOfEmployee, Integer> constraints) throws Exception
-    {
-        if(constraints == null)
-        {
-            throw new Exception("Constraints list is null");
-        }
-        else
-        {
-            if((!constraints.containsKey(ShiftManager)))
-            {
-                throw new Exception("Shift must contain a shift manager constraint");
-            }
-            else if((constraints.get(ShiftManager)<1))
-            {
-                throw new Exception("Number of shift managers in a shift must be at least 1");
-            }
-        }
-        this.constraints = constraints;
-    }
-
-    public void setCurrentShiftEmployees(List<Pair<String, TypeOfEmployee>> currentShiftEmployees) throws Exception {
-        if(currentShiftEmployees == null)
-        {
-            throw new Exception("currentShiftEmployees list is null");
-        }
-        this.currentShiftEmployees = currentShiftEmployees;
-    }
-
-    public void setDate(Date date) throws Exception
-    {
-        if (date == null)
-        {
-            throw new Exception("date can't be null");
-        }
-        long m = System.currentTimeMillis();
-        if (date.before(new Date(m)))
-        {
-            throw new  Exception("date of available shift cant be in the past");
-        }
-        this.date = date;
-    }
-
-    public void setType(TypeOfShift type) {
-        this.type = type;
-    }
-
-
     public boolean isTypeEmployeeInShift(TypeOfEmployee empType) {
 
         for (Pair<String,TypeOfEmployee> p: currentShiftEmployees)
         {
-           // Employee currEmp = (Employee)p.first;
+            // Employee currEmp = (Employee)p.first;
             //if(currEmp.getSkills().contains(empType))
             if(p.second==empType)
             {
@@ -447,4 +373,45 @@ public class Shift implements persistentObject {
         }
         return null;
     }
+    //-------------------------------------------------------------------------getters-------------------------------------------------------------------------
+
+
+    public Date getDate() {
+        return date;
+    }
+
+    public List<Pair<String, TypeOfEmployee>> getCurrentShiftEmployees() {
+        return currentShiftEmployees;
+    }
+
+    public Map<TypeOfEmployee, Integer> getConstraints() {
+        return constraints;
+    }
+
+    public TypeOfShift getType() {
+        return type;
+    }
+    //--------------------------------------------------------------------------------setters---------------------------------------------------------------------
+
+
+    public void setDate(Date date) throws Exception
+    {
+        if (date == null)
+        {
+            throw new Exception("date can't be null");
+        }
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m)))
+        {
+            throw new  Exception("date of available shift cant be in the past");
+        }
+        this.date = date;
+    }
+
+    public void setType(TypeOfShift type) {
+        this.type = type;
+    }
+
+
+
 }

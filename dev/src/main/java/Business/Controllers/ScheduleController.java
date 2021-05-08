@@ -282,6 +282,33 @@ public class ScheduleController {
         return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
     }
 
+    private void restoreMaxShiftID(List<ShiftDTO> allShift)
+    {
+        int max=0;
+        int currId=0;
+        for (ShiftDTO s:allShift)
+        {
+            currId=s.shiftId;
+            if (currId>max)
+            {
+                max=currId;
+            }
+        }
+        this.shiftId = max+1;
+    }
+
+    public void incNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType) throws Exception {
+        Shift s = getShift(date, type);
+        Map<TypeOfEmployee, Integer> cons = s.getConstraints();
+        for(TypeOfEmployee currType:cons.keySet())
+        {
+            if (empType==currType)
+            {
+                int curr =cons.get(currType);
+                s.addConstraint(empType,curr+1);
+            }
+        }
+    }
     @Override
     public String toString()
     {
@@ -299,14 +326,6 @@ public class ScheduleController {
 
     //-----------------------------------------------------getters-----------------------------------------------
 
-    public TypeOfEmployee getTypeOfLoggedIn() {
-        return typeOfLoggedIn;
-    }
-
-    public StaffController getStaffController() {
-        return staffController;
-    }
-
     public Map<Date,DailySchedule> getSchedule()
     {
         return this.schedule;
@@ -323,15 +342,6 @@ public class ScheduleController {
         this.typeOfLoggedIn = typeOfLoggedIn;
     }
 
-    public void setSchedule(Map<Date, DailySchedule> schedule) {
-        this.schedule = schedule;
-    }
-
-    public void setStaffController(StaffController staffController) {
-        this.staffController = staffController;
-    }
-
-
     public List<Shift> getShiftWithEmp(String id) {
         List<Shift> toReturn = new LinkedList<>();
 
@@ -347,14 +357,7 @@ public class ScheduleController {
         }
         return toReturn;
     }
-    /*
-     private int shiftId=0;
-    //========================================================Fields====================================================
-    private TypeOfEmployee typeOfLoggedIn;
-    private Map<Date, DailySchedule> schedule;
-    private StaffController staffController;
-    private ShiftDAO shiftDAO = new ShiftDAO();
-     */
+
     public void getAllShifts()
     {
 
@@ -378,31 +381,5 @@ public class ScheduleController {
        }
     }
 
-    private void restoreMaxShiftID(List<ShiftDTO> allShift)
-    {
-        int max=0;
-        int currId=0;
-        for (ShiftDTO s:allShift)
-        {
-           currId=s.shiftId;
-           if (currId>max)
-           {
-               max=currId;
-           }
-        }
-        this.shiftId = max+1;
-    }
 
-    public void incNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType) throws Exception {
-        Shift s = getShift(date, type);
-        Map<TypeOfEmployee, Integer> cons = s.getConstraints();
-        for(TypeOfEmployee currType:cons.keySet())
-        {
-            if (empType==currType)
-            {
-                int curr =cons.get(currType);
-                s.addConstraint(empType,curr+1);
-            }
-        }
-    }
 }

@@ -16,7 +16,7 @@ public class Transports implements Controller<Transport> {
     private StaffController staffController;
     private TransportsDAO DAO;
     public Transports(Trucks tc, Sites sitesc, StaffController sc) {
-        this.transports = new ArrayList<Transport>();
+        this.transports = new ArrayList<>();
         trucksController = tc;
         sitesController = sitesc;
         staffController = sc;

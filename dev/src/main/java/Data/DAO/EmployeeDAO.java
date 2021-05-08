@@ -11,15 +11,19 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static Misc.Functions.DateToString;
 
 public class EmployeeDAO extends DAO<EmployeeDTO> {
 
+    private AvailableShiftForEmployeeDAO availableShiftForEmployeeDAO;
+    private EmployeesSkillsDAO employeesSkillsDAO;
 
     public EmployeeDAO() {
-        this.tableName = "Employees";
-    }
 
+        this.tableName = "Employees";
+        availableShiftForEmployeeDAO=new AvailableShiftForEmployeeDAO();
+        employeesSkillsDAO=new EmployeesSkillsDAO();
+    }
+    //=====================================Employee===================================
     @Override
     public int insert(EmployeeDTO Ob) {
         int ans=0;
@@ -84,104 +88,6 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         return 1;
     }
 
-
-
-    @Override
-    public int update(EmployeeDTO updatedOb)//not allowed to change ID
-    {
-        Connection conn = Repository.getInstance().connect();
-        if(updatedOb == null) return 0;
-        String updateString = String.format("UPDATE %s" +
-                        " SET \"FirstName\"= \"%s\", \"LastName\"= \"%s\" " +
-                        ", \"BankAccountNumber\"=\"%s\", \"Salary\"=%s,  \"EmpConditions\"=\"%s\", \"StartWorkingDate\"=\"%s\" " +
-                        "WHERE \"ID\" == \"%s\";",
-                tableName,updatedOb.firstName,updatedOb.lastName,
-                updatedOb.bankAccountNumber,updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate, updatedOb.id);
-        Statement s;
-        try {
-            s = conn.createStatement();
-            return  s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-    }
-
-    public int addAvailableShifts(String empID, Date date, String typeOfShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(empID == null || date == null || typeOfShift == null) return 0;
-        updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\",%s);", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift,null);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-    }
-
-    public int removeAvailableShifts(String empID, Date date, String typeOfShift)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(empID == null || date == null || typeOfShift==null) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=\"%s\" AND %s=\"%s\";", "AvailableShiftsForEmployees", "EmpID", empID,"Date" ,date, "Type", typeOfShift);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e )
-        {
-            return 0;
-        }
-    }
-
-    public int addSkill(String empID, String skillToAdd)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(empID == null || skillToAdd == null) return 0;
-        updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",%s);", "EmployeeSkills", empID, skillToAdd, null);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-    }
-    public int removeSkill(String empID, String skillToRemove)
-    {
-        Connection conn = Repository.getInstance().connect();
-        String updateString;
-        if(empID == null || skillToRemove == null) return 0;
-        updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=\"%s\";", "EmployeeSkills", "EmployeeID", empID,"TypeOfEmployee" ,skillToRemove);
-        Statement s;
-        try
-        {
-            s = conn.createStatement();
-            return s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
-            return 0;
-        }
-
-    }
-
-
-
     @Override
     public EmployeeDTO makeDTO(ResultSet RS) {
         EmployeeDTO output = null;
@@ -239,6 +145,61 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         return ans;
 
     }
+
+    @Override
+    public int update(EmployeeDTO updatedOb)//not allowed to change ID
+    {
+        Connection conn = Repository.getInstance().connect();
+        if(updatedOb == null) return 0;
+        String updateString = String.format("UPDATE %s" +
+                        " SET \"FirstName\"= \"%s\", \"LastName\"= \"%s\" " +
+                        ", \"BankAccountNumber\"=\"%s\", \"Salary\"=%s,  \"EmpConditions\"=\"%s\", \"StartWorkingDate\"=\"%s\" " +
+                        "WHERE \"ID\" == \"%s\";",
+                tableName,updatedOb.firstName,updatedOb.lastName,
+                updatedOb.bankAccountNumber,updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate, updatedOb.id);
+        Statement s;
+        try {
+            s = conn.createStatement();
+            return  s.executeUpdate(updateString);
+        }
+        catch (Exception e ){
+            return 0;
+        }
+    }
+    //=====================================EmployeeSkills===================================
+
+    public int addSkill(String empID, String skillToAdd)
+    {
+        return employeesSkillsDAO.addSkill(empID, skillToAdd);
+    }
+    public int removeSkill(String empID, String skillToRemove)
+    {
+        return employeesSkillsDAO.removeSkill(empID, skillToRemove);
+
+    }
+
+
+
+
+
+
+    //=====================================AvailableShift===================================
+    public int addAvailableShifts(String empID, Date date, String typeOfShift) {
+        return availableShiftForEmployeeDAO.addAvailableShifts(empID, date, typeOfShift);
+    }
+
+    public int removeAvailableShifts(String empID, Date date, String typeOfShift)
+    {
+        return availableShiftForEmployeeDAO.removeAvailableShifts(empID, date,typeOfShift );
+    }
+
+
+
+
+
+
+
+
 
 
 }
