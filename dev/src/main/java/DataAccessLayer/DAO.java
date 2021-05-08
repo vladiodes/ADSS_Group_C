@@ -57,7 +57,9 @@ public abstract class DAO<T> {
             //@TODO: for some reason fk keys doesn't work
             Statement stmt=con.createStatement();
             rowsAffected=stmt.executeUpdate(DELETE_SQL);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
         } finally {
             Repository.getInstance().closeConnection(con);

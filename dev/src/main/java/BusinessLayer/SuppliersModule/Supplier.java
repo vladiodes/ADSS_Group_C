@@ -40,8 +40,8 @@ public class Supplier{
         manufacturers=dto.manufacturers;
         contactInfo= dto.contactInfo;
         discountsByPrice=dto.discountsByPrice;
-        ordersFromSupplier=new ArrayList<>();
-        supplierContracts=new ArrayList<>();
+        ordersFromSupplier=new LinkedList<>();
+        supplierContracts=new LinkedList<>();
     }
     public Supplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts) {
         setSupplierName(supplierName);
@@ -198,7 +198,10 @@ public class Supplier{
 
     //when building the supplier object from db
     public void addOrder(Order order){
-        ordersFromSupplier.add(order);
+        if(order != null)
+        {
+            ordersFromSupplier.add(order);
+        }
     }
 
     /**
@@ -329,7 +332,7 @@ public class Supplier{
             if(c.getProduct().equals(product))
                 throw new IllegalArgumentException("There's already a contract issued with the given product");
         }
-        Contract contract=new Contract(price,this,supplierProductID,quantityAgreement,product);
+        Contract contract=new Contract(price,this.SupplierID,supplierProductID,quantityAgreement,product);
         supplierContracts.add(contract);
         return contract;
     }
@@ -415,6 +418,7 @@ public class Supplier{
     public void addDiscount(int catalogueID, int quantity, int discount) {
         findContract(catalogueID).addDiscount(quantity,discount);
         calculateOrdersPrices();
+        ContractMapper.getInstance().addDiscount(findContract(catalogueID),quantity,discount);
     }
 
     //Following are simple getters

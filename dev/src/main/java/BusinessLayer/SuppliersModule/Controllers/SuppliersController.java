@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.InventoryModule.StockController;
 import BusinessLayer.Mappers.ContractMapper;
 import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.Mappers.SupplierMapper;
@@ -158,6 +159,7 @@ public class SuppliersController {
     public void receiveOrder(int supplierID, int orderID) {
         Supplier s = search(supplierID);
         s.receiveOrder(orderID);
+        StockController.getInstance().recieveOrder(s.getOrder(orderID));
     }
 
     /**

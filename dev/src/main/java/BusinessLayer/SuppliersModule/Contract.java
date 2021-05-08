@@ -10,14 +10,14 @@ public class Contract{
     private int catalogueIDBySupplier;
     private Map<Integer,Integer> discountByQuantity;
     private Item product;
-    private Supplier supplier;
+    private int supplierID;
 
-    public Contract(double pricePerUnit,Supplier supplier,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Item product){
+    public Contract(double pricePerUnit,int supplierID,int catalogueIDBySupplier, Map<Integer,Integer> discountByQuantity,Item product){
         setPricePerUnit(pricePerUnit);
         setCatalogueIDBySupplier(catalogueIDBySupplier);
         setDiscountByQuantity(discountByQuantity);
         setProduct(product);
-        setSupplier(supplier);
+        setSupplierID(supplierID);
         product.addContract(this);
     }
 
@@ -38,9 +38,9 @@ public class Contract{
         return pricePerUnit;
     }
 
-    public Supplier getSupplier()
+    public int getSupplierID()
     {
-        return  this.supplier;
+        return  this.supplierID;
     }
 
 
@@ -68,11 +68,11 @@ public class Contract{
         }
         this.pricePerUnit=pricePerUnit;
     }
-    private void setSupplier(Supplier supplier)
+    private void setSupplierID(int supplierID)
     {
-        if(supplier == null)
-            throw new IllegalArgumentException("Supplier can't be null");
-        this.supplier = supplier;
+        if(supplierID == -1)
+            throw new IllegalArgumentException("Supplier can't be -1");
+        this.supplierID = supplierID;
     }
 
     private void setCatalogueIDBySupplier(int catalogueIDBySupplier){

@@ -33,8 +33,8 @@ public class ContractMapper {
         if(dto==null){
             return null;
         }
-        //@todo: recursive build stack overflow
-        Contract contract=new Contract(dto.pricePerUnit,SupplierMapper.getInstance().getSupplier(dto.supplierID),dto.catalogueID,dto.discountByQuantity,ItemsMapper.getInstance().getItem(dto.storeID));
+        //@todo: recursive build stack overflow(FINISHED)
+        Contract contract=new Contract(dto.pricePerUnit,dto.supplierID,dto.catalogueID,dto.discountByQuantity,ItemsMapper.getInstance().getItem(dto.storeID));
         return contract;
     }
 
@@ -78,11 +78,16 @@ public class ContractMapper {
     }
 
     public void remove(Contract contract) {
-        contractMapper.get(contract.getSupplier().getSupplierID()).remove(contract.getProduct().getId());
-        dao.delete(contract.getSupplier().getSupplierID(),contract.getCatalogueIDBySupplier(),contract.getProduct().getId());
+        HashMap<Integer,Contract> contracts = contractMapper.get(contract.getSupplierID());
+        contracts.remove(contract.getProduct().getId());
+        dao.delete(contract.getSupplierID(),contract.getCatalogueIDBySupplier(),contract.getProduct().getId());
     }
 
     public void removeDiscount(Contract c, int quantity) {
-        dao.removeDiscount(new ContractDTO(c,c.getSupplier().getSupplierID()),quantity);
+        dao.removeDiscount(new ContractDTO(c,c.getSupplierID()),quantity);
+    }
+    public void addDiscount(Contract c,int quantity,int discount)
+    {
+        dao.insertDiscount(new ContractDTO(c,c.getSupplierID()),quantity,discount);
     }
 }

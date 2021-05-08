@@ -81,7 +81,7 @@ public class SupplierDAO extends DAO<SupplierDTO> {
         try {
             ps = con.prepareStatement(UPDATE_SQL);
             ps.setString(1,dto.supplierName);
-            ps.setString(2,String.valueOf(dto.selfPickUp));
+            ps.setBoolean(2,dto.selfPickUp);
             ps.setString(3,dto.bankAccount);
             ps.setString(4,String.valueOf(dto.paymentMethod));
             ps.setString(5,String.valueOf(dto.getSupplierID()));

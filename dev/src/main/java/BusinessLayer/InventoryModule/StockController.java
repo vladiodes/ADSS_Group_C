@@ -39,6 +39,14 @@ public class StockController {
         item.addSpecificItem(storageAmount,shelfAmount,expDate);
         return true;
     }
+    public void recieveOrder(Order order) {
+        Set<ProductInOrder> temp = order.getProductsInOrder();
+        for (ProductInOrder p : temp) {
+            Item item = p.getContract().getProduct();
+            int itemID = item.getId();
+            this.addSpecificItem(itemID,  p.getQuantity() / 2, p.getQuantity() / 2, LocalDate.now().plusWeeks(3));
+        }
+    }
     public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID,double sellingPrice) {
 
         if (!isAvailableLocation(location))
@@ -48,7 +56,6 @@ public class StockController {
     }
 
     public void updateItem(int itemID,String name,int minAmount,double sellingPrice,int location,String producer) {
-
         findItem(itemID).updateItem(name, minAmount, sellingPrice,location,producer);
     }
 

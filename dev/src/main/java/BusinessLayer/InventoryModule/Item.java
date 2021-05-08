@@ -192,7 +192,7 @@ public class Item {
         double minPrice =-1;
         if(!contractList.isEmpty())
         {
-            minID = contractList.get(0).getSupplier().getSupplierID();
+            minID = contractList.get(0).getSupplierID();
             minPrice = contractList.get(0).getPricePerUnit();
             minCatalogueID = contractList.get(0).getCatalogueIDBySupplier();
         }
@@ -200,7 +200,7 @@ public class Item {
         {
             if(c.getPricePerUnit() < minPrice)
             {
-                minID = c.getSupplier().getSupplierID();
+                minID = c.getSupplierID();
                 minPrice = c.getPricePerUnit();
                 minCatalogueID = c.getCatalogueIDBySupplier();
             }

@@ -54,7 +54,7 @@ public class InventoryFacade {
         }
         catch (IllegalArgumentException e)
         {
-            return new Response<>(e);
+            return new Response<>(new Exception("Couldn't Reorder deleted item (supplier not found)"));
         }
     }
     public Response<Boolean> updateItem(int itemID, String name,  int minAmount, double sellingPrice,int location,String producer){

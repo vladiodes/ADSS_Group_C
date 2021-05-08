@@ -68,9 +68,9 @@ public class ContractDAO extends DAO<ContractDTO> {
         Map<Integer,Integer> discountByQuantity=new HashMap<>();
         try {
             ps=con.prepareStatement(GET_SQL);
-            ps.setString(1,String.valueOf(CatalogueIDbySupplier));
-            ps.setString(2,String.valueOf(SupplierID));
-            ps.setString(3,String.valueOf(ItemID));
+            ps.setInt(1,CatalogueIDbySupplier);
+            ps.setInt(2,SupplierID);
+            ps.setInt(3,ItemID);
             rs=ps.executeQuery();
 
             if(rs.isClosed()){//if the result set is empty
@@ -82,7 +82,7 @@ public class ContractDAO extends DAO<ContractDTO> {
             stmt=con.createStatement();
             discounts=stmt.executeQuery(query);
             while (discounts.next()){
-                discountByQuantity.putIfAbsent(discounts.getInt(0),discounts.getInt(1));
+                discountByQuantity.putIfAbsent(discounts.getInt(1),discounts.getInt(2));
             }
             output=new ContractDTO(rs.getDouble(PricePerUnitCol),rs.getInt(CatalogueIDbySupplierCol),rs.getInt(ItemIDCol),discountByQuantity,SupplierID);
         }
@@ -104,6 +104,7 @@ public class ContractDAO extends DAO<ContractDTO> {
             ps.setString(1,String.valueOf(CatalogueIDbySupplier));
             ps.setString(2,String.valueOf(SupplierID));
             ps.setString(3,String.valueOf(ItemID));
+            rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -116,7 +117,31 @@ public class ContractDAO extends DAO<ContractDTO> {
         return executeQuery(String.format("DELETE FROM ContractDiscounts WHERE\n" +
                 "CatalogueID=%s AND ItemID=%s AND SupplierID=%s AND Quantity=%s",contractDTO.catalogueID,contractDTO.storeID,contractDTO.supplierID,quantity));
     }
-
+    public int insertDiscount(ContractDTO contractDTO, int quantity,int discount)
+    {
+        String CatalogueID = "CatalogueID";
+        String ItemID = "ItemID";
+        String SupplierID = "SupplierID";
+        String Quantity = "Quantity";
+        String Discount = "Discount";
+        INSERT_SQL=String.format("INSERT INTO ContractDiscounts (%s,%s,%s,%s,%s) VALUES(?,?,?,?,?)",CatalogueID,ItemID,SupplierID,Quantity,Discount);
+        Connection con=Repository.getInstance().connect();
+        PreparedStatement ps = null;
+        try {
+            ps = con.prepareStatement(INSERT_SQL);
+            ps.setInt(1,contractDTO.catalogueID);
+            ps.setInt(2,contractDTO.storeID);
+            ps.setInt(3, contractDTO.supplierID);
+            ps.setInt(4, quantity);
+            ps.setInt(5,discount);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Repository.getInstance().closeConnection(con);
+        }
+        return 1; //irrelevant
+    }
     public List<ContractDTO> getAllContracts() {
             Connection con=Repository.getInstance().connect();
             ResultSet rs=super.getAll(con);

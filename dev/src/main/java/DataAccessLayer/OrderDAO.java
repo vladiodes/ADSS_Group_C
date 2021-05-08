@@ -3,6 +3,7 @@ package DataAccessLayer;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.SupplierDTO;
+import com.sun.xml.internal.bind.v2.TODO;
 import javafx.util.Pair;
 
 import java.sql.*;
@@ -70,11 +71,10 @@ public class OrderDAO extends DAO<OrderDTO> {
         Statement stmt=null;
         try {
             rs=get("ID",String.valueOf(id),con);
-            if(!rs.next()){
+            if(rs.isClosed()){
                 Repository.getInstance().closeConnection(con);
                 return null;
             }
-            rs.first();
             String query=String.format("SELECT ItemID , CatalogueID , Quantity FROM ProductsInOrder WHERE OrderID=?",id);
             stmt=con.createStatement();
             products=stmt.executeQuery(query);
