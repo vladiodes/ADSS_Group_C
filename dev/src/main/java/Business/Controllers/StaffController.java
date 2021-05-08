@@ -12,10 +12,7 @@ import Business.Objects.Driver;
 import Business.Objects.Employee;
 import Business.Objects.Shift;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StaffController
 {
@@ -71,9 +68,11 @@ public class StaffController
 
         return "Employee added successfully";
     }
-    public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) {
+    public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, int license) {
         try
         {
+            List<TypeOfEmployee> skills=new LinkedList<>();
+            skills.add(TypeOfEmployee.Driver);
             Driver driver = new Driver(firstName, lastName,id,bankAccountNumber,salary,empConditions,startWorkingDate, skills, license); //throws exception if fields are invalid
             this.employees.put(id, driver);
             this.driverDAO.insert(driver.toDTO());//add to DB check

@@ -28,8 +28,6 @@ public class Repository {
 
             conn = DriverManager.getConnection(url,config.toProperties());
 
-            System.out.println("Connection to SQLite has been established.");
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }/* finally {
@@ -161,9 +159,10 @@ public class Repository {
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"ShiftID\"\tINTEGER,\n" +
                 "\t\"RoleInShift\"\tTEXT,\n" +
-                "\tPRIMARY KEY(\"EmployeeID\",\"ShiftID\",\"RoleInShift\"),\n" +
+                "\t\"DriverID\"\tTEXT,\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\") ON DELETE CASCADE,\n" +
                 "\tFOREIGN KEY(\"ShiftID\") REFERENCES \"Shifts\"(\"ID\") ON DELETE CASCADE \n" +
+                "\tFOREIGN KEY(\"DriverID\") REFERENCES \"Drivers\"(\"ID\") ON DELETE CASCADE \n" +
                 ");";
 
         String EmployeeSkillsTable = "CREATE TABLE IF NOT EXISTS \"EmployeeSkills\" (\n" +

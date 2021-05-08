@@ -178,9 +178,8 @@ public class Menus {
 
                             //---------All input from user is ready-------------
 
-                            List<TypeOfEmployee> skills = new LinkedList<TypeOfEmployee>();
-                            skills.add(TypeOfEmployee.Driver); //Adding the skill to the new list created for the new employee
-                            System.out.println(facade.addDriverEmployee(driverFields[0], driverFields[1], driverFields[2], driverFields[3], Integer.parseInt(driverFields[4]), driverFields[5], new Date(System.currentTimeMillis()), skills, Integer.parseInt(driverFields[7])));
+
+                            System.out.println(facade.addDriverEmployee(driverFields[0], driverFields[1], driverFields[2], driverFields[3], Integer.parseInt(driverFields[4]), driverFields[5], new Date(System.currentTimeMillis()), Integer.parseInt(driverFields[7])));
 
                             break;
                         }
@@ -542,7 +541,7 @@ public class Menus {
                     TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
                     this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
                     TypeOfEmployee temp = this.facade.getTypeOfLoggedIn();
-                    this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
+                    //this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
                     //Creates 4 employees, a shift, and adds 1 employee to the shift
                     Date date1 = null;
                     Date date2 = null;
@@ -555,7 +554,7 @@ public class Menus {
                         System.out.println("Scenario failed because of date parsing");
                     }
                     List<TypeOfEmployee> skillsNeta = new LinkedList<TypeOfEmployee>();
-                    skillsNeta.add(TypeOfEmployee.ShiftManager);
+                    skillsNeta.add(TypeOfEmployee.Driver);
 
                     List<TypeOfEmployee> skillsBahar = new LinkedList<TypeOfEmployee>();
                     skillsBahar.add(TypeOfEmployee.BranchManager);
@@ -565,9 +564,8 @@ public class Menus {
 
                     List<TypeOfEmployee> skillsTom = new LinkedList<TypeOfEmployee>();
                     skillsTom.add(TypeOfEmployee.Cashier);
-                    System.out.println(this.facade.addDriverEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, skillsNeta, 10000));
+                    System.out.println(this.facade.addDriverEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, 10000));
                     System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Storage));
-                    System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Driver));
                     System.out.println(this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar));
                     System.out.println(this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded));
                     System.out.println(this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom));
@@ -575,9 +573,8 @@ public class Menus {
                     System.out.println(this.facade.addShift(date2, TypeOfShift.Morning));
                     System.out.println(this.facade.addConstraintToShift(date2, TypeOfShift.Morning, TypeOfEmployee.Cashier, 1));
                     System.out.println(this.facade.addEmployeeToShift("444444444", TypeOfEmployee.Cashier, date2, TypeOfShift.Morning));//22/04/2022
-                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.ShiftManager, date2, TypeOfShift.Morning));
-                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Storage, date2, TypeOfShift.Morning));
                     System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Driver, date2, TypeOfShift.Morning));
+                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Storage, date2, TypeOfShift.Morning));
 
                     System.out.println(this.facade.addAvailableShift("111111111", date3, TypeOfShift.Evening));//25/04/2022
                     this.facade.setTypeOfLoggedIn(loggedIn);

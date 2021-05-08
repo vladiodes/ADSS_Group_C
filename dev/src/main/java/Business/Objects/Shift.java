@@ -110,6 +110,10 @@ public class Shift implements persistentObject {
         {
             throw new Exception("employee cant be assigned to a skill he doesnt have");
         }
+        if(this.isEmployeeAndSkillInShift(toAdd.getId(), type))
+        {
+            throw new Exception("employee cant be assigned to a skill he doesnt have");
+        }
         currentShiftEmployees.add((new Pair<String, TypeOfEmployee>(toAdd.getId(),type)));
         isSealed=sealShift();
 
@@ -179,8 +183,19 @@ public class Shift implements persistentObject {
     public boolean isEmployeeInShift(String id) {
         for (Pair p: currentShiftEmployees)
         {
-            Employee currEmp = (Employee)p.first;
-            if(currEmp.getId().equals(id))
+            if(p.first.equals(id))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
+    public boolean isEmployeeAndSkillInShift(String id, TypeOfEmployee skill) {
+        for (Pair p: currentShiftEmployees)
+        {
+
+            if(p.first.equals(id) && p.second==skill)
             {
                 return true;
             }
