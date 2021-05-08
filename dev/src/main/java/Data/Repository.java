@@ -92,7 +92,7 @@ public class Repository {
                 "\tFOREIGN KEY(\"Source\") REFERENCES \"Sites\"(\"Address\")\n" +
                 ");";
 
-        String ItemcontractsTable = "CREATE TABLE \"ItemContracts\" (\n" +
+        String ItemcontractsTable = "CREATE TABLE IF NOT EXISTS \"ItemContracts\" (\n" +
                 "\t\"ID\"\tINTEGER,\n" +
                 "\t\"TransportID\"\tINTEGER,\n" +
                 "\t\"Destination\"\tTEXT,\n" +
