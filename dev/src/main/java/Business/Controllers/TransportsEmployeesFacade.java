@@ -143,7 +143,8 @@ public class TransportsEmployeesFacade {
         if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
             return "Requested ID isn't a Driver.";
         Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));
-        return "Transort Registered Successfuly.";
+        scheduleController.incNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
+        return "Transport Registered Successfuly.";
     }
 
     public void addSection(String section) throws Exception {
