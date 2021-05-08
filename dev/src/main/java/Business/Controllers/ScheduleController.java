@@ -130,7 +130,15 @@ public class ScheduleController {
             Shift s= getShift(date,type);
             Employee toAdd = staffController.getEmployeeByID(id);
             s.addEmployeeToShift(toAdd, toSkill);
-            this.shiftDAO.addEmployeeToShift(id,s.getID(),toSkill.toString());
+            if (this.staffController.getEmployeeByID(id).getSkills().contains(Driver))
+            {
+                this.shiftDAO.addDriverToShift(id,s.getID(),toSkill.toString());
+            }
+            else
+            {
+                this.shiftDAO.addEmployeeToShift(id,s.getID(),toSkill.toString());
+            }
+
         }
         catch(Exception e)
         {
@@ -164,7 +172,15 @@ public class ScheduleController {
             return "Employee was not removed from shift";
         }
         TypeOfEmployee typeOfEmp = s.getTypeOfSpecificEmployee(id);//already check if shift contain this employee
-        this.shiftDAO.removeEmployeeFromShift(id,s.getID(),typeOfEmp.toString());
+        if (this.staffController.getEmployeeByID(id).getSkills().contains(Driver))
+        {
+            this.shiftDAO.removeEmployeeFromShift(id,s.getID(),typeOfEmp.toString());
+        }
+        else
+        {
+            this.shiftDAO.removeDriverFromShift(id,s.getID(),typeOfEmp.toString());
+        }
+
         return "Employee removed successfully from shift";
     }
 
@@ -195,6 +211,8 @@ public class ScheduleController {
             }
             Shift shift = dailySchedule.getShift(typeOfShift);
             shift.addConstraint(typeOfEmployee, numOfEmp);
+////////////////////////////
+            this.shiftDAO.removeConstraints(shift.getID(), typeOfEmployee.toString());
             this.shiftDAO.addConstraints(shift.getID(), typeOfEmployee.toString(), numOfEmp);
         }
         catch (Exception e)

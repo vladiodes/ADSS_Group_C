@@ -36,8 +36,8 @@ public class TransportsEmployeesFacade {
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) {
         return  staffController.addEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, skills);
     }
-    public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int License) {
-        return staffController.addDriverEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, skills, License);
+    public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, int License) {
+        return staffController.addDriverEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, License);
     }
 
     public String RemoveEmployee(String id) {

@@ -215,7 +215,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         ResultSet rs = get("AvailableShiftsForEmployees", "DriverID", driverId,conn);
         try {
             while (rs.next()) {
-                Pair<Date, String> p = new Pair<>(new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString(1)), rs.getString(2));//have to check
+                Pair<Date, String> p = new Pair<>(new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString(2)), rs.getString(3));//have to check
                 ans.add(p);
             }
         } catch (Exception e) {
