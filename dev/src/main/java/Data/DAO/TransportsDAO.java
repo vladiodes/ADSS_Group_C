@@ -20,10 +20,9 @@ public class TransportsDAO extends DAO<TransportDTO> {
     }
 
     public int insert(TransportDTO Ob) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
-        String Values = String.format("(%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", Ob.weight, formatter.format(Ob.date), Ob.ID, Ob.truck, Ob.source, Ob.driver);
+        String Values = String.format("(%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", Ob.weight,Ob.date, Ob.ID, Ob.truck, Ob.source, Ob.driver);
         Statement s;
         try {
             s = conn.createStatement();

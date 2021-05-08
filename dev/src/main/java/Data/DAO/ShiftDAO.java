@@ -1,6 +1,8 @@
 package Data.DAO;
 
 
+import Misc.Pair;
+import Misc.TypeOfShift;
 import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Data.DTO.ShiftDTO;

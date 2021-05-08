@@ -37,7 +37,8 @@ public class Trucks implements Controller<Truck> {
         if(output == null)
             throw new Exception(plate + " doesn't exist");
         Truck toAdd = new Truck(output);
-        return trucks.put(toAdd.getPlateNum(),toAdd);
+        trucks.put(toAdd.getPlateNum(),toAdd);
+        return toAdd;
     }
 
     public ArrayList<Truck> getTrucks() {

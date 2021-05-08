@@ -52,6 +52,7 @@ public class Transports implements Controller<Transport> {
 
     @Override
     public void Load() {
+        this.transports = new ArrayList<>();
         ID = 0;
         try {
             List<TransportDTO> DTOS = DAO.getAll();

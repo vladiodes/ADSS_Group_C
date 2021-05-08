@@ -110,6 +110,6 @@ public class Transport implements persistentObject<TransportDTO> {
         for (ItemContract contract : Contracts) {
             contractsDTO.add(new ItemContractDTO(ID, contract.getDestination().getAddress(), contract.getItems(), contract.getPassed()));
         }
-        return new TransportDTO(getDate().toString(), getWeight(), getDriver().getId(), getTruck().getPlateNum(), contractsDTO, getSource().getAddress(), ID);
+        return new TransportDTO(Misc.Functions.DateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(), contractsDTO, getSource().getAddress(), ID);
     }
 }

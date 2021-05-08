@@ -9,6 +9,7 @@ public class main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
+
         facade.loadAllControllers();
         while (true)
         {
@@ -20,8 +21,8 @@ public class main {
             s.nextLine();
             if (choose == 3)
                 break;
-            switch (choose)
-            {
+
+            switch (choose) {
                 case 1:
                     facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
                     TransportsMain.start(facade);
