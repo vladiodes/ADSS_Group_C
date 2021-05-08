@@ -14,15 +14,15 @@ import java.util.List;
 public class Employee implements persistentObject{
     final int ID_LENGTH = 9;//magic number
     //======================================================Fields=================================================================
-    private String firstName;
-    private String lastName;
-    private String id;
-    private String bankAccountNumber;
-    private int salary;
-    private String empConditions;
-    private Date startWorkingDate;
-    private List<TypeOfEmployee> skills;
-    private List<Pair<Date, TypeOfShift>> availableShifts;
+    protected String firstName;
+    protected String lastName;
+    protected String id;
+    protected String bankAccountNumber;
+    protected int salary;
+    protected String empConditions;
+    protected Date startWorkingDate;
+    protected List<TypeOfEmployee> skills;
+    protected List<Pair<Date, TypeOfShift>> availableShifts;
 
     //======================================================Constructor=================================================================
     public Employee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) throws Exception {

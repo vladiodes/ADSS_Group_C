@@ -1,25 +1,29 @@
 package Business.Objects;
 
+import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import Data.DTO.DriverDTO;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Driver extends Employee implements persistentObject {
     private int License;
+
 
     public Driver(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills, int license) throws Exception {
         super(firstName, lastName, id, bankAccountNumber, salary, empConditions, startWorkingDate, skills);
         setLicense(license);
     }
 
-    public Driver(DriverDTO dto) throws Exception {
+    public Driver(DriverDTO dto)  {
         super(dto);
         setLicense(dto.License);
     }
+
 
     public void setLicense(int license) {
         License = license;

@@ -113,7 +113,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         String updateString;
         if(empID == null || date == null || typeOfShift == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift);
+                "VALUES (\"%s\",\"%s\",\"%s\",%s);", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift,null);
         Statement s;
         try
         {
@@ -150,7 +150,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
         String updateString;
         if(empID == null || skillToAdd == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\");", "EmployeeSkills", empID, skillToAdd);
+                "VALUES (\"%s\",\"%s\",%s);", "EmployeeSkills", empID, skillToAdd, null);
         Statement s;
         try
         {

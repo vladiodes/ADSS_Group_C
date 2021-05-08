@@ -16,17 +16,21 @@ import static Misc.Functions.DateToString;
 
 public class DriverDAO extends DAO<DriverDTO> {
 
+    public DriverDAO() {
+        super.tableName = "Drivers";
+    }
+
     @Override
     public int insert(DriverDTO Ob) {
         int ans=0;
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
-        String toInsertEmp = Ob.fieldsToString();
+        String toInsertEmp =InsertStatement( Ob.fieldsToString());
 
         Statement s;
         try {
             s = conn.createStatement();
-            s.executeUpdate(InsertStatement(toInsertEmp));
+            s.executeUpdate(toInsertEmp);
             int resAs = insertToAvailableShifts(Ob);
             int resES = insertToEmployeeSkills(Ob);
             if (resAs + resES == 2) //If both inserts worked
@@ -109,7 +113,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         String updateString;
         if(empID == null || date == null || typeOfShift == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", empID, DateToString(date),typeOfShift);
+                "VALUES (%s,\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", null, DateToString(date),typeOfShift,empID);
         Statement s;
         try
         {
@@ -127,7 +131,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         String updateString;
         if(empID == null || date == null || typeOfShift==null) return 0;
         updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=\"%s\" AND %s=\"%s\";", "AvailableShiftsForEmployees", "EmpID", empID,"Date" ,date, "Type", typeOfShift);
+                "WHERE %s=\"%s\" AND %s=\"%s\" AND %s=\"%s\";", "AvailableShiftsForEmployees", "DriverID", empID,"Date" ,date, "Type", typeOfShift);
         Statement s;
         try
         {
@@ -146,7 +150,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         String updateString;
         if(empID == null || skillToAdd == null) return 0;
         updateString= String.format("INSERT INTO %s \n" +
-                "VALUES (\"%s\",\"%s\");", "EmployeeSkills", empID, skillToAdd);
+                "VALUES (%s,\"%s\",\"%s\");", "EmployeeSkills", null, skillToAdd, empID);
         Statement s;
         try
         {
@@ -165,7 +169,7 @@ public class DriverDAO extends DAO<DriverDTO> {
         String updateString;
         if(empID == null || skillToRemove == null) return 0;
         updateString= String.format("DELETE FROM %s \n" +
-                "WHERE %s=\"%s\" AND %s=\"%s\";", "EmployeeSkills", "EmployeeID", empID,"TypeOfEmployee" ,skillToRemove);
+                "WHERE %s=\"%s\" AND %s=\"%s\";", "EmployeeSkills", "DriverID", empID,"TypeOfEmployee" ,skillToRemove);
         Statement s;
         try
         {
@@ -193,9 +197,9 @@ public class DriverDAO extends DAO<DriverDTO> {
             if (availableShifts == null) {
                 return null;
             }
-            output = new DriverDTO(/*first name*/RS.getString(0), /*last name*/RS.getString(1), /*Id*/RS.getString(2),
-                    /*bank account number*/RS.getString(3), /*salary*/RS.getInt(4),/*empConditions*/ RS.getString(5),
-                    /*start working date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(6)), RS.getInt(7), skills, availableShifts);
+            output = new DriverDTO(/*first name*/RS.getString(1), /*last name*/RS.getString(2), /*Id*/RS.getString(3),
+                    /*bank account number*/RS.getString(4), /*salary*/RS.getInt(5),/*empConditions*/ RS.getString(6),
+                    /*start working date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(7)), RS.getInt(8), skills, availableShifts);
         } catch (Exception e) {
             output = null;
         }
@@ -206,9 +210,9 @@ public class DriverDAO extends DAO<DriverDTO> {
         return output;
     }
 
-    private List<Pair<Date, String>> getavailableShiftList(String empId, Connection conn) {
+    private List<Pair<Date, String>> getavailableShiftList(String driverId, Connection conn) {
         List<Pair<Date, String>> ans = new LinkedList<>();
-        ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId,conn);
+        ResultSet rs = get("AvailableShiftsForEmployees", "DriverID", driverId,conn);
         try {
             while (rs.next()) {
                 Pair<Date, String> p = new Pair<>(new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString(1)), rs.getString(2));//have to check
@@ -220,12 +224,12 @@ public class DriverDAO extends DAO<DriverDTO> {
         return ans;
     }
 
-    private List<String> getSkillsList(String empId,Connection conn) {
+    private List<String> getSkillsList(String driverId,Connection conn) {
         List<String> ans = new LinkedList<>();
-        ResultSet rs = get("EmployeeSkills", "EmployeeID", empId, conn);
+        ResultSet rs = get("EmployeeSkills", "DriverID", driverId, conn);
         try {
             while (rs.next()) {
-                ans.add(rs.getString(1));//have to check
+                ans.add(rs.getString(2));//have to check
             }
         } catch (Exception e) {
             return null;

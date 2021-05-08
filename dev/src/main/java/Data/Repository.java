@@ -137,7 +137,6 @@ public class Repository {
                 "\t\"StartWorkingDate\"\tDATE,\n" +
                 "\tPRIMARY KEY(\"ID\")\n" +
                 ");";
-        //Foreign keys skills and availableShift
 
         String ShiftsTable = "CREATE TABLE IF NOT EXISTS \"Shifts\" (\n" +
                 "\t\"ID\"\tINTEGER PRIMARY KEY ,\n" +
@@ -147,14 +146,15 @@ public class Repository {
 
                 ");";
 
-        //Foreign Keys current employee and constraints
 
         String AvailableShiftsForEmployees = "CREATE TABLE IF NOT EXISTS \"AvailableShiftsForEmployees\" (\n" +
                 "\t\"EmpID\"\tTEXT,\n" +
                 "\t\"Date\"\tDATE,\n" +
                 "\t\"Type\"\tTEXT,\n" +
+                "\t\"DriverID\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"EmpID\",\"Date\",\"Type\"),\n" +
                 "\tFOREIGN KEY(\"EmpID\") REFERENCES \"Employees\"(\"ID\") ON DELETE CASCADE\n" +
+                "\tFOREIGN KEY(\"DriverID\") REFERENCES \"Drivers\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
 
         String EmployeesInShiftTable = "CREATE TABLE IF NOT EXISTS \"EmployeesInShift\" (\n" +
@@ -169,8 +169,10 @@ public class Repository {
         String EmployeeSkillsTable = "CREATE TABLE IF NOT EXISTS \"EmployeeSkills\" (\n" +
                 "\t\"EmployeeID\"\tTEXT,\n" +
                 "\t\"TypeOfEmployee\"\tTEXT,\n" +
+                "\t\"DriverID\"\tTEXT,\n" +
                 "\tPRIMARY KEY(\"EmployeeID\",\"TypeOfEmployee\"),\n" +
                 "\tFOREIGN KEY(\"EmployeeID\") REFERENCES \"Employees\"(\"ID\") ON DELETE CASCADE\n" +
+                "\tFOREIGN KEY(\"DriverID\") REFERENCES \"Drivers\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
 
         String ShiftConstraintsTable = "CREATE TABLE IF NOT EXISTS \"ShiftConstraints\" (\n" +

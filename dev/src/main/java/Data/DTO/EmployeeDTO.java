@@ -39,7 +39,7 @@ public class EmployeeDTO {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date currDate = p.first;
         String currType = p.second;
-        return String.format("(\"%s\",\"%s\",\"%s\")", this.id, formatter.format(currDate), currType);
+        return String.format("(\"%s\",\"%s\",\"%s\",%s)", this.id, formatter.format(currDate), currType, null);
     }
 
     public int getNumberOfAvailableShifts() {
@@ -51,7 +51,7 @@ public class EmployeeDTO {
     }
 
     public String getSkills(int index) {
-        return String.format("(\"%s\",\"%s\")", this.id, skills.get(index));
+        return String.format("(\"%s\",\"%s\", %s)", this.id, skills.get(index),null);
     }
 
     public String getId() {

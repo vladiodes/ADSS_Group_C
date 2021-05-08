@@ -413,9 +413,16 @@ public class StaffController
     public void getAllEmployees()
     {
         List<EmployeeDTO> allEmps = this.employeeDAO.getAll();
+        List<DriverDTO> allDrivers = this.driverDAO.getAll();
         for (EmployeeDTO emp:allEmps)
         {
             this.employees.put(emp.id, new Employee(emp));
+
+        }
+        for (DriverDTO driver:allDrivers)
+        {
+            this.employees.put(driver.id, new Driver(driver));
+
         }
 
     }
