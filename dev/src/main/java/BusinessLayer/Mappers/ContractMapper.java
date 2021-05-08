@@ -33,8 +33,15 @@ public class ContractMapper {
         if(dto==null){
             return null;
         }
-        //@todo: recursive build stack overflow(FINISHED)
         Contract contract=new Contract(dto.pricePerUnit,dto.supplierID,dto.catalogueID,dto.discountByQuantity,ItemsMapper.getInstance().getItem(dto.storeID));
+        if(contractMapper.containsKey(dto.supplierID))
+            contractMapper.get(dto.supplierID).put(dto.storeID,contract);
+        else{
+            HashMap<Integer,Contract> x=new HashMap<>();
+            x.put(dto.storeID,contract);
+            contractMapper.put(dto.supplierID,x);
+        }
+
         return contract;
     }
 

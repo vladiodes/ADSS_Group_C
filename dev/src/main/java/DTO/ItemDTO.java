@@ -70,7 +70,7 @@ public class ItemDTO {
     }
 
     public void setSpecificItemDTOList(List<specificItemDTO> specificItemDTOList) {
-        this.specificItemDTOList = specificItemDTOList;
+        this.specificItemDTOList = new ArrayList<>(specificItemDTOList);
     }
 
     public void setProducer(String producer) {

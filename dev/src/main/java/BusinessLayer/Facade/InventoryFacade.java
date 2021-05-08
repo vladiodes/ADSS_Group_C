@@ -2,7 +2,6 @@ package BusinessLayer.Facade;
 
 import BusinessLayer.Facade.Response;
 import BusinessLayer.InventoryModule.*;
-import BusinessLayer.Mappers.SaleMapper;
 import DTO.*;
 
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ public class InventoryFacade {
         return inventoryFacadeInstance;
     }
 
-    public Response<Boolean> addSpecificItem(int generalItemID,  int storageAmount, int shelfAmount, LocalDate expDate)
+    public Response<Boolean> addSpecificItem(int generalItemID,  int storageAmount, int shelfAmount, LocalDate expDate, String producer)
     {
         try
         {

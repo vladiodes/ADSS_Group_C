@@ -5,7 +5,7 @@ import BusinessLayer.SuppliersModule.ProductInOrder;
 import javafx.util.Pair;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class OrderDTO {
     //For loading from database//
     public HashMap<Integer, Pair<Integer,Integer>> productIds;//each product in order (mapped by store id to a pair of (catalog id,quantity)
 
-    public LocalDateTime dateOfOrder;
+    public LocalDate dateOfOrder;
     public int orderID;
     public Order.ShipmentStatus shipmentStatus;
     public double priceBeforeDiscount;
@@ -41,26 +41,20 @@ public class OrderDTO {
                     "\nTotal price after discounts: " + pio.getTotalPrice());
     }
 
-    public OrderDTO(LocalDateTime dateOfOrder, int orderID, int shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity,HashMap <Integer, Pair<Integer,Integer>> productsInOrderIDs, String isFixed, int supplierID) {
-        this.dateOfOrder=dateOfOrder;
-        this.orderID=orderID;
-        if(shipmentStatus==0){
-            this.shipmentStatus= Order.ShipmentStatus.WaitingForDelivery;
+    public OrderDTO(LocalDate dateOfOrder, int orderID, Order.ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, HashMap <Integer, Pair<Integer,Integer>> productsInOrderIDs, String isFixed, int supplierID) {
+        this.dateOfOrder = dateOfOrder;
+        this.orderID = orderID;
+        this.shipmentStatus = shipmentStatus;
+        this.priceBeforeDiscount = priceBeforeDiscount;
+        this.priceAfterDiscount = priceAfterDiscount;
+        this.totalQuantity = totalQuantity;
+        this.productIds = productsInOrderIDs;
+        if (isFixed.equals("true")) {
+            this.isFixed = true;
+        } else {
+            this.isFixed = false;
         }
-        else {
-            this.shipmentStatus= Order.ShipmentStatus.Delivered;
-        }
-        this.priceBeforeDiscount=priceBeforeDiscount;
-        this.priceAfterDiscount=priceAfterDiscount;
-        this.totalQuantity=totalQuantity;
-        this.productIds=productsInOrderIDs;
-        if(isFixed.equals("True")){
-            this.isFixed=true;
-        }
-        else {
-            this.isFixed=false;
-        }
-        this.supplierID=supplierID;
+        this.supplierID = supplierID;
     }
 
     @Override

@@ -2,7 +2,6 @@ package BusinessLayer.InventoryModule;
 
 import BusinessLayer.Mappers.CategoryMapper;
 import BusinessLayer.Mappers.ItemsMapper;
-import BusinessLayer.Mappers.SaleMapper;
 import BusinessLayer.SuppliersModule.Contract;
 import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
@@ -40,24 +39,22 @@ public class StockController {
         item.addSpecificItem(storageAmount,shelfAmount,expDate);
         return true;
     }
-    public void recieveOrder(Order order) {
-        Set<ProductInOrder> temp = order.getProductsInOrder();
-        for (ProductInOrder p : temp) {
-            Item item = p.getContract().getProduct();
-            int itemID = item.getId();
-            this.addSpecificItem(itemID,  p.getQuantity() / 2, p.getQuantity() / 2, LocalDate.now().plusWeeks(3));
-        }
-    }
     public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID,double sellingPrice) {
 
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already taken");
-        Item toReturn = categoryMapper.getCategory(categoryID).addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice);
+        Category c=categoryMapper.getCategory(categoryID);
+        if(c==null)
+            throw new IllegalArgumentException("No such category");
+        Item toReturn = c.addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice);
         return toReturn;
     }
 
     public void updateItem(int itemID,String name,int minAmount,double sellingPrice,int location,String producer) {
-        findItem(itemID).updateItem(name, minAmount, sellingPrice,location,producer);
+        Item item=findItem(itemID);
+        if(findItemByLocation(location)!=item)
+            throw new IllegalArgumentException("Location is taken");
+        item.updateItem(name, minAmount, sellingPrice,location,producer);
     }
 
     public void updateCategory(int categoryID,String categoryName){
@@ -172,10 +169,6 @@ public class StockController {
                 deleted = true;
                 Item toDelete = this.findItem(itemID);
                 ItemsMapper.getInstance().deleteItem(toDelete);
-                for(int i=0;i<toDelete.getSpecificItems().size();i++)
-                {
-                    ItemsMapper.getInstance().deleteSpecificItem(toDelete,toDelete.getSpecificItems().get(i));
-                }
             }
         }
         if (!deleted)
@@ -204,12 +197,11 @@ public class StockController {
             throw new IllegalArgumentException("No Available items for sale");
         if(item.SaleItem(quantity))
             addOrder(item);
-
     }
     private void addOrder(Item item) {
         Pair<Integer, Integer> supIDAndCatID = item.getCheapestSupplier();
         SuppliersController controller = SuppliersController.getInstance();
-        int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDateTime.now(), false);
-        controller.addItemToOrder(supIDAndCatID.getKey(), newOrderID, item.getMinAmount() - item.getAmount(), supIDAndCatID.getValue());
+        int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDate.now(), false);
+        controller.addItemToOrder(supIDAndCatID.getKey(), newOrderID, item.getMinAmount() - item.getAmount() + 1, supIDAndCatID.getValue());
     }
 }

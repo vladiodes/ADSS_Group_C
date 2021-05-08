@@ -7,6 +7,7 @@ import BusinessLayer.Mappers.SupplierMapper;
 import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import DTO.SupplierDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -181,8 +182,9 @@ public class Supplier{
      *  calculates the new updated price for each order
      */
     private void calculateOrdersPrices() {
-        for(Order o:ordersFromSupplier)
+        for(Order o:ordersFromSupplier) {
             o.calculateDiscount(discountsByPrice);
+        }
     }
 
     /**
@@ -190,8 +192,8 @@ public class Supplier{
      * @param date the date issued with the order
      * @param isFixed is the order fixed (can be re-ordered)
      */
-    public Order addOrder(LocalDateTime date,Boolean isFixed){
-        Order toAdd=new Order(date,isFixed);
+    public Order addOrder(LocalDate date, Boolean isFixed){
+        Order toAdd=new Order(date,isFixed,SupplierID);
         ordersFromSupplier.add(toAdd);
         return toAdd;
     }
@@ -209,8 +211,8 @@ public class Supplier{
      * @param originalOrderID the id of the original order
      * @param date the date issued with the new order
      */
-    public Order reOrder(int originalOrderID, LocalDateTime date) {
-        Order toReturn = new Order(findOrder(originalOrderID), date);
+    public Order reOrder(int originalOrderID, LocalDate date) {
+        Order toReturn = new Order(findOrder(originalOrderID), date,SupplierID);
         ordersFromSupplier.add(toReturn);
         return toReturn;
     }
@@ -223,7 +225,7 @@ public class Supplier{
      */
     public void addItemToOrder(int orderId, int quantity, int supplierProductId){
         Order order = findOrder(orderId);
-        if(order.getisFixed() && order.getDateOfOrder().compareTo(LocalDateTime.now().plusDays(1)) >= 0)
+        if(order.getisFixed() && order.getDateOfOrder().compareTo(LocalDate.now().plusDays(1)) >= 0)
         {
             order.addItem(findContract(supplierProductId),quantity,discountsByPrice);
         }
@@ -289,8 +291,9 @@ public class Supplier{
     public void receiveOrder(int orderID) {
         Order o=findOrder(orderID);
         o.receive();
+        OrderMapper.getInstance().update(o,SupplierID);
         if(o.getisFixed()) //if a fixed order, reordering it once again for the next week
-            SuppliersController.getInstance().reOrder(SupplierID,o.getOrderID(),LocalDateTime.now().plusWeeks(1));
+            SuppliersController.getInstance().reOrder(SupplierID,o.getOrderID(),LocalDate.now().plusWeeks(1));
     }
 
     /**
@@ -338,7 +341,7 @@ public class Supplier{
     }
 
     public void addContract(Contract contract){
-        addContract(contract.getProduct(),contract.getCatalogueIDBySupplier(),contract.getPricePerUnit(),contract.getDiscountByQuantity());
+        supplierContracts.add(contract);
     }
 
     /**

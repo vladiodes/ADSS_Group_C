@@ -1,7 +1,6 @@
 package BusinessLayer.InventoryModule;
 
 import BusinessLayer.Mappers.ItemsMapper;
-import BusinessLayer.Mappers.SaleMapper;
 import BusinessLayer.SuppliersModule.Contract;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
@@ -134,32 +133,23 @@ public class Item {
         });
         for(SpecificItem item : items)
         {
-            if(quantity > 0)
+            if(quantity>item.getShelfAmount())
             {
-                if(item.getShelfAmount() >= quantity)
-                {
-                    item.setShelfAmount(item.getShelfAmount()-quantity);
-                    quantity = 0;
-                }
-                else if(item.getShelfAmount() >= 0)
-                {
-                    quantity = quantity - item.getShelfAmount();
-                    item.setShelfAmount(0);
-                    if(item.getStorageAmount() >= quantity)
-                    {
-                        item.setStorageAmount(item.getStorageAmount()-quantity);
-                        quantity = 0;
-                    }
-                    else
-                    {
-                        quantity = quantity - item.getStorageAmount();
-                        item.setStorageAmount(0);
-                    }
-                }
-                ItemsMapper.getInstance().updateSpecificItem(item);
+                quantity-=item.getShelfAmount();
+                item.setShelfAmount(0);
             }
-            else
+            else {
+                item.setShelfAmount(item.getShelfAmount()-quantity);
                 break;
+            }
+            if(quantity>item.getStorageAmount()){
+                quantity-=item.getStorageAmount();
+                item.setStorageAmount(0);
+            }
+            else {
+                item.setStorageAmount(item.getStorageAmount()-quantity);
+                break;
+            }
         }
         return this.getAmount() < minAmount;
     }
@@ -169,17 +159,18 @@ public class Item {
         for(int i=0;i<items.size();i++)
         {
             SpecificItem item = items.get(i);
-            if(item.getExpDate().compareTo(LocalDate.now()) <= 0)
+            if(item.getExpDate().compareTo(LocalDate.now()) <= 0) {
                 items.remove(item);
-            ItemsMapper.getInstance().deleteSpecificItem(this,item);
+                ItemsMapper.getInstance().deleteSpecificItem(this, item);
+            }
         }
     }
 
-    public void addContract(Contract contract)
-    {
-        if(contract == null)
+    public void addContract(Contract contract) {
+        if (contract == null)
             throw new IllegalArgumentException("Contract can't be null");
-        this.contractList.add(contract);
+        if (!contractList.contains(contract))
+            this.contractList.add(contract);
     }
 
     /**

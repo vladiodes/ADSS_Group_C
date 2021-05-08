@@ -36,6 +36,10 @@ public class ContractDAO extends DAO<ContractDTO> {
         } finally {
             Repository.getInstance().closeConnection(con);
         }
+        for(Map.Entry<Integer,Integer> entry:dto.discountByQuantity.entrySet()){
+            executeQuery(String.format("INSERT INTO ContractDiscounts (CatalogueID,ItemID,SupplierID,Quantity,Discount) VALUES (%s,%s,%s,%s,%s);"
+                    ,dto.catalogueID,dto.storeID,dto.supplierID,entry.getKey(),entry.getValue()));
+        }
         return 1; //irrelevant
     }
 
@@ -153,9 +157,9 @@ public class ContractDAO extends DAO<ContractDTO> {
                     Statement stmt = con.createStatement();
                     ResultSet discounts = stmt.executeQuery(query);
                     while (discounts.next()) {
-                        discountByQuantity.putIfAbsent(discounts.getInt(0), discounts.getInt(1));
+                        discountByQuantity.putIfAbsent(discounts.getInt("Quantity"), discounts.getInt("Discount"));
                     }
-                    output.add(new ContractDTO(rs.getInt(1), rs.getInt(2), rs.getInt(3), discountByQuantity,rs.getInt(SupplierIDCol)));
+                    output.add(new ContractDTO(rs.getDouble(PricePerUnitCol),rs.getInt(CatalogueIDbySupplierCol),rs.getInt(ItemIDCol),discountByQuantity,rs.getInt(SupplierIDCol)));
                 }
             }
             catch (SQLException e){

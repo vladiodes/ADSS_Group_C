@@ -2,6 +2,8 @@ package BusinessLayer.Mappers;
 
 import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.InventoryModule.SpecificItem;
+import BusinessLayer.SuppliersModule.Contract;
+import DTO.ContractDTO;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
 import DataAccessLayer.DAO;
@@ -27,9 +29,11 @@ public class ItemsMapper {
         return instance;
     }
 
-    public Item buildItem(ItemDTO dto){
-        Item item=new Item(dto);
-        itemsMapper.put(item.getId(),item);
+    public Item buildItem(ItemDTO dto) {
+        Item item = new Item(dto);
+        itemsMapper.put(item.getId(), item);
+        for (Contract c : ContractMapper.getInstance().getItemContracts(dto.getID()))
+            item.addContract(c);
         return item;
     }
 

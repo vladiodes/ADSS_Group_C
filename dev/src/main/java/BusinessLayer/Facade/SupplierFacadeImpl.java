@@ -8,6 +8,7 @@ import DTO.ItemDTO;
 import DTO.OrderDTO;
 import DTO.SupplierDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Integer> openOrder(int supplierId, LocalDateTime date, boolean isFixed) {
+    public Response<Integer> openOrder(int supplierId, LocalDate date, boolean isFixed) {
         try {
             return new Response<>(suppliersController.openOrder(supplierId,date,isFixed));
         }
@@ -103,7 +104,7 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Integer> reOrder(int supplierID, int orderID, LocalDateTime date) {
+    public Response<Integer> reOrder(int supplierID, int orderID, LocalDate date) {
         try {
             return new Response<>(suppliersController.reOrder(supplierID,orderID,date));
         }

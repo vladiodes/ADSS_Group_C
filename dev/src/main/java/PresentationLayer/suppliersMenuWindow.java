@@ -4,6 +4,7 @@ import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
 import BusinessLayer.SuppliersModule.PaymentAgreement;
+import DTO.ContractDTO;
 import DTO.SupplierDTO;
 
 import java.util.*;
@@ -26,7 +27,8 @@ public class suppliersMenuWindow extends menuWindow {
         menu.put(10,"Delete an item from a supplier's contract");
         menu.put(11,"Add a discount to a specific product supplied by a supplier");
         menu.put(12,"Delete a discount from a specific product by a supplier");
-        menu.put(13,"Go back to the main menu");
+        menu.put(13,"View supplier's catalogue");
+        menu.put(14,"Go back to the main menu");
     }
 
     public suppliersMenuWindow(ISuppliersFacade facade, String description) {
@@ -74,6 +76,9 @@ public class suppliersMenuWindow extends menuWindow {
                     deleteDiscountProduct();
                     break;
                 case 13:
+                    viewAllItemsBySupplier();
+                    break;
+                case 14:
                     terminate();
                     break;
             }
@@ -169,6 +174,11 @@ public class suppliersMenuWindow extends menuWindow {
         int supplierID=utills.getNonNegativeNumber("\nEnter supplier's ID:");
         Response<Boolean> response=facade.deleteSupplier(supplierID);
         utills.printMessageOrSuccess(response,"Supplier was deleted successfully!");
+    }
+
+    private void viewAllItemsBySupplier() {
+        Response<List<ContractDTO>>response=facade.getItemsBySupplier(utills.getNonNegativeNumber("\nEnter supplier's ID"));
+        utills.printErrorMessageOrListOfValues(response);
     }
 
     private void addSupplier() {

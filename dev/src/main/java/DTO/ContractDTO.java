@@ -18,6 +18,7 @@ public class ContractDTO {
         pricePerUnit=c.getPricePerUnit();
         catalogueID=c.getCatalogueIDBySupplier();
         this.supplierID=supplierID;
+        this.discountByQuantity=c.getDiscountByQuantity();
     }
 
     public ContractDTO( double pricePerUnit , int catalogueID , int storeID , Map<Integer,Integer> discountByQuantity,int supplierID){

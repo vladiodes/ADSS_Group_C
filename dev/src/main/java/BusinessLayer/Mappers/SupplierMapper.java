@@ -1,8 +1,6 @@
 package BusinessLayer.Mappers;
 
-import BusinessLayer.InventoryModule.Category;
 import BusinessLayer.SuppliersModule.Supplier;
-import DTO.CategoryDTO;
 import DTO.SupplierDTO;
 import DataAccessLayer.SupplierDAO;
 
@@ -40,6 +38,7 @@ public class SupplierMapper {
              dto.contracts.keySet()) {
                 supplier.addContract(ContractMapper.getInstance().getContract(dto.getSupplierID(),dto.contracts.get(itemID),itemID));
         }
+        supplierMapper.put(supplier.getSupplierID(),supplier);
         return supplier;
     }
 

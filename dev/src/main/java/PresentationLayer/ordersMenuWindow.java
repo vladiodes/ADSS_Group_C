@@ -4,6 +4,7 @@ import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
 import DTO.OrderDTO;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -119,21 +120,21 @@ public class ordersMenuWindow extends menuWindow {
         Response<Integer> response=facade.reOrder(
                 utills.getNonNegativeNumber("\nEnter the id of the supplier you'd like to re order from"),
                 utills.getNonNegativeNumber("\nEnter the id of the original order you'd like to re order"),
-                LocalDateTime.now());
+                LocalDate.now());
         utills.printMessageOrSuccess(response,"Successfully reordered, the id of the new order is " + response.getValue());
     }
 
     private void createOrder() {
         Response<Integer> response=facade.openOrder(
                 utills.getNonNegativeNumber("\nEnter the supplier id you'd like to order from"),
-                LocalDateTime.now(),
+                utills.getDateFromUser("Enter the date the order is supposed to arrive"),
                 getFixed()
         );
         utills.printMessageOrSuccess(response,"A new order of id " + response.getValue() + " was issued with the given supplier");
     }
 
     private boolean getFixed(){
-        System.out.println("\nDo you want this order to be fixed? (A.K.A possible to re-order) 1.Fixed    2.Not fixed");
+        System.out.println("\nDo you want this order to be fixed? (will be automatically re-ordered to a week forward) 1.Fixed    2.Not fixed");
         int fixed=-1;
         for(fixed=utills.checkIfInBounds(scanner.nextLine(),3);fixed==-1;fixed=utills.checkIfInBounds(scanner.nextLine(),3))
             System.out.println("\nWrong input, 1.Fixed    2.Not fixed");

@@ -53,8 +53,6 @@ public abstract class DAO<T> {
         int rowsAffected=-1;
         Connection con=Repository.getInstance().connect();
         try {
-            //con.createStatement().execute("PRAGMA foreign_keys = ON");
-            //@TODO: for some reason fk keys doesn't work
             Statement stmt=con.createStatement();
             rowsAffected=stmt.executeUpdate(DELETE_SQL);
         }

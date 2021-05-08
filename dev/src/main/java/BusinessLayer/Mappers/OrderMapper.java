@@ -4,6 +4,7 @@ import BusinessLayer.SuppliersModule.Contract;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.SuppliersModule.ProductInOrder;
 import DTO.OrderDTO;
+import DataAccessLayer.DAO;
 import DataAccessLayer.OrderDAO;
 import javafx.util.Pair;
 
@@ -43,7 +44,7 @@ public class OrderMapper {
             Contract contract=ContractMapper.getInstance().getContract(supplierID,catalogID,itemID);
             productsInOrder.add(new ProductInOrder(quantity,contract));
         }
-        Order order=new Order(dto.dateOfOrder,dto.orderID,dto.shipmentStatus,dto.priceBeforeDiscount,dto.priceAfterDiscount,dto.totalQuantity,productsInOrder,dto.isFixed);
+        Order order=new Order(dto.dateOfOrder,dto.orderID,dto.shipmentStatus,dto.priceBeforeDiscount,dto.priceAfterDiscount,dto.totalQuantity,productsInOrder,dto.isFixed,dto.supplierID);
         return order;
     }
 
@@ -64,19 +65,23 @@ public class OrderMapper {
         return id;
     }
 
-    public void update(Order order) {
-
+    public void update(Order order,int supplierID) {
+        dao.update(new OrderDTO(order,supplierID));
     }
 
     public void remove(Order order) {
+        dao.delete(DAO.idCol,String.valueOf(order.getOrderID()));
     }
 
-    public void addItemToOrder(Order order, ProductInOrder pio) {
+    public int addItemToOrder(Order order, ProductInOrder pio,int supplierID) {
+        return dao.addItemToOrder(new OrderDTO(order,supplierID),pio.getQuantity(),pio.getTotalPrice(),pio.getContract().getCatalogueIDBySupplier(),supplierID,pio.getContract().getProduct().getId() );
     }
 
-    public void updateItemInOrder(Order order, ProductInOrder pio) {
+    public int updateItemInOrder(Order order, ProductInOrder pio,int supplierID) {
+        return dao.updateItemInOrder(new OrderDTO(order,supplierID),pio.getQuantity(),pio.getTotalPrice(),pio.getContract().getCatalogueIDBySupplier(),supplierID,pio.getContract().getProduct().getId() );
     }
 
-    public void removeItemFromOrder(Order order, Contract productContract) {
+    public int removeItemFromOrder(Order order, Contract productContract) {
+        return dao.removeItemFromOrder(new OrderDTO(order,productContract.getSupplierID()),productContract.getCatalogueIDBySupplier(),productContract.getSupplierID(),productContract.getProduct().getId());
     }
 }

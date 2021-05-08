@@ -20,6 +20,7 @@ public class SpecificItem {
         this.shelfAmount=shelfAmount;
         this.expDate=expDate;
         this.generalItemID=generalItemID;
+
     }
     public SpecificItem(specificItemDTO dto){
         id=dto.id;

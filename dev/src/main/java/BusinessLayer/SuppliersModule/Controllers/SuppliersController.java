@@ -1,5 +1,6 @@
 package BusinessLayer.SuppliersModule.Controllers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -106,7 +107,7 @@ public class SuppliersController {
      * @param isFixed
      * @return the id of the issued order
      */
-    public int openOrder(int supplierId, LocalDateTime date, boolean isFixed) {
+    public int openOrder(int supplierId, LocalDate date, boolean isFixed) {
         Supplier s = search(supplierId);
             Order addedOrder=s.addOrder(date, isFixed);
             int id= OrderMapper.getInstance().addOrder(addedOrder,supplierId);
@@ -121,7 +122,7 @@ public class SuppliersController {
      * @param date
      * @return the id of the new order
      */
-    public int reOrder(int supplierID, int orderID, LocalDateTime date) {
+    public int reOrder(int supplierID, int orderID, LocalDate date) {
         Supplier s =search(supplierID);
             Order order=s.reOrder(orderID, date);
             int id=OrderMapper.getInstance().addOrder(order,supplierID);
@@ -159,7 +160,6 @@ public class SuppliersController {
     public void receiveOrder(int supplierID, int orderID) {
         Supplier s = search(supplierID);
         s.receiveOrder(orderID);
-        StockController.getInstance().recieveOrder(s.getOrder(orderID));
     }
 
     /**

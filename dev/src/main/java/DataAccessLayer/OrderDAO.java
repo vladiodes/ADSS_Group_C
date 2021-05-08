@@ -2,14 +2,11 @@ package DataAccessLayer;
 
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
-import DTO.SupplierDTO;
-import com.sun.xml.internal.bind.v2.TODO;
 import javafx.util.Pair;
 
 import java.sql.*;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class OrderDAO extends DAO<OrderDTO> {
@@ -25,11 +22,11 @@ public class OrderDAO extends DAO<OrderDTO> {
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(INSERT_SQL);
-            ps.setString(1,String.valueOf(dto.dateOfOrder));
+            ps.setString(1,dto.dateOfOrder.format(DateTimeFormatter.ISO_LOCAL_DATE));
             ps.setString(2, String.valueOf(dto.shipmentStatus));
-            ps.setString(3,String.valueOf(dto.priceBeforeDiscount));
+            ps.setDouble(3,dto.priceBeforeDiscount);
             ps.setString(4,String.valueOf(dto.supplierID));
-            ps.setString(5,String.valueOf(dto.priceAfterDiscount));
+            ps.setDouble(5,dto.priceAfterDiscount);
             ps.setString(6,String.valueOf(dto.isFixed));
             ps.executeUpdate();
             id=getInsertedID(con);
@@ -75,16 +72,15 @@ public class OrderDAO extends DAO<OrderDTO> {
                 Repository.getInstance().closeConnection(con);
                 return null;
             }
-            String query=String.format("SELECT ItemID , CatalogueID , Quantity FROM ProductsInOrder WHERE OrderID=?",id);
+            String query=String.format("SELECT ItemID , CatalogueID , Quantity FROM ProductsInOrder WHERE OrderID=%s",id);
             stmt=con.createStatement();
             products=stmt.executeQuery(query);
             while (products.next()){
-                productsInOrderIDs.put(products.getInt(0),new Pair<>(products.getInt(1),products.getInt(2)));
+                productsInOrderIDs.put(products.getInt("ItemID"),new Pair<>(products.getInt("CatalogueID"),products.getInt("Quantity")));
                 quantity+=products.getInt(2);
             }
-            LocalDateTime orderdate=new java.sql.Timestamp(
-                    rs.getDate(1).getTime()).toLocalDateTime();
-            output=new OrderDTO(orderdate,id,rs.getInt(2),rs.getDouble(3),rs.getDouble(5),quantity,productsInOrderIDs,rs.getString(6),rs.getInt(4));
+            output=new OrderDTO(LocalDate.parse(rs.getString(DateOfOrderCol)),rs.getInt(DAO.idCol),Order.ShipmentStatus.valueOf(rs.getString(ShipmentStatusCol)),
+                    rs.getDouble(PriceBeforeDiscountCol),rs.getDouble(PriceAfterDiscountCol),quantity,productsInOrderIDs,rs.getString(IsFixedCol),rs.getInt(SupplierIDCol));
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -97,5 +93,21 @@ public class OrderDAO extends DAO<OrderDTO> {
 
     public int delete(OrderDTO dto) {
         return  delete("ID",String.valueOf(dto.orderID));
+    }
+
+    public int addItemToOrder(OrderDTO orderDTO, int quantity, double totalPrice, int catalogueIDBySupplier, int supplierID, int id) {
+        return executeQuery(String.format("INSERT INTO ProductsInOrder (OrderID,Quantity,TotalPrice,CatalogueID,SupplierID,ItemID)\n" +
+                "VALUES (%s,%s,%s,%s,%s,%s);",orderDTO.orderID,quantity,totalPrice,catalogueIDBySupplier,supplierID,id));
+    }
+
+    public int updateItemInOrder(OrderDTO orderDTO, int quantity, double totalPrice, int catalogueIDBySupplier, int supplierID, int id) {
+        return executeQuery(String.format("UPDATE ProductsInOrder Set Quantity=%s, TotalPrice=%s\n" +
+                        "WHERE OrderID=%s AND CatalogueID=%s AND SupplierID=%s AND ItemID=%s",quantity,totalPrice,orderDTO.orderID,catalogueIDBySupplier,
+                supplierID,id));
+    }
+
+    public int removeItemFromOrder(OrderDTO orderDTO, int catalogueIDBySupplier, int supplierID, int id) {
+        return executeQuery(String.format("DELETE FROM ProductsInOrder WHERE OrderID=%s AND CatalogueID=%s AND SupplierID=%s AND ItemID=%s",
+                orderDTO.orderID,catalogueIDBySupplier,supplierID,id));
     }
 }

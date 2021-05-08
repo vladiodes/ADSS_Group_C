@@ -4,11 +4,10 @@ import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.Mappers.OrderMapper;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Order{
-    private LocalDateTime dateOfOrder;
+    private LocalDate dateOfOrder;
     private int orderID=-1;
     private ShipmentStatus shipmentStatus;
     private double priceBeforeDiscount;
@@ -16,8 +15,9 @@ public class Order{
     private int totalQuantity;
     private Set<ProductInOrder> productsInOrder;
     private boolean isFixed;
+    private int supplierID;
 
-    public Order(LocalDateTime date,Boolean isFixed){
+    public Order(LocalDate date,Boolean isFixed,int supplierID){
         setDateOfOrder(date);
         shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=0;
@@ -25,6 +25,7 @@ public class Order{
         totalQuantity=0;
         productsInOrder=new LinkedHashSet<>();
         setisFixed(isFixed);
+        this.supplierID=supplierID;
     }
 
     /**
@@ -34,7 +35,7 @@ public class Order{
      * @param original
      * @param date
      */
-    public Order(Order original,LocalDateTime date){
+    public Order(Order original,LocalDate date,int supplierID){
         if(!original.isFixed)
             throw new IllegalArgumentException("The order you want to re-order from isn't fixed!");
         setDateOfOrder(date);
@@ -45,9 +46,10 @@ public class Order{
         productsInOrder=new LinkedHashSet<>();
         this.productsInOrder.addAll(original.productsInOrder);
         isFixed=true;
+        this.supplierID=supplierID;
     }
 
-    public Order(LocalDateTime dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed) {
+    public Order(LocalDate dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed,int supplierID) {
         this.dateOfOrder=dateOfOrder;
         this.orderID=orderID;
         this.shipmentStatus=shipmentStatus;
@@ -56,9 +58,10 @@ public class Order{
         this.totalQuantity=totalQuantity;
         this.productsInOrder=productsInOrder;
         this.isFixed=isFixed;
+        this.supplierID=supplierID;
     }
 
-    //simple getters
+//    simple getters
     public boolean getisFixed(){
         return isFixed;
     }
@@ -67,7 +70,7 @@ public class Order{
         return orderID;
     }
 
-    public LocalDateTime getDateOfOrder() {
+    public LocalDate getDateOfOrder() {
         return dateOfOrder;
     }
 
@@ -106,15 +109,15 @@ public class Order{
         if(pio==null){
             pio=new ProductInOrder(quantity,productContract);
             productsInOrder.add(pio);
-            OrderMapper.getInstance().addItemToOrder(this,pio);
+            OrderMapper.getInstance().addItemToOrder(this,pio,productContract.getSupplierID());
         }
         else {
             pio.orderMore(quantity);
-            OrderMapper.getInstance().updateItemInOrder(this,pio);
+            OrderMapper.getInstance().updateItemInOrder(this,pio,pio.getContract().getSupplierID());
         }
         totalQuantity+=quantity;
         calculateDiscount(discountsByPrice);
-
+        OrderMapper.getInstance().update(this,supplierID);
 
     }
 
@@ -144,7 +147,8 @@ public class Order{
         for(ProductInOrder pio:productsInOrder)
             pio.getContract().getProduct().addSpecificItem(0,pio.getQuantity(), LocalDate.now().plusWeeks(3));
         shipmentStatus=ShipmentStatus.Delivered;
-        OrderMapper.getInstance().update(this);
+        OrderMapper.getInstance().update(this,supplierID);
+
     }
 
 
@@ -164,11 +168,12 @@ public class Order{
         totalQuantity -= pio.getQuantity();
         calculateDiscount(discounts);
         OrderMapper.getInstance().removeItemFromOrder(this,productContract);
+        OrderMapper.getInstance().update(this,supplierID);
     }
 
     //these functions are used to check the validity of the constructor arguments
-    private void setDateOfOrder(LocalDateTime dateOfOrder){
-        if(dateOfOrder.isAfter(LocalDateTime.now())){
+    private void setDateOfOrder(LocalDate dateOfOrder){
+        if(dateOfOrder.isAfter(LocalDate.now())){
             throw new IllegalArgumentException("the issuing date of an order cannot be in the future.");
         }
         this.dateOfOrder=dateOfOrder;
@@ -184,6 +189,7 @@ public class Order{
             throw new IllegalArgumentException("each order must be fixed or not fixed.");
         }
         this.isFixed=isFixed;
+        OrderMapper.getInstance().update(this,supplierID);
     }
 
     /**
@@ -207,6 +213,8 @@ public class Order{
         }
         else
             priceAfterDiscount=priceBeforeDiscount;
+        OrderMapper.getInstance().update(this,supplierID);
+
     }
 
     //calculates the current price before any discounts
@@ -216,7 +224,7 @@ public class Order{
             pio.calculatePrice();
             priceBeforeDiscount+= pio.getTotalPrice();
         }
-        OrderMapper.getInstance().update(this);
+
     }
 
     /**
