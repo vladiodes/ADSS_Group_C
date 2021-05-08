@@ -14,7 +14,6 @@ public class Transport implements persistentObject<TransportDTO> {
     private List<ItemContract> Contracts;
     private Site source = null;
     private int ID;
-    private Sites sitesController;
 
     public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source, int ID) throws Exception {
         setTruck(truck);
@@ -25,17 +24,7 @@ public class Transport implements persistentObject<TransportDTO> {
         setWeight(weight);
         this.ID = ID;
     }
-/*
-    public Transport(TransportDTO dto) throws Exception {
-        setTruck(dto.truck);
-        setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dto.date));
-        setDriver(dto.driver);
-        setContracts(dto.Contracts);
-        setSource(dto.source);
-        setWeight(dto.weight);
-        this.ID = dto.ID;
-    }
-*/
+
     public void setDate(Date date) {
         this.date = date;
     }

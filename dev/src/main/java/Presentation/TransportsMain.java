@@ -26,15 +26,13 @@ public class TransportsMain {
                 System.out.println("6. Get all sites");
                 System.out.println("7. Get all sections");
                 System.out.println("8. Get all transports");
-                System.out.println("9. Get transport of driver");
-                System.out.println("10. Get transport by date");
-                System.out.println("11. Quit");
+                System.out.println("9. Quit");
                 if (!DataInitialized)
-                    System.out.println("12. Initialize data from instructions manual");
+                    System.out.println("10. Initialize data from instructions manual");
                 Scanner in = new Scanner(System.in);
                 int option = in.nextInt();
                 in.nextLine();
-                if (option == 11)
+                if (option == 9)
                     break;
                 switch (option) {
                     case 1:
@@ -61,13 +59,7 @@ public class TransportsMain {
                     case 8:
                         GetAllTransports(API);
                         break;
-                    case 9:
-                        GetTransportsByDriver(API);
-                        break;
                     case 10:
-                        GetTransportsByDate(API);
-                        break;
-                    case 12:
                         InitializeData(API);
                         break;
                     default:
@@ -239,26 +231,6 @@ public class TransportsMain {
     public static void GetAllTransports(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllTransports());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static void GetTransportsByDriver(TransportsEmployeesFacade API) {
-        try {
-            System.out.println("Please enter the id of the driver");
-            String id = in.nextLine();
-            System.out.println(API.getTransportsOfDriver(id));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static void GetTransportsByDate(TransportsEmployeesFacade API) {
-        try {
-            System.out.println("Please type the Date in the following format - dd/MM/yyyy");
-            String sDate1 = in.nextLine();
-            System.out.println(API.getTransportsByDate(new SimpleDateFormat("dd/MM/yyyy").parse(sDate1)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

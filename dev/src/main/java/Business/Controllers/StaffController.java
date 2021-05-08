@@ -106,9 +106,6 @@ public class StaffController
         List<Shift> shiftWithEmp = scheduleController.getShiftWithEmp(id);
         for (Shift s:shiftWithEmp) {
             s.removeEmployee(id);
-            //TypeOfEmployee type = s.getTypeOfSpecificEmployee(id);
-            //this.shiftDAO.removeEmployeeFromShift(id, s.getID(), type.toString());//DB
-
         }
         if(emp.getSkills().contains(TypeOfEmployee.Driver))
         {
