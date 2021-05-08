@@ -58,13 +58,14 @@ public class ItemDAO extends DAO<ItemDTO> {
         PreparedStatement ps = null;
         try {
             ps = con.prepareStatement(UPDATE_SQL);
-            ps.setString(1, String.valueOf(dto.getLocation()));
+            ps.setInt(1, dto.getLocation());
             ps.setString(2, dto.getName());
             ps.setInt(3, dto.getMinAmount());
             ps.setString(4, dto.getProducer());
             ps.setDouble(5, dto.getSellingPrice());
             ps.setInt(6, dto.getCategoryID());
             ps.setInt(7, dto.getAlertTime());
+            ps.setInt(8,dto.getID());
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,7 +149,7 @@ public class ItemDAO extends DAO<ItemDTO> {
     public int updateSpecificItem(specificItemDTO specificItemDTO) {
         int rowsAffected = -1;
         String query="UPDATE SpecificItems SET\n" +
-                "expDate=?, storageAmount=?, shelfAmount=?;";
+                "expDate=?, storageAmount=?, shelfAmount=? WHERE ID=?;";
         Connection con = Repository.getInstance().connect();
         PreparedStatement ps = null;
         try {
@@ -156,6 +157,7 @@ public class ItemDAO extends DAO<ItemDTO> {
             ps.setString(1, specificItemDTO.expDate.toString());
             ps.setInt(2, specificItemDTO.storageAmount);
             ps.setInt(3, specificItemDTO.shelfAmount);
+            ps.setInt(4,specificItemDTO.id);
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

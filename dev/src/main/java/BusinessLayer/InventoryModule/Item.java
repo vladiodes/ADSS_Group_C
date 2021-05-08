@@ -1,6 +1,7 @@
 package BusinessLayer.InventoryModule;
 
 import BusinessLayer.Mappers.ItemsMapper;
+import BusinessLayer.Mappers.SaleMapper;
 import BusinessLayer.SuppliersModule.Contract;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
@@ -140,7 +141,7 @@ public class Item {
                     item.setShelfAmount(item.getShelfAmount()-quantity);
                     quantity = 0;
                 }
-                else if(item.getShelfAmount() > 0)
+                else if(item.getShelfAmount() >= 0)
                 {
                     quantity = quantity - item.getShelfAmount();
                     item.setShelfAmount(0);
@@ -155,6 +156,7 @@ public class Item {
                         item.setStorageAmount(0);
                     }
                 }
+                ItemsMapper.getInstance().updateSpecificItem(item);
             }
             else
                 break;

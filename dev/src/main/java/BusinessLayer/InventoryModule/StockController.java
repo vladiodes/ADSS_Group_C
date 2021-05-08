@@ -2,6 +2,7 @@ package BusinessLayer.InventoryModule;
 
 import BusinessLayer.Mappers.CategoryMapper;
 import BusinessLayer.Mappers.ItemsMapper;
+import BusinessLayer.Mappers.SaleMapper;
 import BusinessLayer.SuppliersModule.Contract;
 import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
@@ -171,6 +172,10 @@ public class StockController {
                 deleted = true;
                 Item toDelete = this.findItem(itemID);
                 ItemsMapper.getInstance().deleteItem(toDelete);
+                for(int i=0;i<toDelete.getSpecificItems().size();i++)
+                {
+                    ItemsMapper.getInstance().deleteSpecificItem(toDelete,toDelete.getSpecificItems().get(i));
+                }
             }
         }
         if (!deleted)
@@ -199,6 +204,7 @@ public class StockController {
             throw new IllegalArgumentException("No Available items for sale");
         if(item.SaleItem(quantity))
             addOrder(item);
+
     }
     private void addOrder(Item item) {
         Pair<Integer, Integer> supIDAndCatID = item.getCheapestSupplier();

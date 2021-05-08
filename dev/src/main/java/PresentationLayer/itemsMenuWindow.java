@@ -101,8 +101,6 @@ public class itemsMenuWindow extends menuWindow {
 
     private void addSpecificItem() {
         int itemID = utills.getNonNegativeNumber("please enter general item id\n");
-        System.out.println("please enter producer:\n");
-        String producer = scanner.nextLine();
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
         int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
 
@@ -111,7 +109,7 @@ public class itemsMenuWindow extends menuWindow {
         LocalDate expDate = getDateFromUser();
 
 
-        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, storageAmount, shelfAmount, expDate,producer);
+        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, storageAmount, shelfAmount, expDate);
         utills.printMessageOrSuccess(response, "Successfully added item of id " + itemID + "\n");
     }
 
@@ -190,7 +188,7 @@ public class itemsMenuWindow extends menuWindow {
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
         Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, sellingPrice,location,producer);
-        utills.printMessageOrSuccess(response, "Successfully update item : \n");
+        utills.printMessageOrSuccess(response, "Successfully update item \n");
     }
 
     private void addCategory() {
@@ -212,7 +210,7 @@ public class itemsMenuWindow extends menuWindow {
 
     private void findItemByLocation() {
         Response<ItemDTO> response = inventoryFacade.getItemByLocation(utills.getNonNegativeNumber("please enter item location\n"));
-        utills.printMessageOrSuccess(response, "Successfully finding item : \n");
+        utills.printMessageOrSuccess(response, "Successfully finding item : "+ response.getValue() +"\n");
     }
 
     private void changeAlertTime() {
