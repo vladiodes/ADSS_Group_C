@@ -96,15 +96,11 @@ public class Repository {
                 ");";
         String ItemsTable = "CREATE TABLE IF NOT EXISTS \"Item\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
-                "\t\"ExpirationDate\"\tDateTime NOT NULL,\n" +
                 "\t\"Location\"\tINTEGER NOT NULL,\n" +
                 "\t\"Name\"\tTEXT NOT NULL,\n" +
                 "\t\"minAmmount\"\tINTEGER NOT NULL,\n" +
-                "\t\"availableAmmount\"\tINTEGER NOT NULL,\n" +
                 "\t\"Producer\"\tTEXT NOT NULL,\n" +
-                "\t\"ShelfAmmount\"\tINTEGER NOT NULL,\n" +
                 "\t\"SellingPrice\"\tINTEGER NOT NULL,\n" +
-                "\t\"StorageAmmount\"\tINTEGER NOT NULL,\n" +
                 "\t\"CategoryID\"\tINTEGER NOT NULL,\n" +
                 "\t\"Alert\"\tINTEGER NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
@@ -117,7 +113,7 @@ public class Repository {
                 "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\") ON DELETE CASCADE,\n" +
                 "\tFOREIGN KEY(\"ReportID\") REFERENCES \"Report\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
-        String OrdersTable = "CREATE TABLE IF NOT EXISTS \"Order\" (\n" +
+        String OrdersTable = "CREATE TABLE IF NOT EXISTS \"Orders\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
                 "\t\"DateOfOrder\"\tDateTime NOT NULL,\n" +
                 "\t\"ShipmentStatus\"\tINTEGER NOT NULL,\n" +
@@ -208,6 +204,15 @@ public class Repository {
                 "\tPRIMARY KEY(\"Name\",\"SupplierID\"),\n" +
                 "\tFOREIGN KEY(\"SupplierID\") REFERENCES \"Supplier\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
+        String specificItem="CREATE TABLE IF NOT EXISTS \"SpecificItems\" (\n" +
+                "\t\"ID\"\tINTEGER NOT NULL,\n" +
+                "\t\"expDate\"\tDateTime NOT NULL,\n" +
+                "\t\"storageAmount\"\tINTEGER NOT NULL,\n" +
+                "\t\"shelfAmount\"\tINTEGER NOT NULL,\n" +
+                "\t\"ItemID\"\tINTEGER NOT NULL,\n" +
+                "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\"),\n" +
+                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
+                ");";
 
         Connection conn = connect();
         if (conn == null) return;
@@ -230,6 +235,7 @@ public class Repository {
             stmt.execute(SupplierFixedDays);
             stmt.execute(SupplierManu);
             stmt.execute(SalesInReportTable);
+            stmt.execute(specificItem);
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {

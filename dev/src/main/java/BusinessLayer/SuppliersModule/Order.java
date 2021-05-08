@@ -1,13 +1,15 @@
 package BusinessLayer.SuppliersModule;
 
 import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.Mappers.OrderMapper;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Order{
     private LocalDateTime dateOfOrder;
-    private int orderID;
+    private int orderID=-1;
     private ShipmentStatus shipmentStatus;
     private double priceBeforeDiscount;
     private double priceAfterDiscount;
@@ -15,9 +17,8 @@ public class Order{
     private Set<ProductInOrder> productsInOrder;
     private boolean isFixed;
 
-    public Order(LocalDateTime date,Boolean isFixed,int ID){
+    public Order(LocalDateTime date,Boolean isFixed){
         setDateOfOrder(date);
-        setOrderID(ID);
         shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=0;
         priceAfterDiscount=0;
@@ -31,21 +32,18 @@ public class Order{
      *     of the order and creates a copy.
      *     throws an exception if the original order isn't fixed (can't be re-ordered)
      * @param original
-     * @param ID
      * @param date
      */
-    public Order(Order original,int ID,LocalDateTime date){
+    public Order(Order original,LocalDateTime date){
         if(!original.isFixed)
             throw new IllegalArgumentException("The order you want to re-order from isn't fixed!");
         setDateOfOrder(date);
-        setOrderID(ID);
         shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=original.priceBeforeDiscount;
         this.priceAfterDiscount=original.priceAfterDiscount;
         totalQuantity=original.totalQuantity;
         productsInOrder=new LinkedHashSet<>();
-        for(ProductInOrder pio:original.productsInOrder)
-            this.productsInOrder.add(pio);
+        this.productsInOrder.addAll(original.productsInOrder);
         isFixed=true;
     }
 
@@ -108,9 +106,12 @@ public class Order{
         if(pio==null){
             pio=new ProductInOrder(quantity,productContract);
             productsInOrder.add(pio);
+            OrderMapper.getInstance().addItemToOrder(this,pio);
         }
-        else
+        else {
             pio.orderMore(quantity);
+            OrderMapper.getInstance().updateItemInOrder(this,pio);
+        }
         totalQuantity+=quantity;
         calculateDiscount(discountsByPrice);
 
@@ -138,7 +139,12 @@ public class Order{
     public void receive() {
         if(shipmentStatus==ShipmentStatus.Delivered)
             throw new IllegalArgumentException("The order was already delivered!");
+
+        //An assumption: the items received in an order are to expire in 3 weeks from when receiving an order
+        for(ProductInOrder pio:productsInOrder)
+            pio.getContract().getProduct().addSpecificItem(0,pio.getQuantity(), LocalDate.now().plusWeeks(3));
         shipmentStatus=ShipmentStatus.Delivered;
+        OrderMapper.getInstance().update(this);
     }
 
 
@@ -157,6 +163,7 @@ public class Order{
         productsInOrder.remove(pio);
         totalQuantity -= pio.getQuantity();
         calculateDiscount(discounts);
+        OrderMapper.getInstance().removeItemFromOrder(this,productContract);
     }
 
     //these functions are used to check the validity of the constructor arguments
@@ -167,11 +174,9 @@ public class Order{
         this.dateOfOrder=dateOfOrder;
     }
 
-    private void setOrderID(int orderID){
-        if(orderID<0){
-            throw new IllegalArgumentException("an order can't have a negative id.");
-        }
-        this.orderID=orderID;
+    public void setOrderID(int orderID) {
+        if (this.orderID == -1)
+            this.orderID = orderID;
     }
 
     private void setisFixed(Boolean isFixed){
@@ -211,6 +216,7 @@ public class Order{
             pio.calculatePrice();
             priceBeforeDiscount+= pio.getTotalPrice();
         }
+        OrderMapper.getInstance().update(this);
     }
 
     /**

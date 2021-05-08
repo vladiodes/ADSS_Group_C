@@ -1,11 +1,16 @@
 package BusinessLayer.Mappers;
 
+import BusinessLayer.InventoryModule.Category;
 import BusinessLayer.SuppliersModule.Contract;
+import DTO.CategoryDTO;
 import DTO.ContractDTO;
+import DTO.ItemDTO;
 import DataAccessLayer.ContractDAO;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ContractMapper {
     private static ContractMapper instance=null;
@@ -28,7 +33,8 @@ public class ContractMapper {
         if(dto==null){
             return null;
         }
-        Contract contract=new Contract(dto.pricePerUnit,dto.catalogueID,dto.discountByQuantity,ItemsMapper.getInstance().getItem(dto.storeID));
+        //@todo: recursive build stack overflow
+        Contract contract=new Contract(dto.pricePerUnit,SupplierMapper.getInstance().getSupplier(dto.supplierID),dto.catalogueID,dto.discountByQuantity,ItemsMapper.getInstance().getItem(dto.storeID));
         return contract;
     }
 
@@ -45,6 +51,23 @@ public class ContractMapper {
         return buildContract(contract);
     }
 
+    public List<Contract> getItemContracts(int itemID){
+        ArrayList<Contract> output=new ArrayList<>();
+        for(Contract c: getAllContracts()){
+            if(c.getProduct().getId()==itemID)
+                output.add(c);
+        }
+        return output;
+    }
+
+    private List<Contract> getAllContracts() {
+            ArrayList<Contract> output=new ArrayList<>();
+            for(ContractDTO dto:dao.getAllContracts()){
+                output.add(buildContract(dto));
+            }
+            return output;
+    }
+
     public int addContract(Contract contract,int supplierID){
         int id=dao.insert(new ContractDTO(contract,supplierID));
         if(!contractMapper.containsKey(supplierID)){
@@ -52,5 +75,14 @@ public class ContractMapper {
         }
             contractMapper.get(supplierID).put(contract.getProduct().getId(),contract);
         return id;
+    }
+
+    public void remove(Contract contract) {
+        contractMapper.get(contract.getSupplier().getSupplierID()).remove(contract.getProduct().getId());
+        dao.delete(contract.getSupplier().getSupplierID(),contract.getCatalogueIDBySupplier(),contract.getProduct().getId());
+    }
+
+    public void removeDiscount(Contract c, int quantity) {
+        dao.removeDiscount(new ContractDTO(c,c.getSupplier().getSupplierID()),quantity);
     }
 }

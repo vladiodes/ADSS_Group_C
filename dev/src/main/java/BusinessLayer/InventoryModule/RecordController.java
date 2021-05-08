@@ -33,16 +33,15 @@ public class RecordController {
 
     // if one of the specific items of the Item is expired we will add the item to the report
     public Report showExpItems(ArrayList<Category> categories){
-        List itemsInReport = new ArrayList();
+        List<Item> itemsInReport = new ArrayList<>();
         for (Category c: categories) {
-            for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
-                Item value = entry.getValue();
-                List<SpecificItem> items = value.getSpecificItems();
-                for(SpecificItem item : items)
+            for (Item item : c.getItems().values()) {
+                List<SpecificItem> items = item.getSpecificItems();
+                for(SpecificItem specificItem : items)
                 {
-                    if (item.isExp(value.getAlertTime()) & !item.isFaulty())
+                    if (specificItem.isExp(item.getAlertTime()) & !specificItem.isFaulty())
                     {
-                        itemsInReport.add(value);
+                        itemsInReport.add(item);
                         break;
                     }
                 }
@@ -55,7 +54,7 @@ public class RecordController {
 
     }
     public Report showFaultyItems(ArrayList<Category> categories){
-        List itemsInReport = new ArrayList();
+        List<Item> itemsInReport = new ArrayList<>();
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
@@ -78,7 +77,7 @@ public class RecordController {
     // sales weekly report - by category/ies
     public Report getWeeklyReport(ArrayList<Category> categories){
 
-        List itemsInReport = new ArrayList();
+        List<Item> itemsInReport = new ArrayList<>();
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
@@ -88,7 +87,6 @@ public class RecordController {
         Report toReturn = new Report(itemsInReport,LocalDate.now().minusWeeks(1),LocalDate.now());
         reportsMapper.addReport(toReturn);
         return toReturn;
-
         }
 
 
@@ -99,7 +97,7 @@ public class RecordController {
     }
 
     public Report showMinAmountItems(ArrayList<Category> categories) {
-        List itemsInReport = new ArrayList();
+        List<Item> itemsInReport = new ArrayList<>();
         for (Category c: categories) {
             for (Map.Entry<Integer, Item> entry : c.getItems().entrySet()) {
                 Item value = entry.getValue();
@@ -114,7 +112,7 @@ public class RecordController {
     }
 
     public SaleReport getSalesReport(ArrayList<Category> categories, LocalDate startDate, LocalDate endDate) {
-        ArrayList<Sale> salesInReport = new ArrayList();
+        ArrayList<Sale> salesInReport = new ArrayList<>();
         for (Category c: categories) {
             for(Sale sale : salesMapper.getAllSales())
             {
@@ -124,7 +122,6 @@ public class RecordController {
                             salesInReport.add(sale);
                         }
             }
-
         }
         SaleReport toReturn = new SaleReport(salesInReport,startDate,endDate);
         toReturn.setStartDate(startDate);
@@ -134,7 +131,13 @@ public class RecordController {
     }
 
     public ArrayList<Sale> getSales(ArrayList<Integer> categories) {
-        ArrayList<Sale> salesList = new ArrayList<>(salesMapper.getAllSales());
+        ArrayList<Sale> salesList = new ArrayList<>();
+        for (Category category : StockController.getInstance().getCategories(categories)) {
+            for (Sale sale : salesMapper.getAllSales()) {
+                if (category.containsItem(sale.getItemID()))
+                    salesList.add(sale);
+            }
+        }
         return salesList;
     }
 

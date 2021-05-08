@@ -42,6 +42,7 @@ public class CategoryMapper {
     public int addCategory(Category category){
         int id=dao.insert(new CategoryDTO(category));
         categoryMapper.put(id,category);
+        category.setID(id);
         return id;
     }
 

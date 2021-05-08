@@ -34,6 +34,20 @@ public abstract class DAO<T> {
         return rs;
     }
 
+    public int executeQuery(String QUERY){
+        int rowsAffected=-1;
+        Connection con=Repository.getInstance().connect();
+        try {
+            Statement stmt=con.createStatement();
+            rowsAffected=stmt.executeUpdate(QUERY);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Repository.getInstance().closeConnection(con);
+        }
+        return rowsAffected;
+    }
+
     public int delete(String colName,String value){
         String DELETE_SQL=String.format("Delete From %s WHERE %s=%s",tableName,colName,value);
         int rowsAffected=-1;
@@ -79,4 +93,15 @@ public abstract class DAO<T> {
     }
 
 
+    protected ResultSet selectQuerry(Connection con, String query) {
+        ResultSet rs=null;
+        try {
+            Statement stmt= con.createStatement();
+            rs=stmt.executeQuery(query);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return rs;
+    }
 }

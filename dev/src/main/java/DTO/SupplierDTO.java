@@ -31,30 +31,9 @@ public class SupplierDTO {
         discountsByPrice=supplier.getDiscountsByPrice();
     }
 
-    public SupplierDTO(String name, List<Integer> fixedDays, Boolean selfpickup, int id, String bankAccount, String paymentMethod, Set<String> categories, Set<String> manufacturures, Map<String, String> contactInfo, Map<Double, Integer> discountsByPrice, List<Integer> orderIDs,Map<Integer,Integer> contracts) {
+    public SupplierDTO(String name, Set<DayOfWeek> fixedDays, Boolean selfpickup, int id, String bankAccount, String paymentMethod, Set<String> categories, Set<String> manufacturures, Map<String, String> contactInfo, Map<Double, Integer> discountsByPrice, List<Integer> orderIDs,Map<Integer,Integer> contracts) {
         this.supplierName=name;
-        this.fixedDays=new LinkedHashSet<>();
-        for (Integer day:
-             fixedDays) {
-            if(day==1){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-            else if(day==2){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-            else if(day==3){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-            else if(day==4){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-            else if(day==5){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-            else if(day==6){
-                this.fixedDays.add(DayOfWeek.Sunday);
-            }
-        }
+        this.fixedDays=fixedDays;
         this.selfPickUp=selfpickup;
         this.SupplierID=id;
         this.bankAccount=bankAccount;

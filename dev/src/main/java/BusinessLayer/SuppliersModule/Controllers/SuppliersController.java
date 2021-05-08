@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.Mappers.ContractMapper;
+import BusinessLayer.Mappers.OrderMapper;
+import BusinessLayer.Mappers.SupplierMapper;
 import BusinessLayer.SuppliersModule.*;
 
 
@@ -18,14 +21,10 @@ import BusinessLayer.SuppliersModule.*;
 
 public class SuppliersController {
     private static SuppliersController instance = null;
-    private Map<Integer, Supplier> supplierMap;
-    private int currID;
-    private int currOrderID;
+    private SupplierMapper supplierMapper;
 
     private SuppliersController() {
-        supplierMap = new HashMap<>();
-        currID = 0;
-        currOrderID = 0;
+        supplierMapper=SupplierMapper.getInstance();
     }
 
     public static SuppliersController getInstance()
@@ -49,13 +48,14 @@ public class SuppliersController {
      * @return the id of the new added supplier
      */
     public int addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
-        for(Supplier s:supplierMap.values()){
-            if(s.getSupplierName()==supplierName)
+        for(Supplier s:supplierMapper.getAllSuppliers()){
+            if(s.getSupplierName().equals(supplierName))
                 throw new IllegalArgumentException("There's already a supplier with that name in the system");
         }
-            supplierMap.put(currID, new Supplier(currID, supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts));
-            currID++;
-            return currID-1;
+            Supplier supplier=new Supplier(supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts);
+            int id=supplierMapper.addSupplier(supplier);
+            supplier.setSupplierID(id);
+            return id;
     }
 
     /**
@@ -63,10 +63,10 @@ public class SuppliersController {
      * @param supplierID
      */
     public void deleteSupplier(int supplierID) {
-        Supplier deleted = supplierMap.remove(supplierID);
-        if (deleted == null) {
+        Supplier toDelete = supplierMapper.getSupplier(supplierID);
+        if (toDelete == null)
             throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
-        }
+        supplierMapper.deleteSupplier(toDelete);
     }
 
     /**
@@ -83,12 +83,7 @@ public class SuppliersController {
      * @return a list of all suppliers in the system
      */
     public List<Supplier> getAllSuppliers() {
-        List<Supplier> suppliers = new LinkedList<>();
-        for (Supplier supplier :
-                supplierMap.values()) {
-            suppliers.add(supplier);
-        }
-        return suppliers;
+        return new LinkedList<>(supplierMapper.getAllSuppliers());
     }
 
     /**
@@ -98,7 +93,9 @@ public class SuppliersController {
      * @param discountPerecentage
      */
     public void addDiscount(int supplierId, double price, int discountPerecentage) {
-        search(supplierId).addDiscount(price, discountPerecentage);
+        Supplier s=search(supplierId);
+        s.addDiscount(price, discountPerecentage);
+        supplierMapper.addDiscount(s,price,discountPerecentage);
     }
 
     /**
@@ -110,9 +107,10 @@ public class SuppliersController {
      */
     public int openOrder(int supplierId, LocalDateTime date, boolean isFixed) {
         Supplier s = search(supplierId);
-            s.addOrder(date, isFixed, currOrderID);
-            currOrderID++;
-            return currOrderID-1;
+            Order addedOrder=s.addOrder(date, isFixed);
+            int id= OrderMapper.getInstance().addOrder(addedOrder,supplierId);
+            addedOrder.setOrderID(id);
+            return id;
     }
 
     /**
@@ -124,9 +122,10 @@ public class SuppliersController {
      */
     public int reOrder(int supplierID, int orderID, LocalDateTime date) {
         Supplier s =search(supplierID);
-            s.reOrder(currOrderID, orderID, date);
-            currOrderID++;
-            return currOrderID-1;
+            Order order=s.reOrder(orderID, date);
+            int id=OrderMapper.getInstance().addOrder(order,supplierID);
+            order.setOrderID(id);
+            return id;
     }
 
     /**
@@ -139,7 +138,6 @@ public class SuppliersController {
     public void addItemToOrder(int supplierId, int orderId, int quantity, int supplierProductId) {
         Supplier s = search(supplierId);
             s.addItemToOrder(orderId,quantity,supplierProductId);
-
     }
 
     /**
@@ -191,7 +189,7 @@ public class SuppliersController {
      */
     public void addItemToSupplier(int supplierID, Item product, int supplierProductID, double price, Map<Integer, Integer> quantityAgreement){
         Supplier s = search(supplierID);
-        s.addContract(product,supplierProductID,price,quantityAgreement);
+        ContractMapper.getInstance().addContract(s.addContract(product,supplierProductID,price,quantityAgreement),supplierID);
     }
 
     /**
@@ -200,7 +198,7 @@ public class SuppliersController {
      * @param supplierProductID
      */
     public void deleteItemFromSupplier(int supplierID, int supplierProductID) {
-        search(supplierID).removeContract(supplierProductID);
+        ContractMapper.getInstance().remove(search(supplierID).removeContract(supplierProductID));
     }
 
     /**
@@ -209,7 +207,9 @@ public class SuppliersController {
      * @param price
      */
     public void deleteSupplierDiscount(int supplierID, double price){
-        search(supplierID).removeDiscount(price);
+        Supplier s=search(supplierID);
+        s.removeDiscount(price);
+        supplierMapper.removeDiscount(s,price);
     }
 
     /**
@@ -243,7 +243,7 @@ public class SuppliersController {
 
     //this function searches for a supplier in the map and throws an exception if not found.
     private Supplier search(int ID){
-        Supplier s = supplierMap.get(ID);
+        Supplier s = supplierMapper.getSupplier(ID);
         if (s == null) {
             throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
         }

@@ -1,11 +1,12 @@
 package BusinessLayer.InventoryModule;
 
+import BusinessLayer.Mappers.ItemsMapper;
 import BusinessLayer.SuppliersModule.Contract;
+import DTO.ItemDTO;
+import DTO.specificItemDTO;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,49 +14,52 @@ import java.util.List;
 
 public class Item {
     // -- fields
-    private int specificIDCounter = 0;
     private int id;
     private String name;
     private List<SpecificItem> items;
     private int minAmount;
     private List<Contract> contractList;
     private int alertTime;
-    private double buyingPrice;
     private double sellingPrice;
+    private int location;
+    private String producer;
+    private int categoryID; //for database
 
-    //@TODO: add contract lists as a field (FINISHED)
-
-    //@TODO: at the end - change the class to flyweight pattern(FINISHED)
-
-    //@TODO: ask rami about the automatic orders regarding expired items (FINISHED)
 
 
     // -- constructor
 
-    public Item(int id, String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice,double sellingPrice){
-        this.id=id;
+    public Item(ItemDTO dto){
+        items=new ArrayList<>();
+        this.name=dto.getName();
+        this.location=dto.getLocation();
+        this.producer=dto.getProducer();
+        this.minAmount=dto.getMinAmount();
+        this.alertTime=dto.getAlertTime();
+        this.sellingPrice=dto.getSellingPrice();
+        this.categoryID=dto.getCategoryID();
+        this.id=dto.getID();
+        for(specificItemDTO specific:dto.getSpecificItemDTOList()){
+            items.add(new SpecificItem(specific));
+        }
+        contractList=new ArrayList<>();
+    }
+    public Item(String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID){
         this.name=name;
         this.minAmount=minAmount;
         this.alertTime=2;
-        this.buyingPrice = buyingPrice;
         this.sellingPrice = sellingPrice;
         this.contractList = new ArrayList<>();
+        this.producer=producer;
+        this.categoryID=categoryID;
+        this.location=location;
         items = new ArrayList<>();
-        SpecificItem item = new SpecificItem(specificIDCounter++,location,storageAmount,shelfAmount,expDate,producer);
+        SpecificItem item = new SpecificItem(storageAmount,shelfAmount,expDate,getId());
         items.add(item);
+        id=ItemsMapper.getInstance().addItem(this);
+        item.setId(ItemsMapper.getInstance().addSpecificItem(this,item));
     }
 
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Item ID: "+ this.id + "\n");
-        builder.append("Item Name: " + this.name + "\n");
-        builder.append("Item Minimum Amount: "+ this.minAmount + "\n");
-        builder.append("Item Alert Time: "+ this.alertTime +"\n");
-        builder.append("Item Available Amount: "+ this.getAmount());
-        return builder.toString();
-    }
 
     public int getId() {
         return id;
@@ -68,32 +72,32 @@ public class Item {
     }
     public void setName(String name) {
         this.name = name;
+        ItemsMapper.getInstance().updateItem(this);
     }
-    public void updateItem(String name, int minAmount,double buyingPrice,double sellingPrice)
+    public void updateItem(String name, int minAmount,double sellingPrice,int location,String producer)
     {
         if(name == null || name == "")
             throw new IllegalArgumentException("invalid item name");
-
         if (minAmount<0)
             throw new IllegalArgumentException("invalid minimum amount");
-        if (buyingPrice<0)
-            throw new IllegalArgumentException("invalid buying price");
         if (sellingPrice<0)
             throw new IllegalArgumentException("invalid selling price");
-
         this.name = name;
         this.minAmount=minAmount;
-        this.buyingPrice=buyingPrice;
         this.sellingPrice=sellingPrice;
+        this.producer=producer;
+        this.location=location;
+        ItemsMapper.getInstance().updateItem(this);
     }
 
     public void addDiscount(double discount) {
-        this.sellingPrice = this.sellingPrice - this.sellingPrice*discount/100;
+        setSellingPrice(this.sellingPrice - this.sellingPrice*discount/100);
     }
-    public void addSpecificItem(int location,  int storageAmount, int shelfAmount, LocalDate expDate, String producer)
+    public void addSpecificItem(int storageAmount, int shelfAmount, LocalDate expDate)
     {
-        SpecificItem newItem = new SpecificItem(this.specificIDCounter++,location,storageAmount,shelfAmount,expDate,producer);
+        SpecificItem newItem = new SpecificItem(storageAmount,shelfAmount,expDate,getId());
         this.items.add(newItem);
+        newItem.setId(ItemsMapper.getInstance().addSpecificItem(this,newItem));
     }
     public int getAlertTime() {
         return this.alertTime;
@@ -102,7 +106,8 @@ public class Item {
     public void setAlertTime(int alertTime) {
         if(alertTime < 0)
             throw new IllegalArgumentException("invalid alert time");
-        this.alertTime = alertTime;
+        this.alertTime=alertTime;
+        ItemsMapper.getInstance().updateItem(this);
     }
 
     public boolean isMinAmount() {
@@ -117,7 +122,6 @@ public class Item {
         }
         return sum;
     }
-    //@TODO sale item should return true/false upon missing items (FINISHED)
 
     // we sell the specific items who are almost expired first
     public boolean SaleItem(int quantity) {
@@ -155,8 +159,6 @@ public class Item {
             else
                 break;
         }
-
-        //@TODO: check if need to make an order (min quantity, etc..) (FINISHED)
         return this.getAmount() < minAmount;
     }
 
@@ -167,8 +169,10 @@ public class Item {
             SpecificItem item = items.get(i);
             if(item.getExpDate().compareTo(LocalDate.now()) <= 0)
                 items.remove(item);
+            ItemsMapper.getInstance().deleteSpecificItem(this,item);
         }
     }
+
     public void addContract(Contract contract)
     {
         if(contract == null)
@@ -176,6 +180,11 @@ public class Item {
         this.contractList.add(contract);
     }
 
+    /**
+     *
+     * @return returns a pair [supplierID,catalogueID] - this pair represents the cheapest supplier and the catalogue id as
+     * appears in the contract
+     */
     public Pair<Integer, Integer> getCheapestSupplier()
     {
         int minID = -1;
@@ -200,24 +209,14 @@ public class Item {
         return ans;
     }
 
-    public void setID(int i) {
-        if(i == -1) // we only adjust itemID in case of item deletion
-            this.id = i;
-    }
-
-    public List<Contract> getContractList() {
-        return contractList;
-    }
-
-    public void setContractList(List<Contract> contractList) {
-        this.contractList = contractList;
-    }
-
     public List<SpecificItem> getSpecificItems() {
         return this.items;
     }
 
     public double getBuyingPrice() {
+        double buyingPrice = Integer.MAX_VALUE;
+        for (Contract c : contractList)
+            buyingPrice = Math.min(c.getPricePerUnit(), buyingPrice);
         return buyingPrice;
     }
 
@@ -225,14 +224,24 @@ public class Item {
         return sellingPrice;
     }
 
-    public void setBuyingPrice(double buyingPrice) {
-        this.buyingPrice = buyingPrice;
-    }
-
     public void setSellingPrice(double sellingPrice) {
         this.sellingPrice = sellingPrice;
+        ItemsMapper.getInstance().updateItem(this);
     }
-    //@TODO: functions that get the cheapest supplier id, and the cheapest id catalogue (FINISHED)
 
-    //@TODO: think of a solution how to overcome the expiration date field? (flyweight)
+    public void removeContract(Contract contract) {
+        contractList.remove(contract);
+    }
+
+    public int getLocation() {
+        return location;
+    }
+
+    public String getProducer() {
+        return producer;
+    }
+
+    public int getCategoryID() {
+        return categoryID;
+    }
 }

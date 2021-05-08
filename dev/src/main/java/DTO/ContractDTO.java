@@ -20,11 +20,12 @@ public class ContractDTO {
         this.supplierID=supplierID;
     }
 
-    public ContractDTO( int pricePerUnit , int catalogueID , int storeID , Map<Integer,Integer> discountByQuantity){
+    public ContractDTO( double pricePerUnit , int catalogueID , int storeID , Map<Integer,Integer> discountByQuantity,int supplierID){
             this.pricePerUnit=pricePerUnit;
             this.catalogueID=catalogueID;
             this.storeID=storeID;
             this.discountByQuantity=discountByQuantity;
+            this.supplierID=supplierID;
     }
 
     @Override

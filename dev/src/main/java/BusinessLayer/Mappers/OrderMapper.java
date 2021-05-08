@@ -63,4 +63,20 @@ public class OrderMapper {
         orderMapper.put(order.getOrderID(),order);
         return id;
     }
+
+    public void update(Order order) {
+
+    }
+
+    public void remove(Order order) {
+    }
+
+    public void addItemToOrder(Order order, ProductInOrder pio) {
+    }
+
+    public void updateItemInOrder(Order order, ProductInOrder pio) {
+    }
+
+    public void removeItemFromOrder(Order order, Contract productContract) {
+    }
 }

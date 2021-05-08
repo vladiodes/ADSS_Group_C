@@ -101,7 +101,6 @@ public class itemsMenuWindow extends menuWindow {
 
     private void addSpecificItem() {
         int itemID = utills.getNonNegativeNumber("please enter general item id\n");
-        int location = utills.getNonNegativeNumber("please enter item location:\n");
         System.out.println("please enter producer:\n");
         String producer = scanner.nextLine();
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
@@ -112,7 +111,7 @@ public class itemsMenuWindow extends menuWindow {
         LocalDate expDate = getDateFromUser();
 
 
-        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, location, storageAmount, shelfAmount, expDate,producer);
+        Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, storageAmount, shelfAmount, expDate,producer);
         utills.printMessageOrSuccess(response, "Successfully added item of id " + itemID + "\n");
     }
 
@@ -165,20 +164,15 @@ public class itemsMenuWindow extends menuWindow {
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
         int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
         int minAmount = utills.getNonNegativeNumber("please enter minimum amount:\n");
-
-
         System.out.println("please enter expiration date: ");
         LocalDate expDate = getDateFromUser();
-        System.out.println("please enter buying price: ");
-        double buyingPrice = scanner.nextDouble();
-        scanner.nextLine();
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
 
 
-        Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, buyingPrice, sellingPrice);
-        utills.printMessageOrSuccess(response, "Successfully added item of id " + response.getValue().getId() + "\n");
+        Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice);
+        utills.printMessageOrSuccess(response, "Successfully added item" + response.getValue() + "\n");
     }
 
     private void updateItem() {
@@ -189,20 +183,13 @@ public class itemsMenuWindow extends menuWindow {
 
         System.out.println("please enter producer:\n");
         String producer = scanner.nextLine();
-        int storageAmount = utills.getNonNegativeNumber("please enter storage amount\n");
-        int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount\n");
 
         int minAmount = utills.getNonNegativeNumber("please enter minimum amount\n");
-        System.out.println("please enter expiration date:");
-        LocalDate expDate = getDateFromUser();
 
-        System.out.println("please enter buying price : ");
-        double buyingPrice = scanner.nextDouble();
-        scanner.nextLine();
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
-        Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, buyingPrice, sellingPrice);
+        Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, sellingPrice,location,producer);
         utills.printMessageOrSuccess(response, "Successfully update item : \n");
     }
 
@@ -357,10 +344,10 @@ public class itemsMenuWindow extends menuWindow {
         Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
         utills.printMessageOrSuccess(response1, "Successfully added category\n");
 
-        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90, 16.90);
+        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90);
         utills.printMessageOrSuccess(response2, "Successfully added item\n");
 
-        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getId(), 1);
+        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
         utills.printMessageOrSuccess(response3, "successfully sale\n");
 
         ArrayList categoriesList = new ArrayList();

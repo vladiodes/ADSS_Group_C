@@ -1,30 +1,32 @@
 package BusinessLayer.InventoryModule;
 
-import BusinessLayer.SuppliersModule.Contract;
+
+import BusinessLayer.Mappers.ItemsMapper;
+import DTO.specificItemDTO;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SpecificItem {
-    private int id;
-    private String producer;
-    private int storageAmount;
+    private int id=-1;
     private int shelfAmount;
-    private int location;
+    private int storageAmount;
     private LocalDate expDate;
+    private int generalItemID; //for db completeness
 
 
-    public SpecificItem(int id,int location,  int storageAmount, int shelfAmount, LocalDate expDate, String producer)
+    public SpecificItem(int storageAmount, int shelfAmount, LocalDate expDate,int generalItemID)
     {
-        this.producer=producer;
-
-        this.id = id;
-        this.setStorageAmount(storageAmount);
-        this.setShelfAmount(shelfAmount);
-        this.setLocation(location);
-        this.setExpDate(expDate);
-
+        this.storageAmount=storageAmount;
+        this.shelfAmount=shelfAmount;
+        this.expDate=expDate;
+        this.generalItemID=generalItemID;
+    }
+    public SpecificItem(specificItemDTO dto){
+        id=dto.id;
+        shelfAmount=dto.shelfAmount;
+        storageAmount=dto.storageAmount;
+        expDate=dto.expDate;
+        this.generalItemID=dto.generalID;
     }
 
     public int getAvailableAmount() {
@@ -38,6 +40,7 @@ public class SpecificItem {
 
     public void setStorageAmount(int storageAmount) {
         this.storageAmount = storageAmount;
+        ItemsMapper.getInstance().updateSpecificItem(this);
     }
 
     public int getShelfAmount() {
@@ -46,23 +49,13 @@ public class SpecificItem {
 
     public void setShelfAmount(int shelfAmount) {
         this.shelfAmount = shelfAmount;
-    }
-
-    public int getLocation() {
-        return location;
-    }
-
-    public void setLocation(int location) {
-        this.location = location;
+        ItemsMapper.getInstance().updateSpecificItem(this);
     }
 
     public LocalDate getExpDate() {
         return expDate;
     }
 
-    public void setExpDate(LocalDate expDate) {
-        this.expDate = expDate;
-    }
     public boolean isFaulty() {
         if (this.expDate.compareTo(LocalDate.now())<=0)
             return true;
@@ -75,4 +68,16 @@ public class SpecificItem {
         return false;
     }
 
+    public void setId(int id){
+        if(this.id==-1)
+            this.id=id;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public int getGeneralItemID() {
+        return generalItemID;
+    }
 }

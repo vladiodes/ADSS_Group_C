@@ -16,7 +16,7 @@ public class OrderDAO extends DAO<OrderDTO> {
             SupplierIDCol="SupplierID",PriceAfterDiscountCol="PriceAfterDiscount",IsFixedCol="isFixed",
             INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?)",tableName,DateOfOrderCol,ShipmentStatusCol,PriceBeforeDiscountCol,SupplierIDCol,PriceAfterDiscountCol,IsFixedCol),
             UPDATE_SQL=String.format("Update %s SET %s=?, %s=? ,%s=? WHERE ID=?",tableName,ShipmentStatusCol,PriceBeforeDiscountCol,PriceAfterDiscountCol,IDCol);
-    public OrderDAO(){super("Order");}
+    public OrderDAO(){super("Orders");}
     @Override
     public int insert(OrderDTO dto) {
         int id=-1;

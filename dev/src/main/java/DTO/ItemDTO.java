@@ -1,10 +1,10 @@
 package DTO;
 
 import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.InventoryModule.SpecificItem;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemDTO {
     private int id;
@@ -12,17 +12,19 @@ public class ItemDTO {
     private int availableAmount;
     private int alertTime;
     private int categoryID;
+    private int location;
+    private String producer;
+    private int minAmount;
+    private double sellingPrice;
+    private double buyingPrice;
+    private List<specificItemDTO> specificItemDTOList;
 
-    public ItemDTO(int id, String name, int location, String producer, int availableAmount, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double sellingPrice, int categoryID, int alertTime){
+    public ItemDTO(int id, String name, int location, String producer,int minAmount, double sellingPrice, int categoryID, int alertTime){
         this.id=id;
-        itemName=name;
-        this.location=location;
         this.producer=producer;
-        this.availableAmount=availableAmount;
-        this.storageAmount=storageAmount;
-        this.shelfAmount=shelfAmount;
+        this.location=location;
+        itemName=name;
         this.minAmount=minAmount;
-        this.expDate=expDate;
         this.sellingPrice=sellingPrice;
         this.categoryID=categoryID;
         this.alertTime=alertTime;
@@ -30,16 +32,18 @@ public class ItemDTO {
     public ItemDTO(Item i){
         this.id=i.getId();
         this.itemName = i.getName();
-        this.setLocation(i.getLocation());
-        this.setProducer(i.getProducer());
-        this.setAvailableAmount(i.getAvailableAmount());
-        this.setStorageAmount(i.getStorageAmount());
-        this.setShelfAmount(i.getShelfAmount());
+        this.location=i.getLocation();
+        this.producer=i.getProducer();
+        this.setAvailableAmount(i.getAmount());
         this.setMinAmount(i.getMinAmount());
-        this.setExpDate(i.getExpDate());
         this.setAlertTime(i.getAlertTime());
         sellingPrice=i.getSellingPrice();
         categoryID=i.getCategoryID();
+        buyingPrice=i.getBuyingPrice();
+        specificItemDTOList=new ArrayList<>();
+        for(SpecificItem specificItem:i.getSpecificItems()){
+            specificItemDTOList.add(new specificItemDTO(specificItem.getId(),specificItem.getExpDate(), specificItem.getStorageAmount(), specificItem.getShelfAmount(),i.getId()));
+        }
     }
 
     @Override
@@ -50,11 +54,9 @@ public class ItemDTO {
         builder.append("Item Location: "+ this.location + "\n");
         builder.append("Item Producer: "+ this.producer + "\n");
         builder.append("Item Selling price: " + sellingPrice + "\n");
+        builder.append("Item Buying price: " + buyingPrice + "\n");
         builder.append("Item Available Amount: "+ this.availableAmount + "\n");
-        builder.append("Item Storage Amount: "+ this.storageAmount + "\n");
-        builder.append("Item Shelf Amount: "+ this.shelfAmount + "\n");
         builder.append("Item Minimum Amount: "+ this.minAmount + "\n");
-        builder.append("Item Expiration Date: "+ this.expDate.format(DateTimeFormatter.ISO_LOCAL_DATE) + "\n");
         builder.append("Item Alert Time: "+ this.alertTime);
         return builder.toString();
     }
@@ -63,12 +65,12 @@ public class ItemDTO {
         return location;
     }
 
-    public void setLocation(int location) {
-        this.location = location;
-    }
-
     public String getProducer() {
         return producer;
+    }
+
+    public void setSpecificItemDTOList(List<specificItemDTO> specificItemDTOList) {
+        this.specificItemDTOList = specificItemDTOList;
     }
 
     public void setProducer(String producer) {
@@ -83,36 +85,12 @@ public class ItemDTO {
         this.availableAmount = availableAmount;
     }
 
-    public int getStorageAmount() {
-        return storageAmount;
-    }
-
-    public void setStorageAmount(int storageAmount) {
-        this.storageAmount = storageAmount;
-    }
-
-    public int getShelfAmount() {
-        return shelfAmount;
-    }
-
-    public void setShelfAmount(int shelfAmount) {
-        this.shelfAmount = shelfAmount;
-    }
-
     public int getMinAmount() {
         return minAmount;
     }
 
     public void setMinAmount(int minAmount) {
         this.minAmount = minAmount;
-    }
-
-    public LocalDate getExpDate() {
-        return expDate;
-    }
-
-    public void setExpDate(LocalDate expDate) {
-        this.expDate = expDate;
     }
 
     public void setAlertTime(int alertTime) {
@@ -137,5 +115,9 @@ public class ItemDTO {
 
     public int getCategoryID() {
         return categoryID;
+    }
+
+    public List<specificItemDTO> getSpecificItemDTOList() {
+        return specificItemDTOList;
     }
 }

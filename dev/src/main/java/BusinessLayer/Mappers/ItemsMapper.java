@@ -1,7 +1,9 @@
 package BusinessLayer.Mappers;
 
 import BusinessLayer.InventoryModule.Item;
+import BusinessLayer.InventoryModule.SpecificItem;
 import DTO.ItemDTO;
+import DTO.specificItemDTO;
 import DataAccessLayer.DAO;
 import DataAccessLayer.ItemDAO;
 
@@ -76,5 +78,17 @@ public class ItemsMapper {
     public boolean deleteItem(Item item){
         itemsMapper.remove(item.getId());
         return dao.delete(new ItemDTO(item))>0;
+    }
+
+    public int addSpecificItem(Item item, SpecificItem newItem) {
+        return dao.insertSpecificItem(new specificItemDTO(newItem,item.getId()));
+    }
+
+    public void deleteSpecificItem(Item item,SpecificItem sItem) {
+        dao.deleteSpecific(new specificItemDTO(sItem,item.getId()));
+    }
+
+    public void updateSpecificItem(SpecificItem specificItem) {
+        dao.updateSpecificItem(new specificItemDTO(specificItem,specificItem.getGeneralItemID()));
     }
 }

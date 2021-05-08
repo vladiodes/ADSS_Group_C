@@ -1,10 +1,14 @@
 package BusinessLayer.Mappers;
 
+import BusinessLayer.InventoryModule.Category;
 import BusinessLayer.SuppliersModule.Supplier;
+import DTO.CategoryDTO;
 import DTO.SupplierDTO;
 import DataAccessLayer.SupplierDAO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SupplierMapper {
     private static SupplierMapper instance=null;
@@ -27,7 +31,7 @@ public class SupplierMapper {
         if(dto==null){
             return null;
         }
-        Supplier supplier=new Supplier(dto.getSupplierID(),dto.supplierName,dto.fixedDays,dto.selfPickUp,dto.bankAccount,dto.paymentMethod,dto.categories,dto.manufacturers,dto.contactInfo,dto.discountsByPrice);
+        Supplier supplier=new Supplier(dto);
         for (Integer orderID:
              dto.orderIDs) {
                 supplier.addOrder(OrderMapper.getInstance().getOrder(orderID));
@@ -54,5 +58,30 @@ public class SupplierMapper {
         int id=dao.insert(new SupplierDTO(supplier));
         supplierMapper.put(supplier.getSupplierID(),supplier);
         return id;
+    }
+
+    public List<Supplier> getAllSuppliers() {
+            ArrayList<Supplier> output=new ArrayList<>();
+            for(SupplierDTO dto:dao.getAllSuppliers()){
+                output.add(buildSupplier(dto));
+            }
+            return output;
+    }
+
+    public void deleteSupplier(Supplier toDelete) {
+        dao.delete(new SupplierDTO(toDelete));
+        supplierMapper.remove(toDelete.getSupplierID());
+    }
+
+    public void removeDiscount(Supplier s, double price) {
+        dao.removeDiscount(s.getSupplierID(),price);
+    }
+
+    public void update(Supplier supplier) {
+        dao.update(new SupplierDTO(supplier));
+    }
+
+    public void addDiscount(Supplier s, double price, int discountPerecentage) {
+        dao.addDiscount(s.getSupplierID(),price,discountPerecentage);
     }
 }

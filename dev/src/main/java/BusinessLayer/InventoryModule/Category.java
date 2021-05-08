@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Category {
     private String name;
-    private int id;
+    private int id=-1;
     // check about itemDTO
     private HashMap<Integer, Item> items;
     private List<Category> subCategories;
@@ -40,8 +40,6 @@ public class Category {
         this.fatherCategory=fatherCategory;
         this.subCategories=new ArrayList<>();
         this.items=new HashMap<>();
-        this.id=CategoryMapper.getInstance().addCategory(this);
-
     }
 
     public void addDiscount(double discount) {
@@ -74,7 +72,7 @@ public class Category {
     public List<Category> getSubCategories() {
         return subCategories;
     }
-    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double buyingPrice,double sellingPrice) {
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice) {
         if (storageAmount<0)
             throw new IllegalArgumentException("invalid storage amount");
         if (shelfAmount<0)
@@ -85,12 +83,6 @@ public class Category {
         if (expDate.compareTo(LocalDate.now())<0)
             throw new IllegalArgumentException("invalid exp date");
 
-
-        if (buyingPrice<0)
-
-            throw new IllegalArgumentException("invalid buying price");
-
-        //@TODO: buying price should be calculated by system and not passed as an argument
         Item toAdd = new Item(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID());
         this.items.put(toAdd.getId(), toAdd);
         return toAdd;
@@ -113,15 +105,17 @@ public class Category {
     {
         return items.containsKey(itemID);
     }
-    public void deleteItem(int itemID)
+    public boolean deleteItem(int itemID)
     {
         if(items.containsKey(itemID)) {
-            Item toDelete=items.get(itemID);
-            ItemsMapper.getInstance().deleteItem(toDelete);
             items.remove(itemID);
-            //@todo: continue later
+        return true;
         }
-        else
-            throw new IllegalArgumentException("Item does not exists in this category");
+        return false;
+    }
+
+    public void setID(int id) {
+        if(this.id==-1)
+            this.id=id;
     }
 }
