@@ -29,17 +29,7 @@ public class Repository {
             conn = DriverManager.getConnection(url,config.toProperties());
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }/* finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                    conn = null;
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }*/
+        }
         return conn;
     }
 
@@ -48,7 +38,6 @@ public class Repository {
         try {
             conn.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -200,10 +189,8 @@ public class Repository {
             stmt.execute(EmployeesInShiftTable);
             stmt.execute(EmployeeSkillsTable);
             stmt.execute(ShiftConstraintsTable);
-            //stmt.execute("INSERT INTO sqlite_sequence VALUES (\"Shifts\",1)");
 
         } catch (SQLException exception) {
-            System.out.println("SQLException");
         } finally {
             closeConn(conn);
         }
@@ -215,55 +202,4 @@ public class Repository {
         return Instance;
     }
 
-    public static void main(String[] args) {
-       Repository r = getInstance();
-        r.generateTables();
-       /*
-        EmployeeDAO emp = new EmployeeDAO();
-        ShiftDAO shift = new ShiftDAO();
-        Date date = null;
-        try
-        {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
-        }
-        catch (Exception ee)
-        {
-            System.out.println("Invalid date");
-        }
-        Date date2 = null;
-        try
-        {
-            date2 = new SimpleDateFormat("dd/MM/yyyy").parse("22/05/2022");
-        }
-        catch (Exception ee)
-        {
-            System.out.println("Invalid date");
-        }
-        List<String> skills = new LinkedList<>();
-        skills.add("HRManager");
-        List<Pair<Date, String>> ava = new LinkedList<>();
-        ava.add(new Pair<Date, String>(date, "Evening"));
-        EmployeeDTO eDTO = new EmployeeDTO("Oded", "Gal", "316327923", "234234", 10000, "sdfsdf", date,skills, ava);
-        int x= emp.insert(eDTO);
-        int x3 = emp.addAvailableShifts("316327923", date, "Morning");
-        int x5 = emp.addSkill("316327923", "Driver");
-
-        Map<String,Integer> constraints = new HashMap<>();
-        List<Pair<String, String>> currEmp = new LinkedList<>();
-        currEmp.add(new Pair<String, String>("316327923","HRManager"));
-        ShiftDTO shiftDTO1 = new ShiftDTO(0,"Morning", date,0,constraints,currEmp);
-        ShiftDTO shiftDTO2 = new ShiftDTO(1,"Evening", date2,1,constraints,currEmp);
-        //ShiftDTO updatedShiftDTO = new ShiftDTO(0,"Evening", date,constraints,currEmp);
-        //int y1 = e.insert(shiftDTO);
-        int y1=shift.insert(shiftDTO1);
-        int y2=shift.insert(shiftDTO2);
-        int y3=shift.updateConstraint(date,"Morning","ShiftManager", 5 );
-        //int count=e.getShiftIdByDateAndType(date2, "Evening");
-        //int count=e.removeEmployeeFromShift("316327923",date, "Evening", "kjsdhfkjds" );
-        //int xy=e.removeConstraints(date,"Evening", "Casjutg");
-        //System.out.println(xy);
-        */
-
-
-    }
 }

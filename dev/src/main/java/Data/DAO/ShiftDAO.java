@@ -98,10 +98,10 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         Connection conn = Repository.getInstance().connect();
         if(TypeOfEmployee == null || ShiftID < 0 || amount<0) return 0;
         String updateString = String.format("UPDATE %s" +
-                        " SET  \"ShiftID\"= %s " +
-                        ", \"TypeOfEmployee\"=\"%s\",  \"Amount\"=%s" +
-                        " WHERE \"ShiftID\" == %s ;",
-                "ShiftConstraints", ShiftID,TypeOfEmployee,amount, ShiftID);
+                        " SET  " +
+                        "  \"Amount\"=%s" +
+                        " WHERE \"ShiftID\" == %s AND \"TypeOfEmployee\" == \"%s\" ;",
+                "ShiftConstraints", amount, ShiftID,TypeOfEmployee);
         Statement s;
         try {
             s = conn.createStatement();

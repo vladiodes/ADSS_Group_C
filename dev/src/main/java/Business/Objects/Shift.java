@@ -7,6 +7,7 @@ import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -413,5 +414,14 @@ public class Shift implements persistentObject {
     }
 
 
-
+    public boolean containsConstraint(TypeOfEmployee typeOfEmployee) {
+        for(TypeOfEmployee typeEmp : constraints.keySet())
+        {
+            if(typeEmp==typeOfEmployee)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

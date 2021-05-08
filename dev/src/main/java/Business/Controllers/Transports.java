@@ -67,7 +67,7 @@ public class Transports implements Controller<Transport> {
         }
         catch (Exception e )
         {
-            System.out.println(e.getMessage());
+
         }
     }
 }

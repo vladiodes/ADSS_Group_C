@@ -15,14 +15,7 @@ public class ItemContract implements persistentObject<ItemContractDTO> {
         setItems(items);
         setPassed(passed);
     }
-/*
-    public ItemContract(ItemContractDTO dto){
-        setID(dto.ID);
-        setDestination(dto.destination); //////////////// TODO ///////////////////////////////////
-        setItems(dto.items);
-        setPassed(dto.passed);
-    }
-*/
+
     public int getID() {
         return ID;
     }

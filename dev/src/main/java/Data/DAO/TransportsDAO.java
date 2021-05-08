@@ -40,7 +40,6 @@ public class TransportsDAO extends DAO<TransportDTO> {
             }
             return 1;
         } catch (Exception e) {
-            System.out.print(e.getMessage());
             return 0;
         } finally {
             Repository.getInstance().closeConn(conn);

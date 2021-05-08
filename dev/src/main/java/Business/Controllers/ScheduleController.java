@@ -211,10 +211,17 @@ public class ScheduleController {
                 return "No such shift";
             }
             Shift shift = dailySchedule.getShift(typeOfShift);
+            boolean isInShift=getShift(date,typeOfShift).containsConstraint(typeOfEmployee);
             shift.addConstraint(typeOfEmployee, numOfEmp);
-////////////////////////////
-            this.shiftDAO.removeConstraints(shift.getID(), typeOfEmployee.toString());
-            this.shiftDAO.addConstraints(shift.getID(), typeOfEmployee.toString(), numOfEmp);
+            if(isInShift)
+            {
+                this.shiftDAO.updateConstraint(date,typeOfShift.toString(),typeOfEmployee.toString(),numOfEmp);
+            }
+            else
+            {
+                this.shiftDAO.addConstraints(shift.getID(), typeOfEmployee.toString(), numOfEmp);
+            }
+
         }
         catch (Exception e)
         {
@@ -297,17 +304,19 @@ public class ScheduleController {
         this.shiftId = max+1;
     }
 
-    public void incNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType) throws Exception {
+    public int getNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType)  {
         Shift s = getShift(date, type);
         Map<TypeOfEmployee, Integer> cons = s.getConstraints();
+        int curr=-1;
         for(TypeOfEmployee currType:cons.keySet())
         {
             if (empType==currType)
             {
-                int curr =cons.get(currType);
-                s.addConstraint(empType,curr+1);
+                curr=cons.get(currType);
             }
         }
+        return curr;
+
     }
     @Override
     public String toString()

@@ -137,13 +137,32 @@ public class TransportsEmployeesFacade {
 
     public String addTransport(Date date, int weight, String driverID, String TruckID, List<ItemContract> IC, String Source, TypeOfShift TransportationShift) throws Exception {
         if(!scheduleController.shiftContainsEmployee(driverID,date,TransportationShift))
-            return "Driver not in shift at the time of the transport.";
+            throw new Exception("Driver not in shift at the time of the transport.");
         if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
-            return "No storage employee at the time of the shift, can't register transport.";
+            throw new Exception("No storage employee at the time of the shift, can't register transport.");
         if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
-            return "Requested ID isn't a Driver.";
+            throw new Exception("Requested ID isn't a Driver.");
         Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));
-        scheduleController.incNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
+
+        int newDriverAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
+        if(newDriverAmount==-1)
+        {
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver,1);
+        }
+        else
+        {
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, newDriverAmount+1);
+        }
+
+        int newStorageAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Storage);
+        if(newStorageAmount==-1)
+        {
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage,1);
+        }
+        else
+        {
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, newStorageAmount+1);
+        }
         return "Transport Registered Successfuly.";
     }
 
@@ -179,7 +198,7 @@ public class TransportsEmployeesFacade {
         return Sit.getSection(s);
     }
 
-    public Site getSite(String s) throws Exception {
+    public Site getSite(String s) {
         return Sit.getSite(s);
     }
 
@@ -189,26 +208,6 @@ public class TransportsEmployeesFacade {
         this.Tra.Load();
     }
 
-    public static void main(String[] args) throws Exception {
-        TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
-        /*List<TypeOfEmployee> toe = new ArrayList<>();
-        toe.add(TypeOfEmployee.Driver);
-        toe.add(TypeOfEmployee.Storage);
-        facade.addDriverEmployee("oded","Nisim","123456789","45807731",2,"melech", new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022"),toe,500);
-        facade.addShift(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
-        facade.addEmployeeToShift("123456789",TypeOfEmployee.Driver,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
-        facade.addEmployeeToShift("123456789",TypeOfEmployee.Storage,new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),TypeOfShift.Morning);
-        //facade.addTruck("5123","mazda",400,"car",1);
-        //facade.addSection("North");
-        //facade.addSite("Nahariyya","123","ilay","North");
-        List<ItemContract> ICS = new ArrayList<>();
-        HashMap<String,Integer> items = new HashMap<>();
-        items.put("Tea",1);
-        items.put("coffee",2);
-        ICS.add(new ItemContract(0,facade.getSite("Nahariyya"),items,true));
-        facade.addTransport(new SimpleDateFormat("dd/MM/yyyy").parse("07/05/2022"),50,"123456789","5123",ICS,"Nahariyya",TypeOfShift.Morning);*/
-         facade.Load();
-    }
 
     public void loadAllControllers() {
         this.staffController.getAllEmployees();
