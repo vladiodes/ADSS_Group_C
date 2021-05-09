@@ -1,12 +1,10 @@
 package BusinessLayer.Facade;
 
-import BusinessLayer.Facade.Response;
 import BusinessLayer.InventoryModule.*;
 import DTO.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.function.BinaryOperator;
 
 public class InventoryFacade {
     private static InventoryFacade inventoryFacadeInstance = null;

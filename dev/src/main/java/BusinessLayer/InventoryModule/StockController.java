@@ -7,11 +7,9 @@ import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.SuppliersModule.ProductInOrder;
 import BusinessLayer.SuppliersModule.Supplier;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class StockController {
@@ -150,6 +148,8 @@ public class StockController {
 
     public void deleteItem(int itemID) {
         boolean deleted = false;
+        if(findItem(itemID).getContractList().size()!=0)
+            throw new IllegalArgumentException("This item has contracts, can't delete it");
         List<Supplier> allSuppliers = SuppliersController.getInstance().getAllSuppliers();
         // check if the item exists in an order and if so remove it from the order
         for (Supplier s : allSuppliers) {
@@ -201,7 +201,8 @@ public class StockController {
     private void addOrder(Item item) {
         Pair<Integer, Integer> supIDAndCatID = item.getCheapestSupplier();
         SuppliersController controller = SuppliersController.getInstance();
-        int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDate.now(), false);
+        //issuing an order in case of low quantity to a week from now
+        int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDate.now().plusWeeks(1), false);
         controller.addItemToOrder(supIDAndCatID.getKey(), newOrderID, item.getMinAmount() - item.getAmount() + 1, supIDAndCatID.getValue());
     }
 }

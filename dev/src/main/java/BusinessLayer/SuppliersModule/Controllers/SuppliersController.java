@@ -1,11 +1,9 @@
 package BusinessLayer.SuppliersModule.Controllers;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import BusinessLayer.InventoryModule.Item;
-import BusinessLayer.InventoryModule.StockController;
 import BusinessLayer.Mappers.ContractMapper;
 import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.Mappers.SupplierMapper;
@@ -68,6 +66,8 @@ public class SuppliersController {
         Supplier toDelete = supplierMapper.getSupplier(supplierID);
         if (toDelete == null)
             throw new IllegalArgumentException("A supplier with that id doesn't exist in the system.");
+        if (toDelete.getSupplierContracts().size() != 0)
+            throw new IllegalArgumentException("Can't delete a supplier which supplies items to the store");
         supplierMapper.deleteSupplier(toDelete);
     }
 

@@ -237,4 +237,8 @@ public class Item {
     public int getCategoryID() {
         return categoryID;
     }
+
+    public List<Contract> getContractList() {
+        return contractList;
+    }
 }

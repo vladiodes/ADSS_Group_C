@@ -75,17 +75,7 @@ public class itemsMenuWindow extends menuWindow {
                 case 16:
                     addSpecificItem();
                     break;
-//                case 17:
-//                    removeFaultyItems();
-//                    break;
                 case 17:
-                    if (scenario) {
-                        scenario1();
-                        scenario = false;
-                    } else
-                        System.out.println("scenario can run only one time");
-                    break;
-                case 18:
                     terminate();
                     break;
             }
@@ -126,32 +116,30 @@ public class itemsMenuWindow extends menuWindow {
     @Override
     protected void createMenu() {
         menu = new HashMap<>();
-        menu.put(1, "add item");
-        menu.put(2, "update item");
-        menu.put(3, "add category");
-        menu.put(4, "update category");
-        menu.put(5, "find item by location");
-        menu.put(6, "change alert time");
-        menu.put(7, "add category discount");
-        menu.put(8, "add item discount");
-        menu.put(9, "add sale");
-        menu.put(10, "get weekly inventory report");
-        menu.put(11, "show faulty items");
-        menu.put(12, "show exp items");
-        menu.put(13, "show minimum amount items");
+        menu.put(1, "Add item");
+        menu.put(2, "Update item");
+        menu.put(3, "Add category");
+        menu.put(4, "Update category");
+        menu.put(5, "Find item by location");
+        menu.put(6, "Change alert time");
+        menu.put(7, "Add category discount");
+        menu.put(8, "Add item discount");
+        menu.put(9, "Add sale");
+        menu.put(10, "Get weekly inventory report");
+        menu.put(11, "Show faulty items");
+        menu.put(12, "Show exp items");
+        menu.put(13, "Show minimum amount items");
         menu.put(14, "Show Sales Report");
-        menu.put(15, "delete item");
-        menu.put(16,"add Specific Item");
-        //menu.put(17, "remove faulty items");
-        menu.put(17, "run scenario");
-        menu.put(18, "back to main menu");
+        menu.put(15, "Delete item");
+        menu.put(16,"Add Specific Item");
+        menu.put(17, "Back to main menu");
     }
 
     public static void printReport(Response<? extends Object> response) {
         if (response.WasException())
             System.out.println(response.getMessage());
         else
-            System.out.println(response.getValue().toString());
+            System.out.println(response.getValue());
     }
 
     private void addItem() {
@@ -172,7 +160,7 @@ public class itemsMenuWindow extends menuWindow {
 
 
         Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice);
-        utills.printMessageOrSuccess(response, "Successfully added item" + response.getValue() + "\n");
+        utills.printMessageOrSuccess(response, "Successfully added item\n" + response.getValue());
     }
 
     private void updateItem() {
@@ -190,15 +178,15 @@ public class itemsMenuWindow extends menuWindow {
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
         Response<Boolean> response = inventoryFacade.updateItem(itemID, name,  minAmount, sellingPrice,location,producer);
-        utills.printMessageOrSuccess(response, "Successfully update item : \n");
+        utills.printMessageOrSuccess(response, "Successfully update item \n");
     }
 
     private void addCategory() {
         System.out.println("please enter category name : ");
         String name = scanner.nextLine();
-        int fatherID = utills.getNonNegativeNumber("please enter father-category ID\n");
+        int fatherID = utills.getNonNegativeNumber("please enter father-category ID or 0 if none\n");
         Response<CategoryDTO> response = inventoryFacade.addCategory(name, fatherID);
-        utills.printMessageOrSuccess(response, "Successfully added category : \n");
+        utills.printMessageOrSuccess(response, "Successfully added category\n" + response.getValue());
     }
 
     private void updateCategory() {
@@ -338,21 +326,5 @@ public class itemsMenuWindow extends menuWindow {
         }
         LocalDate date = LocalDate.of(year, month, day);
         return date;
-    }
-
-    public void scenario1() {
-        Response<CategoryDTO> response1 = inventoryFacade.addCategory("sweets", 0);
-        utills.printMessageOrSuccess(response1, "Successfully added category\n");
-
-        Response<ItemDTO> response2 = inventoryFacade.addItem(response1.getValue().id, 2, "chocolate", "nutela", 15, 20, 5, LocalDate.of(2021, 06, 15), 14.90);
-        utills.printMessageOrSuccess(response2, "Successfully added item\n");
-
-        Response<SaleDTO> response3 = inventoryFacade.addSale(response2.getValue().getID(), 1);
-        utills.printMessageOrSuccess(response3, "successfully sale\n");
-
-        ArrayList categoriesList = new ArrayList();
-        categoriesList.add(response1.getValue().id);
-        Response<ReportDTO> response4 = inventoryFacade.getWeeklyReport(categoriesList);
-        printReport(response4);
     }
 }
