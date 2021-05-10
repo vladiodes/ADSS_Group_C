@@ -140,6 +140,8 @@ public class TransportsEmployeesFacade {
             throw new Exception("Driver not in shift at the time of the transport.");
         if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
             throw new Exception("No storage employee at the time of the shift, can't register transport.");
+        if(staffController.getEmployeeByID(driverID) == null)
+            throw new Exception("Id isn't legal.");
         if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
             throw new Exception("Requested ID isn't a Driver.");
         Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));

@@ -272,8 +272,9 @@ public class ScheduleController {
      * @param type
      * @return true is the shift requested contains the specific employee, false if not contains
      */
-    public boolean shiftContainsEmployee(String id,Date date,TypeOfShift type )
-    {
+    public boolean shiftContainsEmployee(String id,Date date,TypeOfShift type ) throws Exception {
+        if(getShift(date,type) == null)
+            throw new Exception("Shift doesn't exist");
         return this.getShift(date, type).isEmployeeInShift(id);
     }
 
@@ -284,8 +285,9 @@ public class ScheduleController {
      * @param shiftType
      * @return true if contains, false if not contains
      */
-    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType)
-    {
+    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType) throws Exception {
+        if(getShift(date, shiftType) == null)
+            throw new Exception("shift doesn't exist.");
         return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
     }
 
@@ -340,8 +342,7 @@ public class ScheduleController {
         return this.schedule;
     }
 
-    public Shift getShift(Date date,TypeOfShift type)
-    {
+    public Shift getShift(Date date,TypeOfShift type) {
         DailySchedule ds = schedule.get(date);
         Shift s = ds.getShift(type);
         return s;
