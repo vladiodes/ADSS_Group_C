@@ -344,6 +344,10 @@ public class ScheduleController {
 
     public Shift getShift(Date date,TypeOfShift type) {
         DailySchedule ds = schedule.get(date);
+        if(ds==null)
+        {
+            return null;
+        }
         Shift s = ds.getShift(type);
         return s;
     }
