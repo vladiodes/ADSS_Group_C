@@ -109,6 +109,7 @@ public class TransportsMain {
             System.out.println("Please enter the section the site is in");
             String sec = in.nextLine();
             API.addSite(ad, num, c, API.getSection(sec));
+            System.out.println("Site added successfuly.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -129,6 +130,7 @@ public class TransportsMain {
             int factoryweight = in.nextInt();
             in.nextLine();
             API.addTruck(plate, model, maxweight, type, factoryweight);
+            System.out.println("Truck added");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -250,7 +252,7 @@ public class TransportsMain {
             API.addTruck("6942021", "Tesla", 10000, "Smart Car", 7500);
             DataInitialized = true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Data wasn't initialized successfuly.");
         }
     }
 

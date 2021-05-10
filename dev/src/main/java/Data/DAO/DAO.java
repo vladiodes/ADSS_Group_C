@@ -39,7 +39,6 @@ public abstract class DAO<T> {
             Statement stmt=con.createStatement();
             rowsAffected=stmt.executeUpdate(DELETE_SQL);
         } catch (SQLException e) {
-            e.printStackTrace();
         } finally {
             Repository.getInstance().closeConn(con);
         }
@@ -57,7 +56,6 @@ public abstract class DAO<T> {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return rs;
@@ -70,7 +68,6 @@ public abstract class DAO<T> {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return rs;
     }
@@ -82,7 +79,6 @@ public abstract class DAO<T> {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(SELECT_SQL);
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return rs;
     }

@@ -52,7 +52,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
             output = new TruckDTO(RS.getString(1), RS.getString(4), RS.getInt(3), RS.getString(5), RS.getInt(2));
         }
         catch (Exception e){
-            System.out.println(e.getMessage());
+
         } finally {
             Repository.getInstance().closeConn(conn);
         }
