@@ -170,14 +170,6 @@ public class TransportsEmployeesFacade {
         Sit.addSection(section);
     }
 
-    public ArrayList<Transport> getTransportsOfDriver(String driverID) {
-        return Tra.getTransportsOfDriver(driverID);
-    }
-
-    public ArrayList<Transport> getTransportsByDate(Date date) {
-        return Tra.getTransportsByDate(date);
-    }
-
     public ArrayList<Truck> getAllTrucks() {
         return Tru.getTrucks();
     }

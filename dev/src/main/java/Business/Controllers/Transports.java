@@ -30,22 +30,6 @@ public class Transports implements Controller<Transport> {
         DAO.insert(toAdd.toDTO());
     }
 
-    public ArrayList<Transport> getTransportsOfDriver(String driverID) {
-        ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
-        for (Transport t : transports)
-            if (t.getDriver().getId().equals(driverID))
-                filteredTransports.add(t);
-        return filteredTransports;
-    }
-
-    public ArrayList<Transport> getTransportsByDate(Date date) {
-        ArrayList<Transport> filteredTransports = new ArrayList<Transport>();
-        for (Transport t : transports)
-            if (t.getDate() == date)
-                filteredTransports.add(t);
-        return filteredTransports;
-    }
-
     public ArrayList<Transport> getTransports() {
         return transports;
     }
