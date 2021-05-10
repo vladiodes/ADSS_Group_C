@@ -90,34 +90,15 @@ public class utills {
 
     public static LocalDate getDateFromUser(String prompt) {
         System.out.println(prompt);
-        System.out.println("please enter day :");
-        int day = scanner.nextInt();
-        scanner.nextLine();
-        while (day > 30 || day < 1) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        System.out.println("please enter month :");
-        int month = scanner.nextInt();
-        scanner.nextLine();
-        while (month > 12 || month < 1) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        System.out.println("please enter year :");
-        int year = scanner.nextInt();
-        scanner.nextLine();
-        while (year < 2021 || year > 2023) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        LocalDate date = LocalDate.of(year, month, day);
-        return date;
+        int day = getNonNegativeNumber("Please enter day:");
+        while (day > 30 || day < 1)
+            day = getNonNegativeNumber("Please enter day:");
+        int month = getNonNegativeNumber("Please enter month:");
+        while (month > 12 || month < 1)
+            month = getNonNegativeNumber("Please enter month:");
+        int year = getNonNegativeNumber("Please enter year:");
+        while (year < 2021 || year > 2023)
+            year = getNonNegativeNumber("Please enter year:");
+        return LocalDate.of(year, month, day);
     }
 }

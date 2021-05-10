@@ -354,7 +354,7 @@ public class Supplier{
             if(c.getCatalogueIDBySupplier()==supplierProductID){
                 for(Order order:ordersFromSupplier){
                     if(order.checkIfProductExists(c.getProduct()))
-                        throw new IllegalArgumentException("There's an order waiting for delivery with the given product, can't delete it");
+                        throw new IllegalArgumentException("There's an order with the given product, can't delete it\nYou need to cancel (delete) the order first");
                 }
                 supplierContracts.remove(c);
                 c.getProduct().removeContract(c);

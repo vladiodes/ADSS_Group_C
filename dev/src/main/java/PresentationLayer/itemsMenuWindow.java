@@ -96,9 +96,7 @@ public class itemsMenuWindow extends menuWindow {
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
         int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
 
-
-        System.out.println("please enter expiration date: ");
-        LocalDate expDate = getDateFromUser();
+        LocalDate expDate = utills.getDateFromUser("Please enter expiration date");
 
 
         Response<Boolean> response = inventoryFacade.addSpecificItem(itemID, storageAmount, shelfAmount, expDate,producer);
@@ -152,8 +150,7 @@ public class itemsMenuWindow extends menuWindow {
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
         int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
         int minAmount = utills.getNonNegativeNumber("please enter minimum amount:\n");
-        System.out.println("please enter expiration date: ");
-        LocalDate expDate = getDateFromUser();
+        LocalDate expDate = utills.getDateFromUser("Please enter expiration date");
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
@@ -280,11 +277,9 @@ public class itemsMenuWindow extends menuWindow {
                 break;
         }
 
-        System.out.println("please enter start date: ");
-        LocalDate startDate = getDateFromUser();
+        LocalDate startDate = utills.getDateFromUser("Please enter start date");
 
-        System.out.println("please enter end date: ");
-        LocalDate endDate = getDateFromUser();
+        LocalDate endDate = utills.getDateFromUser("Please enter end date");
 
         Response<SaleReportDTO> response = inventoryFacade.showSalesReport(startDate, endDate, categoriesList);
         printReport(response);
@@ -296,35 +291,4 @@ public class itemsMenuWindow extends menuWindow {
         utills.printMessageOrSuccess(response, "Successfully deleted item\n");
     }
 
-    private LocalDate getDateFromUser() {
-        System.out.println("please enter day :");
-        int day = scanner.nextInt();
-        scanner.nextLine();
-        while (day > 30 || day < 1) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        System.out.println("please enter month :");
-        int month = scanner.nextInt();
-        scanner.nextLine();
-        while (month > 12 || month < 1) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        System.out.println("please enter year :");
-        int year = scanner.nextInt();
-        scanner.nextLine();
-        while (year < 2021 || year > 2023) {
-            System.out.println("please enter valid day :");
-            day = scanner.nextInt();
-            scanner.nextLine();
-
-        }
-        LocalDate date = LocalDate.of(year, month, day);
-        return date;
-    }
 }

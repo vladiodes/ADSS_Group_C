@@ -173,8 +173,8 @@ public class Order{
 
     //these functions are used to check the validity of the constructor arguments
     private void setDateOfOrder(LocalDate dateOfOrder){
-        if(dateOfOrder.isAfter(LocalDate.now())){
-            throw new IllegalArgumentException("the issuing date of an order cannot be in the future.");
+        if(dateOfOrder.isBefore(LocalDate.now())){
+            throw new IllegalArgumentException("The ETA date of the order can't be in the past");
         }
         this.dateOfOrder=dateOfOrder;
     }
@@ -228,13 +228,11 @@ public class Order{
     }
 
     /**
-     * Checks if a given products is part of an order that wasn't delivered yet
+     * Checks if a given products is part of an order
      * @param p - the product
      * @return true if yes, false otherwise
      */
     public boolean checkIfProductExists(Item p) {
-        if(shipmentStatus==ShipmentStatus.Delivered)
-            return false;
         return findProductInOrder(p)!=null;
     }
 

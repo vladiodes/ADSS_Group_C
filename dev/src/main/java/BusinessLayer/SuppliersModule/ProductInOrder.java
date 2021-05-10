@@ -1,6 +1,5 @@
 package BusinessLayer.SuppliersModule;
 
-import BusinessLayer.SuppliersModule.Contract;
 
 public class ProductInOrder{
     private int quantity;

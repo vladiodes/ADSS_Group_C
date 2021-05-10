@@ -1,10 +1,7 @@
 package BusinessLayer.Mappers;
 
-import BusinessLayer.InventoryModule.Category;
 import BusinessLayer.SuppliersModule.Contract;
-import DTO.CategoryDTO;
 import DTO.ContractDTO;
-import DTO.ItemDTO;
 import DataAccessLayer.ContractDAO;
 
 

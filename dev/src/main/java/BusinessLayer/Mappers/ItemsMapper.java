@@ -3,7 +3,6 @@ package BusinessLayer.Mappers;
 import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.InventoryModule.SpecificItem;
 import BusinessLayer.SuppliersModule.Contract;
-import DTO.ContractDTO;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
 import DataAccessLayer.DAO;

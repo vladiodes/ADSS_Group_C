@@ -200,6 +200,8 @@ public class SuppliersController {
      * @param supplierProductID
      */
     public void deleteItemFromSupplier(int supplierID, int supplierProductID) {
+//        Supplier s=search(supplierID);
+//        for(Order order)
         ContractMapper.getInstance().remove(search(supplierID).removeContract(supplierProductID));
     }
 
