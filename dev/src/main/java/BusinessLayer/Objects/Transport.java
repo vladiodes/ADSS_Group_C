@@ -1,9 +1,8 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Business.Controllers.Sites;
-import Data.DTO.TransportDTO;
-import Data.DTO.ItemContractDTO;
-import java.text.SimpleDateFormat;
+import DTO.TransportDTO;
+import DTO.ItemContractDTO;
+
 import java.util.*;
 
 public class Transport implements persistentObject<TransportDTO> {

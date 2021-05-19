@@ -1,6 +1,6 @@
 package Data.DAO;
 
-import Data.DTO.ShiftDTO;
+import DTO.ShiftDTO;
 import Data.Repository;
 
 import java.sql.Connection;

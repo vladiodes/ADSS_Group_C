@@ -1,4 +1,4 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
 public interface persistentObject<T> {
     //boolean insert();

@@ -1,13 +1,12 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
 
-import Business.Controllers.StaffController;
-import Data.DTO.ShiftDTO;
+import BusinessLayer.Controllers.StaffController;
+import DTO.ShiftDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;

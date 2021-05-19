@@ -1,10 +1,10 @@
-package Business.Controllers;
+package BusinessLayer.Controllers;
 
-import Business.Objects.Site;
+import BusinessLayer.Objects.Site;
 import Data.DAO.SectionsDAO;
 import Data.DAO.SiteDAO;
-import Data.DTO.SectionDTO;
-import Data.DTO.SiteDTO;
+import DTO.SectionDTO;
+import DTO.SiteDTO;
 
 import java.util.*;
 

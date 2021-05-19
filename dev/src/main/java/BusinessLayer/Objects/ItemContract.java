@@ -1,6 +1,6 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Data.DTO.ItemContractDTO;
+import DTO.ItemContractDTO;
 import java.util.HashMap;
 
 public class ItemContract implements persistentObject<ItemContractDTO> {

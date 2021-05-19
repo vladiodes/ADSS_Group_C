@@ -1,4 +1,4 @@
-package Data.DTO;
+package DTO;
 
 public class SiteDTO {
     public String address;

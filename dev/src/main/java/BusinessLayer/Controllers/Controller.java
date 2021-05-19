@@ -1,5 +1,4 @@
-package Business.Controllers;
-import java.util.List;
+package BusinessLayer.Controllers;
 
 public interface Controller<T> {
     void Load();

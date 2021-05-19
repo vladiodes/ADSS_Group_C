@@ -1,14 +1,12 @@
 package Data.DAO;
 
-import Data.DTO.ItemContractDTO;
-import Data.DTO.SiteDTO;
-import Data.DTO.TransportDTO;
+import DTO.ItemContractDTO;
+import DTO.TransportDTO;
 import Data.Repository;
-import javax.xml.transform.Result;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

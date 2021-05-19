@@ -1,6 +1,6 @@
 package Presentation;
 
-import Business.Controllers.TransportsEmployeesFacade;
+import BusinessLayer.Controllers.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
 import java.util.Scanner;
 

@@ -1,13 +1,11 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Data.DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import Data.DTO.DriverDTO;
+import DTO.DriverDTO;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Driver extends Employee implements persistentObject {

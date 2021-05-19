@@ -1,4 +1,4 @@
-package Data.DTO;
+package DTO;
 
 public class TruckDTO {
     public String plateNum;

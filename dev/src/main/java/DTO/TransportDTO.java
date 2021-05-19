@@ -1,6 +1,5 @@
-package Data.DTO;
+package DTO;
 
-import java.util.Date;
 import java.util.List;
 
 public class TransportDTO {

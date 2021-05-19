@@ -1,6 +1,6 @@
 package Data;
 import Data.DAO.*;
-import Data.DTO.*;
+import DTO.*;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;

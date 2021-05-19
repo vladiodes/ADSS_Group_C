@@ -1,6 +1,6 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Data.DTO.TruckDTO;
+import DTO.TruckDTO;
 
 public class Truck implements persistentObject<TruckDTO> {
     private String plateNum;

@@ -1,7 +1,7 @@
 package Data.DAO;
 
 import Misc.Pair;
-import Data.DTO.DriverDTO;
+import DTO.DriverDTO;
 import Data.Repository;
 import java.sql.Connection;
 import java.sql.ResultSet;

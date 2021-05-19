@@ -1,6 +1,6 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Data.DTO.SiteDTO;
+import DTO.SiteDTO;
 
 public class Site implements persistentObject<SiteDTO> {
     private String Address;

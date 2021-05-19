@@ -1,6 +1,6 @@
 package Data.DAO;
 
-import Data.DTO.TruckDTO;
+import DTO.TruckDTO;
 import Data.Repository;
 import java.sql.*;
 import java.sql.ResultSet;

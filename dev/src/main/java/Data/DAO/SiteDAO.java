@@ -1,6 +1,6 @@
 package Data.DAO;
 
-import Data.DTO.SiteDTO;
+import DTO.SiteDTO;
 import Data.Repository;
 import java.sql.Connection;
 import java.sql.ResultSet;

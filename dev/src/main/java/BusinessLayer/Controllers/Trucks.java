@@ -1,8 +1,8 @@
-package Business.Controllers;
+package BusinessLayer.Controllers;
 
-import Business.Objects.Truck;
+import BusinessLayer.Objects.Truck;
 import Data.DAO.TrucksDAO;
-import Data.DTO.TruckDTO;
+import DTO.TruckDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

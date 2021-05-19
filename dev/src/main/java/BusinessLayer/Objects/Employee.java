@@ -1,9 +1,9 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import Data.DTO.EmployeeDTO;
+import DTO.EmployeeDTO;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

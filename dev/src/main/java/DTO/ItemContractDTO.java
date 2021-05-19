@@ -1,5 +1,4 @@
-package Data.DTO;
-import Business.Objects.Site;
+package DTO;
 import java.util.HashMap;
 
 public class ItemContractDTO {

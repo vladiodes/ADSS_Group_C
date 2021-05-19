@@ -1,10 +1,8 @@
-package Business.Objects;
+package BusinessLayer.Objects;
 
-import Business.Controllers.StaffController;
+import BusinessLayer.Controllers.StaffController;
 import Misc.TypeOfShift;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;

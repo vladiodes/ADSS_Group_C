@@ -1,4 +1,4 @@
-package Data.DTO;
+package DTO;
 
 import Misc.Pair;
 
