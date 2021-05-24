@@ -1,7 +1,8 @@
-package Presentation;
+package PresentationLayer;
 
 import BusinessLayer.Controllers.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
+
 import java.util.Scanner;
 
 public class main {
@@ -10,8 +11,7 @@ public class main {
         Scanner s = new Scanner(System.in);
         TransportsEmployeesFacade facade = new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
         facade.loadAllControllers();
-        while (true)
-        {
+        while (true) {
             System.out.println("Please select the number of the module:");
             System.out.println("1. Transportation");
             System.out.println("2. Employees");

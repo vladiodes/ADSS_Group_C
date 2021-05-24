@@ -2,8 +2,9 @@ package BusinessLayer.Objects;
 
 import DTO.TransportDTO;
 import DTO.ItemContractDTO;
-
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Transport implements persistentObject<TransportDTO> {
     private Date date;
@@ -13,6 +14,7 @@ public class Transport implements persistentObject<TransportDTO> {
     private List<ItemContract> Contracts;
     private Site source = null;
     private int ID;
+    private boolean delivered;
 
     public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source, int ID) throws Exception {
         setTruck(truck);
@@ -22,6 +24,7 @@ public class Transport implements persistentObject<TransportDTO> {
         setSource(source);
         setWeight(weight);
         this.ID = ID;
+        delivered = false;
     }
 
     public void setDate(Date date) {
@@ -78,6 +81,10 @@ public class Transport implements persistentObject<TransportDTO> {
 
     public Site getSource() {
         return source;
+    }
+
+    public void setDelivered() {
+        this.delivered = true;
     }
 
     @Override

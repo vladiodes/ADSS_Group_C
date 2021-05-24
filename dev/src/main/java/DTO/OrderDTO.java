@@ -2,9 +2,7 @@ package DTO;
 
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.SuppliersModule.ProductInOrder;
-import javafx.util.Pair;
-
-import java.sql.Date;
+import Misc.Pair;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import java.util.List;
 
 public class OrderDTO {
     //For loading from database//
-    public HashMap<Integer, Pair<Integer,Integer>> productIds;//each product in order (mapped by store id to a pair of (catalog id,quantity)
+    public HashMap<Integer, Pair<Integer, Integer>> productIds;//each product in order (mapped by store id to a pair of (catalog id,quantity)
 
     public LocalDate dateOfOrder;
     public int orderID;
@@ -25,10 +23,10 @@ public class OrderDTO {
     public boolean isFixed;
     public int supplierID;
 
-    public OrderDTO(Order order,int supplierID) {
+    public OrderDTO(Order order, int supplierID) {
         dateOfOrder = order.getDateOfOrder();
         orderID = order.getOrderID();
-        this.supplierID=supplierID;
+        this.supplierID = supplierID;
         shipmentStatus = order.getShipmentStatus();
         priceBeforeDiscount = order.getPriceBeforeDiscount();
         priceAfterDiscount = order.getPriceAfterDiscount();
@@ -41,7 +39,7 @@ public class OrderDTO {
                     "\nTotal price after discounts: " + pio.getTotalPrice());
     }
 
-    public OrderDTO(LocalDate dateOfOrder, int orderID, Order.ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, HashMap <Integer, Pair<Integer,Integer>> productsInOrderIDs, String isFixed, int supplierID) {
+    public OrderDTO(LocalDate dateOfOrder, int orderID, Order.ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, HashMap<Integer, Pair<Integer, Integer>> productsInOrderIDs, String isFixed, int supplierID) {
         this.dateOfOrder = dateOfOrder;
         this.orderID = orderID;
         this.shipmentStatus = shipmentStatus;
@@ -59,16 +57,16 @@ public class OrderDTO {
 
     @Override
     public String toString() {
-        StringBuilder builder=new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         builder.append("Order id: " + orderID);
         builder.append("\nDate of order: " + dateOfOrder.format(DateTimeFormatter.ISO_LOCAL_DATE));
-        builder.append("\nShippment status: " + shipmentStatus);
+        builder.append("\nShipment status: " + shipmentStatus);
         builder.append("\nPrice before discounts: " + priceBeforeDiscount);
         builder.append("\nPrice after discounts: " + priceAfterDiscount);
         builder.append("\nTotal quantity of items: " + totalQuantity);
         builder.append("\nFixed order: " + isFixed);
         builder.append("\nProducts in the order:");
-        for(String product:productsInOrder)
+        for (String product : productsInOrder)
             builder.append("\n" + product);
         builder.append("\n");
         return builder.toString();

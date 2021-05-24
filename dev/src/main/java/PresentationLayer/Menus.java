@@ -1,4 +1,4 @@
-package Presentation;
+package PresentationLayer;
 
 import BusinessLayer.Controllers.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
@@ -64,10 +64,12 @@ public class Menus {
                         case (1): //Add Employee
                         {
                             String[] employeeFields = new String[NUMBER_OF_EMPLOYEE_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
+
                             //First Name
                             System.out.println("Please Enter First Name");
                             employeeFields[0] = s.nextLine();
                             employeeFields[0] = inValidInputLetters(employeeFields[0]);
+
                             //Last Name
                             System.out.println("Please Enter Last Name");
                             employeeFields[1] = s.nextLine();
@@ -101,7 +103,6 @@ public class Menus {
                             employeeFields[6] = s.nextLine();
 
                             //---------All input from user is ready-------------
-
                             List<TypeOfEmployee> l = new LinkedList<TypeOfEmployee>();
                             TypeOfEmployee typeOfEmployee;
                             typeOfEmployee = parseTypeOfEmp(employeeFields[6]);
@@ -113,7 +114,6 @@ public class Menus {
                             }
                             l.add(typeOfEmployee); //Adding the skill to the new list created for the new employee
                             System.out.println(facade.addEmployee(employeeFields[0], employeeFields[1], employeeFields[2], employeeFields[3], Integer.parseInt(employeeFields[4]), employeeFields[5], new Date(System.currentTimeMillis()), l));
-
                             break;
                         }
                         case (2): //Remove Employee
@@ -124,7 +124,7 @@ public class Menus {
                             System.out.println(facade.RemoveEmployee(id));
                             break;
                         }
-                        case (3)://back To main menu
+                        case (3): //back To main menu
                         {
                             continue;
                         }
@@ -138,10 +138,12 @@ public class Menus {
                         case (1): //Add Driver Employee
                         {
                             String[] driverFields = new String[NUMBER_OF_DRIVER_FIELDS]; //0-FirstName 1-LastName 2-ID 3-BankAccountNumber 4-Salary 5-empConditions 6-skill
+
                             //First Name
                             System.out.println("Please Enter First Name");
                             driverFields[0] = s.nextLine();
                             driverFields[0] = inValidInputLetters(driverFields[0]);
+
                             //Last Name
                             System.out.println("Please Enter Last Name");
                             driverFields[1] = s.nextLine();
@@ -176,10 +178,7 @@ public class Menus {
                             driverFields[7] = inValidInputDigits(driverFields[7]);
 
                             //---------All input from user is ready-------------
-
-
                             System.out.println(facade.addDriverEmployee(driverFields[0], driverFields[1], driverFields[2], driverFields[3], Integer.parseInt(driverFields[4]), driverFields[5], new Date(System.currentTimeMillis()), Integer.parseInt(driverFields[7])));
-
                             break;
                         }
                         case (2): //Remove Driver Employee
@@ -190,7 +189,7 @@ public class Menus {
                             System.out.println(facade.RemoveEmployee(id));
                             break;
                         }
-                        case (3)://back To main menu
+                        case (3): //back To main menu
                         {
                             continue;
                         }
@@ -203,7 +202,7 @@ public class Menus {
                     this.menuEditOption = printMenu(menuEdit);
                     switch (menuEditOption) {
 
-                        case (1)://Edit First Name
+                        case (1): //Edit First Name
                         {
                             System.out.println("Enter new First Name");
                             String firstName = s.nextLine();
@@ -211,7 +210,7 @@ public class Menus {
                             System.out.println(facade.editFirstName(idToEdit, firstName));
                             break;
                         }
-                        case (2)://Edit Last Name
+                        case (2): //Edit Last Name
                         {
                             System.out.println("Enter new Last Name");
                             String lastName = s.nextLine();
@@ -219,8 +218,7 @@ public class Menus {
                             System.out.println(facade.editLastName(idToEdit, lastName));
                             break;
                         }
-                        case(3)://Edit Bank Account Number
-
+                        case (3): //Edit Bank Account Number
                         {
                             System.out.println("Enter new Bank Account Number");
                             String newBankAccountNumber = s.nextLine();
@@ -232,8 +230,7 @@ public class Menus {
                             System.out.println(facade.editBankAccountNumber(idToEdit, newBankAccountNumber));
                             break;
                         }
-                        case(4)://Edit Salary
-
+                        case (4): //Edit Salary
                         {
                             System.out.println("Enter new Salary");
                             String newSalary = s.nextLine();
@@ -241,17 +238,14 @@ public class Menus {
                             System.out.println(facade.editSalary(idToEdit, Integer.parseInt(newSalary)));
                             break;
                         }
-
-                        case(5)://Edit Employee Conditions
-
+                        case (5): //Edit Employee Conditions
                         {
                             System.out.println("Enter new Employee Conditions");
                             String newEmpConditions = s.nextLine();
                             System.out.println(facade.editEmpConditions(idToEdit, newEmpConditions));
                             break;
                         }
-                        case(6)://Back To Main Menu
-
+                        case (6): //Back To Main Menu
                         {
                             continue;
                         }
@@ -263,7 +257,7 @@ public class Menus {
                     String idToEdit = checkIdExist();
                     this.ARAvailableShiftOption = printMenu(ARAvailableShift);
                     switch (ARAvailableShiftOption) {
-                        case (1)://Add available shift
+                        case (1): //Add available shift
                         {
                             Date date = getDateFromUser();
                             System.out.println("Please Enter Type Of Shift To Add");
@@ -276,11 +270,10 @@ public class Menus {
                                 type = s.nextLine();
                                 typeOfShift = parseTypeOfShift(type);
                             }
-
                             System.out.println(facade.addAvailableShift(idToEdit, date, typeOfShift));
                             break;
                         }
-                        case (2)://Remove available shift
+                        case (2): //Remove available shift
                         {
                             System.out.println("Please Enter Date Of Shift To Remove in format dd/mm/yyyy");
                             String dateOfShift = s.nextLine();
@@ -309,7 +302,7 @@ public class Menus {
                             System.out.println(facade.removeAvailableShift(idToEdit, date, typeOfShift));
                             break;
                         }
-                        case (3)://Back to main menu
+                        case (3): //Back to main menu
                         {
                             continue;
                         }
@@ -321,7 +314,7 @@ public class Menus {
                     String idToEdit = checkIdExist();
                     this.ARSkillOption = printMenu(ARSkills);
                     switch (ARSkillOption) {
-                        case (1)://Add skills
+                        case (1): //Add skills
                         {
                             System.out.println("Please Enter new skill");
                             String skill = s.nextLine();
@@ -336,7 +329,7 @@ public class Menus {
                             System.out.println(facade.addSkill(idToEdit, typeOfEmployee));
                             break;
                         }
-                        case (2)://Remove skills
+                        case (2): //Remove skills
                         {
                             System.out.println("Please Enter skill to remove");
                             String skill = s.nextLine();
@@ -351,7 +344,7 @@ public class Menus {
                             System.out.println(facade.removeSkill(idToEdit, typeOfEmployee));
                             break;
                         }
-                        case (3)://Back to main menu
+                        case (3): //Back to main menu
                         {
                             continue;
                         }
@@ -363,7 +356,7 @@ public class Menus {
                     String idToEdit = checkIdExist();
                     this.AREmployeeToShiftOption = printMenu(AREmployeeToShift);
                     switch (AREmployeeToShiftOption) {
-                        case (1)://Add Employee to shift
+                        case (1): //Add Employee to shift
                         {
                             System.out.println("Enter skill of the employee");
                             String skill = s.nextLine();
@@ -389,7 +382,7 @@ public class Menus {
                             System.out.println(facade.addEmployeeToShift(idToEdit, typeOfEmployee, date, typeOfShift));
                             break;
                         }
-                        case (2)://Remove Employee to shift
+                        case (2): //Remove Employee to shift
                         {
                             Date date = getDateFromUser();
                             System.out.println("Enter Type of shift");
@@ -405,7 +398,7 @@ public class Menus {
                             System.out.println(facade.removeEmployeeFromShift(idToEdit, date, typeOfShift));
                             break;
                         }
-                        case (3)://Back to main menu
+                        case (3): //Back to main menu
                         {
                             continue;
                         }
@@ -416,7 +409,7 @@ public class Menus {
                 {
                     this.ARConstraintOption = printMenu(ARConstraint);
                     switch (ARConstraintOption) {
-                        case (1)://Add Constraint
+                        case (1): //Add Constraint
                         {
                             //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
@@ -454,7 +447,7 @@ public class Menus {
                             System.out.println(facade.addConstraintToShift(date, typeOfShift, typeOfEmployee, numOfEmp));
                             break;
                         }
-                        case (2)://Remove Constraint
+                        case (2): //Remove Constraint
                         {
                             //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
@@ -482,7 +475,7 @@ public class Menus {
                             System.out.println(facade.removeConstraintToShift(date, typeOfShift, typeOfEmployee));
                             break;
                         }
-                        case (3)://Back to main menu
+                        case (3): //Back to main menu
                         {
                             continue;
                         }
@@ -493,8 +486,7 @@ public class Menus {
                 {
                     this.ARShiftOption = printMenu(ARShift);
                     switch (ARShiftOption) {
-
-                        case (1)://Add shift
+                        case (1): //Add shift
                         {
                             //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
@@ -511,7 +503,7 @@ public class Menus {
                             System.out.println(facade.addShift(date, typeOfShift));
                             break;
                         }
-                        case (2)://Remove Shift
+                        case (2): //Remove Shift
                         {
                             //Get Shift identifiers from user (date and type)
                             Date date = getDateFromUser();
@@ -528,7 +520,7 @@ public class Menus {
                             System.out.println(facade.removeShift(date, typeOfShift));
                             break;
                         }
-                        case (3)://Back to main menu
+                        case (3): //Back to main menu
                         {
                             continue;
                         }
@@ -580,7 +572,6 @@ public class Menus {
                     System.out.println("Initialized Successfully");
                     this.facade.setTypeOfLoggedIn(temp);
                     break;
-
                 }
                 case (10): //Print schedule
                 {
@@ -764,6 +755,7 @@ public class Menus {
         }
         return true;
     }
+
     //Menus Initialization and creations-----------------------
 
     /**
@@ -796,8 +788,6 @@ public class Menus {
         menuMain.put(10, "Print Schedule");
         menuMain.put(11, "Print Employee Personal Details");
         menuMain.put(12, "Exit");
-
-
     }
 
     private void createAREmployee() {
@@ -813,16 +803,15 @@ public class Menus {
         ARDriverEmployee.put(2, "Remove Driver Employee");
         ARDriverEmployee.put(3, "Back to main menu");
     }
-    private void createEditMenu()
-    {
-        menuEdit=new HashMap<>();
-        menuEdit.put(1,"Edit First Name");
-        menuEdit.put(2,"Edit Last Name");
-        menuEdit.put(3,"Edit Bank Account Number");
-        menuEdit.put(4,"Edit Salary");
-        menuEdit.put(5,"Edit Employee Conditions");
-        menuEdit.put(6,"Back To Main Menu");
 
+    private void createEditMenu() {
+        menuEdit = new HashMap<>();
+        menuEdit.put(1, "Edit First Name");
+        menuEdit.put(2, "Edit Last Name");
+        menuEdit.put(3, "Edit Bank Account Number");
+        menuEdit.put(4, "Edit Salary");
+        menuEdit.put(5, "Edit Employee Conditions");
+        menuEdit.put(6, "Back To Main Menu");
     }
 
     private void createARAvailableShift() {

@@ -4,7 +4,7 @@ import BusinessLayer.Mappers.ItemsMapper;
 import BusinessLayer.SuppliersModule.Contract;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
-import javafx.util.Pair;
+import Misc.Pair;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

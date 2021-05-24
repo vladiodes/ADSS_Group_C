@@ -7,10 +7,12 @@ import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.SuppliersModule.ProductInOrder;
 import BusinessLayer.SuppliersModule.Supplier;
-import javafx.util.Pair;
+import Misc.Pair;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class StockController {
     // -- fields
@@ -18,51 +20,51 @@ public class StockController {
     private CategoryMapper categoryMapper;
 
     // -- constructor
-    private StockController()
-    {
-        categoryMapper=CategoryMapper.getInstance();
+    private StockController() {
+        categoryMapper = CategoryMapper.getInstance();
     }
 
-    public static StockController getInstance(){
-        if(stockControllerInstance == null)
+    public static StockController getInstance() {
+        if (stockControllerInstance == null)
             stockControllerInstance = new StockController();
         return stockControllerInstance;
     }
 
 
     // -- public methods
-    public boolean addSpecificItem(int generalItemID,  int storageAmount, int shelfAmount, LocalDate expDate)
-    {
+    public boolean addSpecificItem(int generalItemID, int storageAmount, int shelfAmount, LocalDate expDate) {
         Item item = findItem(generalItemID);
-        item.addSpecificItem(storageAmount,shelfAmount,expDate);
+        item.addSpecificItem(storageAmount, shelfAmount, expDate);
         return true;
     }
-    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID,double sellingPrice) {
+
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double sellingPrice) {
 
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already taken");
-        Category c=categoryMapper.getCategory(categoryID);
-        if(c==null)
+        Category c = categoryMapper.getCategory(categoryID);
+        if (c == null)
             throw new IllegalArgumentException("No such category");
-        Item toReturn = c.addItem(location,name,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice);
+        Item toReturn = c.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice);
         return toReturn;
     }
 
-    public void updateItem(int itemID,String name,int minAmount,double sellingPrice,int location,String producer) {
-        Item item=findItem(itemID);
-        if(findItemByLocation(location)!=item)
+    public void updateItem(int itemID, String name, int minAmount, double sellingPrice, int location, String producer) {
+        Item item = findItem(itemID);
+        if (findItemByLocation(location) != item)
             throw new IllegalArgumentException("Location is taken");
-        item.updateItem(name, minAmount, sellingPrice,location,producer);
+        item.updateItem(name, minAmount, sellingPrice, location, producer);
     }
 
-    public void updateCategory(int categoryID,String categoryName){
-        Category category=categoryMapper.getCategory(categoryID);
-        if(category!=null)
+    public void updateCategory(int categoryID, String categoryName) {
+        Category category = categoryMapper.getCategory(categoryID);
+        if (category != null)
             category.updateCategory(categoryName);
         else
             throw new IllegalArgumentException("Invalid category ID");
     }
-    public void addCategoryDiscount(int categoryID,double discount) {
+
+    public void addCategoryDiscount(int categoryID, double discount) {
         if (discount < 0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
         Category category = categoryMapper.getCategory(categoryID);
@@ -72,28 +74,28 @@ public class StockController {
             throw new IllegalArgumentException("Invalid category ID");
     }
 
-    public void addItemDiscount(int itemID,double discount){
+    public void addItemDiscount(int itemID, double discount) {
 
-        if (itemID<0)
+        if (itemID < 0)
             throw new IllegalArgumentException("invalid Item id");
-        if (discount<0 || discount > 100)
+        if (discount < 0 || discount > 100)
             throw new IllegalArgumentException("invalid discount amount");
         findItem(itemID).addDiscount(discount);
     }
 
-    public Category addCategory(String name,int fatherID){
+    public Category addCategory(String name, int fatherID) {
         // checks - father id = 0 -> no father category
         // check that the father ID exists
-        if (fatherID<0)
+        if (fatherID < 0)
             throw new IllegalArgumentException("invalid father category");
         Category FatherCategory = null;
-        if(fatherID>0){
-            FatherCategory=categoryMapper.getCategory(fatherID);
-            if(FatherCategory==null)
+        if (fatherID > 0) {
+            FatherCategory = categoryMapper.getCategory(fatherID);
+            if (FatherCategory == null)
                 throw new IllegalArgumentException("No such father category");
         }
-        Category toAdd = new Category(name,FatherCategory);
-        if (toAdd.getFatherCategory()!=null)
+        Category toAdd = new Category(name, FatherCategory);
+        if (toAdd.getFatherCategory() != null)
             toAdd.getFatherCategory().addSubCategory(toAdd);
         categoryMapper.addCategory(toAdd);
         return toAdd;
@@ -102,11 +104,12 @@ public class StockController {
     public Item getItemByLocation(int location) {
         return findItemByLocation(location);
     }
-    public Item getItemById(int itemID){
+
+    public Item getItemById(int itemID) {
         return findItem(itemID);
     }
 
-    public void changeAlertTime(int itemID,int daysAmount){
+    public void changeAlertTime(int itemID, int daysAmount) {
         findItem(itemID).setAlertTime(daysAmount);
     }
 
@@ -127,10 +130,10 @@ public class StockController {
         return i;
     }
 
-    private boolean isAvailableLocation(int location){
-        if (location<0)
+    private boolean isAvailableLocation(int location) {
+        if (location < 0)
             throw new IllegalArgumentException("invalid location");
-        return ItemsMapper.getInstance().getItemByLocation(location)==null;
+        return ItemsMapper.getInstance().getItemByLocation(location) == null;
     }
 
     public ArrayList<Category> getAllCategories() {
@@ -139,7 +142,7 @@ public class StockController {
 
     public ArrayList<Category> getCategories(ArrayList<Integer> categoriesList) {
         ArrayList<Category> toReturn = new ArrayList<>();
-        for (Category cat: categoryMapper.getAllCategories()) {
+        for (Category cat : categoryMapper.getAllCategories()) {
             if (categoriesList.contains(cat.getID()))
                 toReturn.add(cat);
         }
@@ -148,7 +151,7 @@ public class StockController {
 
     public void deleteItem(int itemID) {
         boolean deleted = false;
-        if(findItem(itemID).getContractList().size()!=0)
+        if (findItem(itemID).getContractList().size() != 0)
             throw new IllegalArgumentException("This item has contracts, can't delete it");
         List<Supplier> allSuppliers = SuppliersController.getInstance().getAllSuppliers();
         // check if the item exists in an order and if so remove it from the order
@@ -176,33 +179,32 @@ public class StockController {
 
     }
 
-    public void removeFaultyItems()
-    {
-        for (Category category:categoryMapper.getAllCategories()) {
+    public void removeFaultyItems() {
+        for (Category category : categoryMapper.getAllCategories()) {
             for (Item item : category.getItems().values()) {
                 item.removeFaultyItems();
-                if(item.getAmount() < item.getMinAmount())
-                {
+                if (item.getAmount() < item.getMinAmount()) {
                     addOrder(item);
                 }
             }
         }
     }
 
-    public void sellItem(int itemID,int quantity) {
+    public void sellItem(int itemID, int quantity) {
         Item item = findItem(itemID);
-        if (quantity<1)
+        if (quantity < 1)
             throw new IllegalArgumentException("invalid quantity");
-        if(item.getAmount()<quantity)
+        if (item.getAmount() < quantity)
             throw new IllegalArgumentException("No Available items for sale");
-        if(item.SaleItem(quantity))
+        if (item.SaleItem(quantity))
             addOrder(item);
     }
+
     private void addOrder(Item item) {
         Pair<Integer, Integer> supIDAndCatID = item.getCheapestSupplier();
         SuppliersController controller = SuppliersController.getInstance();
         //issuing an order in case of low quantity to a week from now
-        int newOrderID = controller.openOrder(supIDAndCatID.getKey(), LocalDate.now().plusWeeks(1), false);
-        controller.addItemToOrder(supIDAndCatID.getKey(), newOrderID, item.getMinAmount() - item.getAmount() + 1, supIDAndCatID.getValue());
+        int newOrderID = controller.openOrder(supIDAndCatID.first, LocalDate.now().plusWeeks(1), false);
+        controller.addItemToOrder(supIDAndCatID.first, newOrderID, item.getMinAmount() - item.getAmount() + 1, supIDAndCatID.second);
     }
 }
