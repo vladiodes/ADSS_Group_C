@@ -5,7 +5,7 @@ import BusinessLayer.InventoryModule.SpecificItem;
 import BusinessLayer.SuppliersModule.Contract;
 import DTO.ItemDTO;
 import DTO.specificItemDTO;
-import DataAccessLayer.DAO;
+import DataAccessLayer.DAOV1;
 import DataAccessLayer.ItemDAO;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class ItemsMapper {
     public Item getItem(int id) {
         if (itemsMapper.containsKey(id))
             return itemsMapper.get(id);
-        ItemDTO dto = dao.get(DAO.idCol, id);
+        ItemDTO dto = dao.get(DAOV1.idCol, id);
         if (dto == null)
             return null;
         return buildItem(dto);

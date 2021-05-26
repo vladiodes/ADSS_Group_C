@@ -1,6 +1,5 @@
 package DataAccessLayer;
 
-import DTO.CategoryDTO;
 import DTO.ReportDTO;
 
 import java.sql.Connection;
@@ -9,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 
-public class ReportDAO extends DAO<ReportDTO> {
+public class ReportDAO extends DAOV1<ReportDTO> {
     private String StartDate="StartDate",EndDate="EndDate",
             INSERT_SQL=String.format("INSERT INTO %s (%s,%s) VALUES(?,?)",tableName,StartDate,EndDate),
             UPDATE_SQL=String.format("Update %s SET %s=?, %s=? WHERE ID=?",tableName,StartDate,EndDate);

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
-public class OrderDAO extends DAO<OrderDTO> {
+public class OrderDAO extends DAOV1<OrderDTO> {
     String IDCol = "ID", DateOfOrderCol = "DateOfOrder", ShipmentStatusCol = "ShipmentStatus", PriceBeforeDiscountCol = "PriceBeforeDiscount",
             SupplierIDCol = "SupplierID", PriceAfterDiscountCol = "PriceAfterDiscount", IsFixedCol = "isFixed",
             INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?)", tableName, DateOfOrderCol, ShipmentStatusCol, PriceBeforeDiscountCol, SupplierIDCol, PriceAfterDiscountCol, IsFixedCol),
@@ -82,7 +82,7 @@ public class OrderDAO extends DAO<OrderDTO> {
                 productsInOrderIDs.put(products.getInt("ItemID"), new Pair<>(products.getInt("CatalogueID"), products.getInt("Quantity")));
                 quantity += products.getInt(2);
             }
-            output = new OrderDTO(LocalDate.parse(rs.getString(DateOfOrderCol)), rs.getInt(DAO.idCol), Order.ShipmentStatus.valueOf(rs.getString(ShipmentStatusCol)),
+            output = new OrderDTO(LocalDate.parse(rs.getString(DateOfOrderCol)), rs.getInt(DAOV1.idCol), Order.ShipmentStatus.valueOf(rs.getString(ShipmentStatusCol)),
                     rs.getDouble(PriceBeforeDiscountCol), rs.getDouble(PriceAfterDiscountCol), quantity, productsInOrderIDs, rs.getString(IsFixedCol), rs.getInt(SupplierIDCol));
         } catch (SQLException e) {
             e.printStackTrace();

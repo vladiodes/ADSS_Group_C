@@ -5,7 +5,6 @@ import BusinessLayer.Facade.Response;
 import DTO.OrderDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +13,7 @@ public class ordersMenuWindow extends menuWindow {
     private ISuppliersFacade facade;
     public ordersMenuWindow(ISuppliersFacade facade, String description) {
         super(description);
+        createMenu();
         this.facade=facade;
     }
 

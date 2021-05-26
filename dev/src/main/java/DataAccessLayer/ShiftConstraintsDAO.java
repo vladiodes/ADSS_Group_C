@@ -1,7 +1,6 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import DTO.ShiftDTO;
-import Data.Repository;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -27,7 +26,7 @@ public class ShiftConstraintsDAO {
             return 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
 
@@ -51,7 +50,7 @@ public class ShiftConstraintsDAO {
             return 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
         return 1;
@@ -76,7 +75,7 @@ public class ShiftConstraintsDAO {
         }
         finally
         {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
     }
@@ -100,7 +99,7 @@ public class ShiftConstraintsDAO {
         }
         finally
         {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
     }

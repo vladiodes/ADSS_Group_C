@@ -1,8 +1,8 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import Misc.Pair;
 import DTO.EmployeeDTO;
-import Data.Repository;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class EmployeeDAO extends DAO<EmployeeDTO> {
+public class EmployeeDAO extends DAOV2<EmployeeDTO> {
 
     private AvailableShiftForEmployeeDAO availableShiftForEmployeeDAO;
     private EmployeesSkillsDAO employeesSkillsDAO;
@@ -48,7 +48,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
             ans= 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return ans;
 
@@ -109,7 +109,7 @@ public class EmployeeDAO extends DAO<EmployeeDTO> {
             output = null;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
         return output;

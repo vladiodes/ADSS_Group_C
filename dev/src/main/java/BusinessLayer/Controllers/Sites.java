@@ -1,8 +1,8 @@
 package BusinessLayer.Controllers;
 
 import BusinessLayer.Objects.Site;
-import Data.DAO.SectionsDAO;
-import Data.DAO.SiteDAO;
+import DataAccessLayer.SectionsDAO;
+import DataAccessLayer.SiteDAO;
 import DTO.SectionDTO;
 import DTO.SiteDTO;
 

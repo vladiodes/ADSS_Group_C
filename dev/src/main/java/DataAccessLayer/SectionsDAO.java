@@ -1,12 +1,12 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import DTO.SectionDTO;
-import Data.Repository;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class SectionsDAO extends  DAO<String> {
+public class SectionsDAO extends DAOV2<String> {
 
     public SectionsDAO() {
         this.tableName = "Sections";
@@ -49,7 +49,7 @@ public class SectionsDAO extends  DAO<String> {
         } catch (Exception e) {
             output = null;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return output;
     }

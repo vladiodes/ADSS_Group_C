@@ -1,40 +1,44 @@
 package PresentationLayer;
 
-import BusinessLayer.Controllers.TransportsEmployeesFacade;
+import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.TypeOfShift;
 import BusinessLayer.Objects.ItemContract;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class TransportsMain {
-    public static int ICID = 0;
-    private static Scanner in;
-    private static Boolean DataInitialized = false;
+public class TransportsMain extends menuWindow {
+    public int ICID = 0;
+    private Scanner in;
+    private TransportsEmployeesFacade API;
+    private boolean shouldTerminate=false;
 
-    public static void start(TransportsEmployeesFacade facade) {
-        TransportsEmployeesFacade API = facade;
-        in = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.println("Hello, write the number of the operation you would like to do");
-                System.out.println("1. Add site");
-                System.out.println("2. Add truck");
-                System.out.println("3. Add transport");
-                System.out.println("4. Add section");
-                System.out.println("5. Get all trucks");
-                System.out.println("6. Get all sites");
-                System.out.println("7. Get all sections");
-                System.out.println("8. Get all transports");
-                System.out.println("9. Quit");
-                if (!DataInitialized)
-                    System.out.println("10. Initialize data from instructions manual");
-                Scanner in = new Scanner(System.in);
-                int option = in.nextInt();
-                in.nextLine();
-                if (option == 9)
-                    break;
-                switch (option) {
+    public TransportsMain(TransportsEmployeesFacade API){
+        super("Logistics Manager");
+        this.API=API;
+        in=utills.scanner;
+        createMenu();
+    }
+
+    @Override
+    protected void createMenu() {
+        menu=new HashMap<>();
+        menu.put(1,"Add site");
+        menu.put(2,"Add truck");
+        menu.put(3,"Add transport");
+        menu.put(4,"Add section");
+        menu.put(5,"Get all trucks");
+        menu.put(6,"Get all sites");
+        menu.put(7,"Get all sections");
+        menu.put(8,"Get all transports");
+        menu.put(9,"Logout");
+    }
+
+    @Override
+    public void start() {
+        printDescription();
+        while (!shouldTerminate) {
+                switch (printMenu()) {
                     case 1:
                         AddSite(API);
                         break;
@@ -59,20 +63,23 @@ public class TransportsMain {
                     case 8:
                         GetAllTransports(API);
                         break;
-                    case 10:
-                        InitializeData(API);
-                        break;
-                    default:
-                        System.out.println("Please enter a valid number");
+                    case 9:
+                        terminate();
                         break;
                 }
-            } catch (Exception e) {
-                System.out.println("Please enter a valid number");
             }
+        closeWindow();
         }
+
+    private void closeWindow() {
+        shouldTerminate=false;
     }
 
-    public static ArrayList<ItemContract> makeItemContract(TransportsEmployeesFacade API) throws Exception {
+    private void terminate() {
+        shouldTerminate=true;
+    }
+
+    public ArrayList<ItemContract> makeItemContract(TransportsEmployeesFacade API) throws Exception {
         ArrayList<ItemContract> contracts = new ArrayList<ItemContract>();
         while (true) {
             System.out.println("Please enter the destination address");
@@ -98,7 +105,7 @@ public class TransportsMain {
         return contracts;
     }
 
-    public static void AddSite(TransportsEmployeesFacade API) {
+    public void AddSite(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the address of the site");
             String ad = in.nextLine();
@@ -115,7 +122,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTruck(TransportsEmployeesFacade API) {
+    public void AddTruck(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the plate number of the truck");
             String plate = in.nextLine();
@@ -136,7 +143,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddTransport(TransportsEmployeesFacade API) {
+    public void AddTransport(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the date of the transport in the following format: dd/MM/yyyy");
             String date = in.nextLine();
@@ -196,7 +203,7 @@ public class TransportsMain {
         }
     }
 
-    public static void AddSection(TransportsEmployeesFacade API) {
+    public void AddSection(TransportsEmployeesFacade API) {
         try {
             System.out.println("Please enter the name of the new section");
             String section = in.nextLine();
@@ -206,7 +213,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTrucks(TransportsEmployeesFacade API) {
+    public void GetAllTrucks(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllTrucks());
         } catch (Exception e) {
@@ -214,7 +221,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllSites(TransportsEmployeesFacade API) {
+    public void GetAllSites(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllSites());
         } catch (Exception e) {
@@ -222,7 +229,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllSections(TransportsEmployeesFacade API) {
+    public void GetAllSections(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllSections());
         } catch (Exception e) {
@@ -230,7 +237,7 @@ public class TransportsMain {
         }
     }
 
-    public static void GetAllTransports(TransportsEmployeesFacade API) {
+    public void GetAllTransports(TransportsEmployeesFacade API) {
         try {
             System.out.println(API.getAllTransports());
         } catch (Exception e) {
@@ -238,25 +245,7 @@ public class TransportsMain {
         }
     }
 
-    public static void InitializeData(TransportsEmployeesFacade API) {
-        if (DataInitialized) {
-            return;
-        }
-        try {
-            API.addSection("North");
-            API.addSection("Center");
-            API.addSection("South");
-            API.addSite("Nahariyya", "052123123", "Ilay", "North");
-            API.addSite("Tel-Aviv", "052555555", "Hadar", "Center");
-            API.addTruck("3212345", "Honda Ridgeline", 5000, "Pickup Truck", 1500);
-            API.addTruck("6942021", "Tesla", 10000, "Smart Car", 7500);
-            DataInitialized = true;
-        } catch (Exception e) {
-            System.out.println("Data wasn't initialized successfuly.");
-        }
-    }
-
-    private static TypeOfShift parseTypeOfShift(String type) {
+    private TypeOfShift parseTypeOfShift(String type) {
         TypeOfShift typeOfShift;
         try {
             typeOfShift = TypeOfShift.valueOf(type);

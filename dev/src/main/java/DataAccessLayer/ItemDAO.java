@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDAO extends DAO<ItemDTO> {
+public class ItemDAO extends DAOV1<ItemDTO> {
     public static final String LocationCol = "Location";
     public static final String NameCol = "Name";
     public static final String minCol = "minAmmount";
@@ -95,7 +95,7 @@ public class ItemDAO extends DAO<ItemDTO> {
     }
 
     public int delete(ItemDTO dto) {
-        return delete(DAO.idCol, String.valueOf(dto.getID()));
+        return delete(DAOV1.idCol, String.valueOf(dto.getID()));
     }
 
     public List<specificItemDTO> getSpecificItems(int itemID){

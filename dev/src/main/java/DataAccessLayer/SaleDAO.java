@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaleDAO extends DAO<SaleDTO> {
+public class SaleDAO extends DAOV1<SaleDTO> {
     private String QuantityCol="Quantity",itemCol="ItemID",SaleDateCol="SaleDate",
             INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s) VALUES(?,?,?)",tableName,QuantityCol,itemCol,SaleDateCol),
             UPDATE_SQL=String.format("Update %s SET %s=?, %s=?,%s=? WHERE ID=?",tableName,QuantityCol,itemCol,SaleDateCol);
@@ -67,7 +67,7 @@ public class SaleDAO extends DAO<SaleDTO> {
         ResultSet rs=get("ID",String.valueOf(id),con);
         try {
             if (!rs.isClosed()) {
-                ItemDTO itemInSale = new ItemDAO().get(DAO.idCol, rs.getInt(itemCol));
+                ItemDTO itemInSale = new ItemDAO().get(DAOV1.idCol, rs.getInt(itemCol));
                 output = new SaleDTO(rs.getInt("ID"), rs.getInt(itemCol), itemInSale.getName(), itemInSale.getSellingPrice(), LocalDate.parse(rs.getString(SaleDateCol)), rs.getInt(QuantityCol));
             }
         }
@@ -88,7 +88,7 @@ public class SaleDAO extends DAO<SaleDTO> {
         ResultSet rs=getAll(con);
         try {
             while (rs.next()){
-                ItemDTO itemInSale = new ItemDAO().get(DAO.idCol, rs.getInt(itemCol));
+                ItemDTO itemInSale = new ItemDAO().get(DAOV1.idCol, rs.getInt(itemCol));
                 output.add(new SaleDTO(rs.getInt("ID"), rs.getInt(itemCol), itemInSale.getName(), itemInSale.getSellingPrice(), LocalDate.parse(rs.getString(SaleDateCol)), rs.getInt(QuantityCol)));
             }
         }

@@ -2,7 +2,7 @@ package BusinessLayer.Controllers;
 
 
 import BusinessLayer.Objects.Employee;
-import Data.DAO.ShiftDAO;
+import DataAccessLayer.ShiftDAO;
 import DTO.ShiftDTO;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;

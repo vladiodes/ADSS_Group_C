@@ -1,8 +1,8 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import Misc.Pair;
 import DTO.DriverDTO;
-import Data.Repository;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static Misc.Functions.DateToString;
 
-public class DriverDAO extends DAO<DriverDTO> {
+public class DriverDAO extends DAOV2<DriverDTO> {
 
     private AvailableShiftForEmployeeDAO availableShiftForEmployeeDAO;
     private EmployeesSkillsDAO employeesSkillsDAO;
@@ -48,7 +48,7 @@ public class DriverDAO extends DAO<DriverDTO> {
             ans= 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return ans;
 
@@ -202,7 +202,7 @@ public class DriverDAO extends DAO<DriverDTO> {
             output = null;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
         return output;

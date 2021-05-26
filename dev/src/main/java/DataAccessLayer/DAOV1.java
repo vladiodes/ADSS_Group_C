@@ -1,14 +1,15 @@
 package DataAccessLayer;
 
-import DTO.CategoryDTO;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import java.sql.*;
-
-public abstract class DAO<T> {
+public abstract class DAOV1<T> {
     public final static String idCol="ID";
     protected String tableName;
 //@TODO: when inserting daos, pay attention to update association tables as well
-    public DAO(String tableName){
+    public DAOV1(String tableName){
         this.tableName=tableName;
     }
 

@@ -1,16 +1,16 @@
-package Data.DAO;
+package DataAccessLayer;
 
 
 import Misc.Pair;
 import DTO.ShiftDTO;
-import Data.Repository;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ShiftDAO extends DAO<ShiftDTO> {
+public class ShiftDAO extends DAOV2<ShiftDTO> {
     private ShiftConstraintsDAO shiftConstraintsDAO;
     private EmployeesInShiftDAO employeesInShiftDAO;
 
@@ -39,7 +39,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             return 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
     @Override
@@ -63,7 +63,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             return 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
     }
@@ -88,7 +88,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             return -1;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
     }
@@ -111,7 +111,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
             return 0;
         }
         finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
 
     }
@@ -161,7 +161,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         }
         finally
         {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -235,7 +235,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         } catch (Exception e) {
             return null;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return ans;
     }
@@ -254,7 +254,7 @@ public class ShiftDAO extends DAO<ShiftDTO> {
         } catch (Exception e) {
             return null;
         } finally{
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return ans;
     }

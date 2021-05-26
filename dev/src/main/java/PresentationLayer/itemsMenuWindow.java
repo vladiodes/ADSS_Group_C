@@ -3,6 +3,7 @@ package PresentationLayer;
 import BusinessLayer.Facade.InventoryFacade;
 import BusinessLayer.Facade.Response;
 import DTO.*;
+import Misc.TypeOfEmployee;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,9 +14,12 @@ public class itemsMenuWindow extends menuWindow {
     private InventoryFacade inventoryFacade;
     private boolean shouldTerminate;
     private boolean scenario;
+    private TypeOfEmployee employee;
 
-    public itemsMenuWindow() {
+
+    public itemsMenuWindow(TypeOfEmployee employee) {
         super("Items menu");
+        this.employee=employee;
         inventoryFacade = InventoryFacade.getInstance();
         scenario = true;
         shouldTerminate = false;
@@ -26,62 +30,92 @@ public class itemsMenuWindow extends menuWindow {
         System.out.println("Welcome To items Menu , We Are currently Removing faulty items...");
         removeFaultyItems(); // Remove all faulty items whenever entering the menu of the items
         while (!shouldTerminate) {
-            switch (printMenu()) {
-                case 1:
-                    addItem();
-                    break;
-                case 2:
-                    updateItem();
-                    break;
-                case 3:
-                    addCategory();
-                    break;
-                case 4:
-                    updateCategory();
-                    break;
-                case 5:
-                    findItemByLocation();
-                    break;
-                case 6:
-                    changeAlertTime();
-                    break;
-                case 7:
-                    addCategoryDiscount();
-                    break;
-                case 8:
-                    addItemDiscount();
-                    break;
-                case 9:
-                    addSale();
-                    break;
-                case 10:
-                    weeklyReport();
-                    break;
-                case 11:
-                    faultyItems();
-                    break;
-                case 12:
-                    expItems();
-                    break;
-                case 13:
-                    minAmountItems();
-                    break;
-                case 14:
-                    salesReport();
-                    break;
-                case 15:
-                    deleteItem();
-                    break;
-                case 16:
-                    addSpecificItem();
-                    break;
-                case 17:
-                    terminate();
-                    break;
-            }
+            if(employee.equals(TypeOfEmployee.BranchManager))
+                branchManagerFunctionality();
+            else if(employee.equals(TypeOfEmployee.Storage))
+                storageManagerFunctionality();
 
-        }
+            }
         closeWindow();
+    }
+
+    private void storageManagerFunctionality() {
+        switch (printMenu()) {
+            case 1:
+                addItem();
+                break;
+            case 2:
+                updateItem();
+                break;
+            case 3:
+                addCategory();
+                break;
+            case 4:
+                updateCategory();
+                break;
+            case 5:
+                findItemByLocation();
+                break;
+            case 6:
+                changeAlertTime();
+                break;
+            case 7:
+                addCategoryDiscount();
+                break;
+            case 8:
+                addItemDiscount();
+                break;
+            case 9:
+                addSale();
+                break;
+            case 10:
+                weeklyReport();
+                break;
+            case 11:
+                faultyItems();
+                break;
+            case 12:
+                expItems();
+                break;
+            case 13:
+                minAmountItems();
+                break;
+            case 14:
+                salesReport();
+                break;
+            case 15:
+                deleteItem();
+                break;
+            case 16:
+                addSpecificItem();
+                break;
+            case 17:
+                terminate();
+                break;
+        }
+    }
+
+    private void branchManagerFunctionality(){
+        switch (printMenu()){
+            case 1:
+                weeklyReport();
+                break;
+            case 2:
+                faultyItems();
+                break;
+            case 3:
+                expItems();
+                break;
+            case 4:
+                minAmountItems();
+                break;
+            case 5:
+                salesReport();
+                break;
+            case 6:
+                terminate();
+                break;
+        }
     }
 
     private void removeFaultyItems() {
@@ -114,23 +148,33 @@ public class itemsMenuWindow extends menuWindow {
     @Override
     protected void createMenu() {
         menu = new HashMap<>();
-        menu.put(1, "Add item");
-        menu.put(2, "Update item");
-        menu.put(3, "Add category");
-        menu.put(4, "Update category");
-        menu.put(5, "Find item by location");
-        menu.put(6, "Change alert time");
-        menu.put(7, "Add category discount");
-        menu.put(8, "Add item discount");
-        menu.put(9, "Add sale");
-        menu.put(10, "Get weekly inventory report");
-        menu.put(11, "Show faulty items");
-        menu.put(12, "Show exp items");
-        menu.put(13, "Show minimum amount items");
-        menu.put(14, "Show Sales Report");
-        menu.put(15, "Delete item");
-        menu.put(16,"Add Specific Item");
-        menu.put(17, "Back to main menu");
+        if(employee.equals(TypeOfEmployee.BranchManager)){
+            menu.put(1, "Get weekly inventory report");
+            menu.put(2, "Show faulty items");
+            menu.put(3, "Show exp items");
+            menu.put(4, "Show minimum amount items");
+            menu.put(5, "Show Sales Report");
+            menu.put(6, "Back to main menu");
+        }
+        else {
+            menu.put(1, "Add item");
+            menu.put(2, "Update item");
+            menu.put(3, "Add category");
+            menu.put(4, "Update category");
+            menu.put(5, "Find item by location");
+            menu.put(6, "Change alert time");
+            menu.put(7, "Add category discount");
+            menu.put(8, "Add item discount");
+            menu.put(9, "Add sale");
+            menu.put(10, "Get weekly inventory report");
+            menu.put(11, "Show faulty items");
+            menu.put(12, "Show exp items");
+            menu.put(13, "Show minimum amount items");
+            menu.put(14, "Show Sales Report");
+            menu.put(15, "Delete item");
+            menu.put(16, "Add Specific Item");
+            menu.put(17, "Back to main menu");
+        }
     }
 
     public static void printReport(Response<? extends Object> response) {

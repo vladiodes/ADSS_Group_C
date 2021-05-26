@@ -1,11 +1,11 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import DTO.TruckDTO;
-import Data.Repository;
+
 import java.sql.*;
 import java.sql.ResultSet;
 
-public class TrucksDAO extends DAO<TruckDTO> {
+public class TrucksDAO extends DAOV2<TruckDTO> {
     public TrucksDAO() {
         this.tableName = "Trucks";
     }
@@ -22,7 +22,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -40,7 +40,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -54,7 +54,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
         catch (Exception e){
 
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return output;
     }
@@ -80,7 +80,7 @@ public class TrucksDAO extends DAO<TruckDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 }

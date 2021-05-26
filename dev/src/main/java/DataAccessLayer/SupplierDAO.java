@@ -1,13 +1,12 @@
 package DataAccessLayer;
 
 import BusinessLayer.SuppliersModule.DayOfWeek;
-import DTO.CategoryDTO;
 import DTO.SupplierDTO;
 
 import java.sql.*;
 import java.util.*;
 
-public class SupplierDAO extends DAO<SupplierDTO> {
+public class SupplierDAO extends DAOV1<SupplierDTO> {
     String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="paymentMethod",
     INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol),
     UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol,IDCol);

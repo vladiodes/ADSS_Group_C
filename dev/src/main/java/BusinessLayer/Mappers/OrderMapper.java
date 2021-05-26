@@ -4,7 +4,7 @@ import BusinessLayer.SuppliersModule.Contract;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.SuppliersModule.ProductInOrder;
 import DTO.OrderDTO;
-import DataAccessLayer.DAO;
+import DataAccessLayer.DAOV1;
 import DataAccessLayer.OrderDAO;
 import Misc.Pair;
 
@@ -69,7 +69,7 @@ public class OrderMapper {
     }
 
     public void remove(Order order) {
-        dao.delete(DAO.idCol, String.valueOf(order.getOrderID()));
+        dao.delete(DAOV1.idCol, String.valueOf(order.getOrderID()));
     }
 
     public int addItemToOrder(Order order, ProductInOrder pio, int supplierID) {

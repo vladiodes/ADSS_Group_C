@@ -1,12 +1,12 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import DTO.SiteDTO;
-import Data.Repository;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class SiteDAO extends DAO<SiteDTO> {
+public class SiteDAO extends DAOV2<SiteDTO> {
 
     public SiteDAO() {
         this.tableName = "Sites";
@@ -24,7 +24,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -42,7 +42,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -55,7 +55,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         } catch (Exception e) {
             output = null;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return output;
     }
@@ -81,7 +81,7 @@ public class SiteDAO extends DAO<SiteDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 }

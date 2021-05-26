@@ -1,6 +1,4 @@
-package Data.DAO;
-
-import Data.Repository;
+package DataAccessLayer;
 
 import java.sql.Connection;
 import java.sql.Statement;

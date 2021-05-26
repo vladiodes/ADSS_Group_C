@@ -1,12 +1,12 @@
 package PresentationLayer;
 
-import BusinessLayer.Controllers.TransportsEmployeesFacade;
+import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Menus {
+public class Menus extends menuWindow {
     private final int NUMBER_OF_EMPLOYEE_FIELDS = 7; //magic number
     private final int NUMBER_OF_DRIVER_FIELDS = 8; //magic number
 
@@ -42,6 +42,7 @@ public class Menus {
 
     //================================================Constructor===========================================================
     public Menus(TransportsEmployeesFacade facade) {
+        super("Human Resource manager");
         this.facade = facade;
     }
 
@@ -50,10 +51,11 @@ public class Menus {
     /**
      * Main Function for running all menus and functions in the program
      */
+    @Override
     public void start() {
 
         Scanner s = new Scanner(System.in);
-        initializeAllMenus();
+        createMenu();
         while (true) {
             this.menuMainOption = printMenu(menuMain);
             switch (this.menuMainOption) {
@@ -527,52 +529,6 @@ public class Menus {
                     }
                     break;
                 }
-                case (9): //pre-made scenario
-                {
-                    TypeOfEmployee loggedIn = this.facade.getTypeOfLoggedIn();
-                    this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
-                    TypeOfEmployee temp = this.facade.getTypeOfLoggedIn();
-                    //this.facade.setTypeOfLoggedIn(TypeOfEmployee.HRManager);
-                    //Creates 4 employees, a shift, and adds 1 employee to the shift
-                    Date date1 = null;
-                    Date date2 = null;
-                    Date date3 = null;
-                    try {
-                        date1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/04/2022");
-                        date2 = new SimpleDateFormat("dd/MM/yyyy").parse("22/04/2022");
-                        date3 = new SimpleDateFormat("dd/MM/yyyy").parse("25/04/2022");
-                    } catch (Exception e) {
-                        System.out.println("Scenario failed because of date parsing");
-                    }
-                    List<TypeOfEmployee> skillsNeta = new LinkedList<TypeOfEmployee>();
-                    skillsNeta.add(TypeOfEmployee.Driver);
-
-                    List<TypeOfEmployee> skillsBahar = new LinkedList<TypeOfEmployee>();
-                    skillsBahar.add(TypeOfEmployee.BranchManager);
-
-                    List<TypeOfEmployee> skillsOded = new LinkedList<TypeOfEmployee>();
-                    skillsOded.add(TypeOfEmployee.Storage);
-
-                    List<TypeOfEmployee> skillsTom = new LinkedList<TypeOfEmployee>();
-                    skillsTom.add(TypeOfEmployee.Cashier);
-                    System.out.println(this.facade.addDriverEmployee("Neta", "Lavi", "111111111", "132/13", 10000, "Sick Days 2", date1, 10000));
-                    System.out.println(this.facade.addSkill("111111111", TypeOfEmployee.Storage));
-                    System.out.println(this.facade.addEmployee("Barak", "Bahar", "222222222", "132/13", 10000, "Sick Days 1", date1, skillsBahar));
-                    System.out.println(this.facade.addEmployee("Oded", "Gal", "333333333", "132/13", 10000, "Sick Days 5", date1, skillsOded));
-                    System.out.println(this.facade.addEmployee("Tom", "Nisim", "444444444", "132/13", 10000, "Sick Days 4", date1, skillsTom));
-
-                    System.out.println(this.facade.addShift(date2, TypeOfShift.Morning));
-                    System.out.println(this.facade.addConstraintToShift(date2, TypeOfShift.Morning, TypeOfEmployee.Cashier, 1));
-                    System.out.println(this.facade.addEmployeeToShift("444444444", TypeOfEmployee.Cashier, date2, TypeOfShift.Morning));//22/04/2022
-                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Driver, date2, TypeOfShift.Morning));
-                    System.out.println(this.facade.addEmployeeToShift("111111111", TypeOfEmployee.Storage, date2, TypeOfShift.Morning));
-
-                    System.out.println(this.facade.addAvailableShift("111111111", date3, TypeOfShift.Evening));//25/04/2022
-                    this.facade.setTypeOfLoggedIn(loggedIn);
-                    System.out.println("Initialized Successfully");
-                    this.facade.setTypeOfLoggedIn(temp);
-                    break;
-                }
                 case (10): //Print schedule
                 {
                     System.out.println(this.facade.printSchedule());
@@ -758,10 +714,8 @@ public class Menus {
 
     //Menus Initialization and creations-----------------------
 
-    /**
-     * Initializes all menus so they will be ready for printing and using
-     */
-    private void initializeAllMenus() {
+    @Override
+    protected void createMenu() {
         createMenuMain();
         createARAvailableShift();
         createARSkills();

@@ -1,6 +1,5 @@
 package PresentationLayer;
 
-import BusinessLayer.Facade.ISuppliersFacade;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -12,7 +11,6 @@ public abstract class menuWindow {
 
     public menuWindow(String description){
         this.description=description;
-        createMenu();
     }
 
     public abstract void start();

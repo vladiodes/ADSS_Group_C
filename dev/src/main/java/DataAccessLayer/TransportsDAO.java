@@ -1,8 +1,7 @@
-package Data.DAO;
+package DataAccessLayer;
 
 import DTO.ItemContractDTO;
 import DTO.TransportDTO;
-import Data.Repository;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TransportsDAO extends DAO<TransportDTO> {
+public class TransportsDAO extends DAOV2<TransportDTO> {
     public TransportsDAO() {
         this.tableName = "Transports";
     }
@@ -40,7 +39,7 @@ public class TransportsDAO extends DAO<TransportDTO> {
         } catch (Exception e) {
             return 0;
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
     }
 
@@ -78,7 +77,7 @@ public class TransportsDAO extends DAO<TransportDTO> {
             output = null;
         }
         finally{
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return output;
     }

@@ -1,7 +1,7 @@
 package BusinessLayer.Controllers;
 
 import BusinessLayer.Objects.Truck;
-import Data.DAO.TrucksDAO;
+import DataAccessLayer.TrucksDAO;
 import DTO.TruckDTO;
 import java.util.ArrayList;
 import java.util.HashMap;

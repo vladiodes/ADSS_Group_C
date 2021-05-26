@@ -1,16 +1,14 @@
 package DataAccessLayer;
 
-import DTO.CategoryDTO;
 import DTO.ContractDTO;
 
-import javax.sql.RowSet;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ContractDAO extends DAO<ContractDTO> {
+public class ContractDAO extends DAOV1<ContractDTO> {
     String SupplierIDCol="SupplierID",PricePerUnitCol="PricePerUnit",CatalogueIDbySupplierCol="CatalogueIDbySupplier",ItemIDCol="ItemID",
             INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,SupplierIDCol,PricePerUnitCol,CatalogueIDbySupplierCol,ItemIDCol),
             UPDATE_SQL=String.format("Update %s SET %s=? WHERE CatalogueIDbySupplier=? AND SupplierID=? AND ItemID=?",tableName,PricePerUnitCol),

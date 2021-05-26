@@ -1,13 +1,12 @@
 package DataAccessLayer;
 
-import BusinessLayer.InventoryModule.Category;
 import DTO.CategoryDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  CategoryDAO extends DAO<CategoryDTO> {
+public class  CategoryDAO extends DAOV1<CategoryDTO> {
     private String NameCol="Name",ParentCat="ParentCategoryID",
     INSERT_SQL=String.format("INSERT INTO %s (%s,%s) VALUES(?,?)",tableName,NameCol,ParentCat),
     UPDATE_SQL=String.format("Update %s SET %s=?, %s=? WHERE ID=?",tableName,NameCol,ParentCat);

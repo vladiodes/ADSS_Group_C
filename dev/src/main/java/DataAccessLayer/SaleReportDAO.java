@@ -1,13 +1,11 @@
 package DataAccessLayer;
 
-import DTO.ReportDTO;
-import DTO.SaleDTO;
 import DTO.SaleReportDTO;
 
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 
-public class SaleReportDAO extends DAO<SaleReportDTO> {
+public class SaleReportDAO extends DAOV1<SaleReportDTO> {
     private String StartDate="StartDate",EndDate="EndDate",
             INSERT_SQL=String.format("INSERT INTO %s (%s,%s) VALUES(?,?)",tableName,StartDate,EndDate),
             UPDATE_SQL=String.format("Update %s SET %s=?, %s=? WHERE ID=?",tableName,StartDate,EndDate);

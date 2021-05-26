@@ -1,5 +1,6 @@
-package BusinessLayer.Controllers;
+package BusinessLayer.Facade;
 
+import BusinessLayer.Controllers.*;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
@@ -29,6 +30,7 @@ public class TransportsEmployeesFacade {
         this.staffController=new StaffController(typeOfLoggedIn);
         this.scheduleController=new ScheduleController(typeOfLoggedIn, this.staffController);
         Tra = new Transports(Tru,Sit,staffController);
+        loadAllControllers();
     }
 
 
@@ -119,10 +121,11 @@ public class TransportsEmployeesFacade {
         return typeOfLoggedIn;
     }
 
-    public void setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
+    public TransportsEmployeesFacade setTypeOfLoggedIn(TypeOfEmployee typeOfLoggedIn) {
         this.typeOfLoggedIn = typeOfLoggedIn;
         this.scheduleController.setTypeOfLoggedIn(typeOfLoggedIn);
         this.staffController.setTypeOfLoggedIn(typeOfLoggedIn);
+        return this;
     }
 
     //========================================================Transports========================================================================
@@ -195,19 +198,11 @@ public class TransportsEmployeesFacade {
         return Sit.getSite(s);
     }
 
-    public void Load(){
-        this.Tru.Load();
-        this.Sit.Load();
-        this.Tra.Load();
-    }
-
-
     public void loadAllControllers() {
         this.staffController.getAllEmployees();
         this.scheduleController.getAllShifts();
         this.Sit.Load();
         this.Tru.Load();
         this.Tra.Load();
-
     }
 }

@@ -33,6 +33,7 @@ public class suppliersMenuWindow extends menuWindow {
 
     public suppliersMenuWindow(ISuppliersFacade facade, String description) {
         super(description);
+        createMenu();
         this.facade=facade;
     }
     public void start() {

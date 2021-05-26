@@ -1,10 +1,9 @@
-package Data.DAO;
-import Data.Repository;
+package DataAccessLayer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DAO<T> {
+public abstract class DAOV2<T> {
     protected String tableName;
 
     public abstract int insert(T Ob);
@@ -23,7 +22,7 @@ public abstract class DAO<T> {
                 output.add(makeDTO(RS));
         } catch (Exception e) {
         } finally {
-            Repository.getInstance().closeConn(conn);
+            Repository.getInstance().closeConnection(conn);
         }
         return output;
     }
@@ -40,7 +39,7 @@ public abstract class DAO<T> {
             rowsAffected=stmt.executeUpdate(DELETE_SQL);
         } catch (SQLException e) {
         } finally {
-            Repository.getInstance().closeConn(con);
+            Repository.getInstance().closeConnection(con);
         }
         return rowsAffected;
     }
