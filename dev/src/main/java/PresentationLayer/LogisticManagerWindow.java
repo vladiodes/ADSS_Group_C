@@ -2,21 +2,22 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.SupplierFacadeImpl;
 import BusinessLayer.Facade.TransportsEmployeesFacade;
-import Misc.TypeOfEmployee;
 
 import java.util.HashMap;
 
-public class StoreManagerWindow extends menuWindow {
-    private SupplierFacadeImpl supplierFacade;
+public class LogisticManagerWindow extends menuWindow {
+
+    private boolean shouldTerminate;
     private menuWindow[] windows;
-    private boolean shouldTerminate=false;
-    public StoreManagerWindow(SupplierFacadeImpl supplierFacade, TransportsEmployeesFacade transportsEmployeesFacade){
-        super("Store manager");
+
+    public LogisticManagerWindow(SupplierFacadeImpl supplierFacade, TransportsEmployeesFacade transportsEmployeesFacade){
+        super("Logistic Manager");
         createMenu();
+        shouldTerminate=false;
         windows=new menuWindow[]{
-                new suppliersMenuWindow(supplierFacade,"Manage suppliers"),
-                new itemsMenuWindow(TypeOfEmployee.BranchManager),
-                new menuWindow("Exit") {
+                new TransportsMain(transportsEmployeesFacade),
+                new ordersMenuWindow(supplierFacade,"Manage orders"),
+                new menuWindow("Logout") {
                     @Override
                     public void start() {
                         terminate();
@@ -28,15 +29,13 @@ public class StoreManagerWindow extends menuWindow {
                     }
                 }
         };
-        this.supplierFacade=supplierFacade;
     }
     @Override
     public void start() {
-        printDescription();
-        System.out.println("Please choose an option:");
+
         while (!shouldTerminate){
-            int choice=printMenu()-1;
-            windows[choice].start();
+            int choice=printMenu();
+            windows[choice-1].start();
         }
         closeWindow();
     }
@@ -52,9 +51,8 @@ public class StoreManagerWindow extends menuWindow {
     @Override
     protected void createMenu() {
         menu=new HashMap<>();
-        menu.put(1,"Manage suppliers");
-        menu.put(2,"View reports");
+        menu.put(1,"Manage transports");
+        menu.put(2,"Manage Orders");
         menu.put(3,"Logout");
-
     }
 }

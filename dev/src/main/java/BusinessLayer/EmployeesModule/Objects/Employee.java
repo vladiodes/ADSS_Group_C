@@ -1,5 +1,6 @@
-package BusinessLayer.Objects;
+package BusinessLayer.EmployeesModule.Objects;
 
+import BusinessLayer.Interfaces.persistentObject;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Employee implements persistentObject{
+public class Employee implements persistentObject {
     final int ID_LENGTH = 9;//magic number
     //======================================================Fields=================================================================
     protected String firstName;

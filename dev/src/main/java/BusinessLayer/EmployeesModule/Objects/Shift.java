@@ -1,7 +1,8 @@
-package BusinessLayer.Objects;
+package BusinessLayer.EmployeesModule.Objects;
 
 
-import BusinessLayer.Controllers.StaffController;
+import BusinessLayer.EmployeesModule.Controllers.StaffController;
+import BusinessLayer.Interfaces.persistentObject;
 import DTO.ShiftDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;

@@ -1,10 +1,18 @@
 package BusinessLayer.Facade;
 
-import BusinessLayer.Controllers.*;
+import BusinessLayer.EmployeesModule.Controllers.ScheduleController;
+import BusinessLayer.EmployeesModule.Controllers.StaffController;
+import BusinessLayer.TransportsModule.Controllers.Sites;
+import BusinessLayer.TransportsModule.Controllers.Transports;
+import BusinessLayer.TransportsModule.Controllers.Trucks;
+import BusinessLayer.TransportsModule.Objects.ItemContract;
+import BusinessLayer.TransportsModule.Objects.Site;
+import BusinessLayer.TransportsModule.Objects.Transport;
+import BusinessLayer.TransportsModule.Objects.Truck;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import BusinessLayer.Objects.*;
+import BusinessLayer.EmployeesModule.Objects.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,17 +27,18 @@ public class TransportsEmployeesFacade {
     private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
     private StaffController staffController;
-    private Sites Sit = new Sites();
-    private Trucks Tru = new Trucks();
+    private Sites Sit = Sites.getInstance();
+    private Trucks Tru = Trucks.getInstance();
     private Transports Tra;
 
     //When creating the assignment screen add the skills of each employee
     public TransportsEmployeesFacade(TypeOfEmployee typeOfLoggedIn)
     {
         this.typeOfLoggedIn=typeOfLoggedIn;
-        this.staffController=new StaffController(typeOfLoggedIn);
+        this.staffController=StaffController.getInstance();
+        staffController.setTypeOfLoggedIn(typeOfLoggedIn);
         this.scheduleController=new ScheduleController(typeOfLoggedIn, this.staffController);
-        Tra = new Transports(Tru,Sit,staffController);
+        Tra = Transports.getInstance();
         loadAllControllers();
     }
 

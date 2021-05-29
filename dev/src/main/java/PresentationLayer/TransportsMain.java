@@ -2,7 +2,8 @@ package PresentationLayer;
 
 import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.TypeOfShift;
-import BusinessLayer.Objects.ItemContract;
+import BusinessLayer.TransportsModule.Objects.ItemContract;
+import Misc.utills;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +17,7 @@ public class TransportsMain extends menuWindow {
     public TransportsMain(TransportsEmployeesFacade API){
         super("Logistics Manager");
         this.API=API;
-        in=utills.scanner;
+        in= utills.scanner;
         createMenu();
     }
 
@@ -31,7 +32,7 @@ public class TransportsMain extends menuWindow {
         menu.put(6,"Get all sites");
         menu.put(7,"Get all sections");
         menu.put(8,"Get all transports");
-        menu.put(9,"Logout");
+        menu.put(9,"Go back");
     }
 
     @Override

@@ -3,13 +3,13 @@ package BusinessLayer.Facade;
 import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.SuppliersModule.PaymentAgreement;
 import DTO.ContractDTO;
-import DTO.ItemDTO;
 import DTO.OrderDTO;
 import DTO.SupplierDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface ISuppliersFacade {
     /**
@@ -27,9 +27,10 @@ public interface ISuppliersFacade {
      * @param contactInfo - A dictionary of [Name:Phone number]
      * @param discounts - The quantity agreement by price (for a total price of an order)
      *                  A dictionary of the type: [Price:Discount]
+     * @param siteDestination - the address destination of the site the supplier located at.
      * @return A response message, with the id of the added supplier upon success.
      */
-    Response<Integer> addSupplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts);
+    Response<Integer> addSupplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts,String siteDestination);
 
     /**
      * Deletes a supplier from the system
@@ -189,4 +190,12 @@ public interface ISuppliersFacade {
      * @return a response object, true upon success
      */
     Response<Boolean> addDiscountProduct(int supplierID, int catalogueID,int quantity, int discount);
+
+    /**
+     * Finds a transportation for a given order
+     * @param supplierID - the id of the supplier that supplies the order
+     * @param orderID - the id of the order to find transport to
+     * @return returns a response object, true upon success, false otherwise
+     */
+    Response<Boolean> findTransportForOrder(int supplierID, int orderID);
 }

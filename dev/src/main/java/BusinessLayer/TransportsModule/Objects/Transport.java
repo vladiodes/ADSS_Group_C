@@ -1,5 +1,7 @@
-package BusinessLayer.Objects;
+package BusinessLayer.TransportsModule.Objects;
 
+import BusinessLayer.EmployeesModule.Objects.Driver;
+import BusinessLayer.Interfaces.persistentObject;
 import DTO.TransportDTO;
 import DTO.ItemContractDTO;
 import java.util.Date;

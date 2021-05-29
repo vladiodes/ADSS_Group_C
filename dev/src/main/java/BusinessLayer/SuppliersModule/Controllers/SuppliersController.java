@@ -1,13 +1,16 @@
 package BusinessLayer.SuppliersModule.Controllers;
 
-import java.time.LocalDate;
-import java.util.*;
-
 import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.Mappers.ContractMapper;
 import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.Mappers.SupplierMapper;
 import BusinessLayer.SuppliersModule.*;
+
+import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -47,12 +50,12 @@ public class SuppliersController {
      * @param discounts
      * @return the id of the new added supplier
      */
-    public int addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
+    public int addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts,String siteDestination) {
         for(Supplier s:supplierMapper.getAllSuppliers()){
             if(s.getSupplierName().equals(supplierName))
                 throw new IllegalArgumentException("There's already a supplier with that name in the system");
         }
-            Supplier supplier=new Supplier(supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts);
+            Supplier supplier=new Supplier(supplierName, supplyingDays, selfPickup, bankAccount, paymentMethod, categories, manufactures, contactInfo, discounts,siteDestination);
             int id=supplierMapper.addSupplier(supplier);
             supplier.setSupplierID(id);
             return id;

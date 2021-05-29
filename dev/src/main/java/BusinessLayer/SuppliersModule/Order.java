@@ -2,9 +2,13 @@ package BusinessLayer.SuppliersModule;
 
 import BusinessLayer.InventoryModule.Item;
 import BusinessLayer.Mappers.OrderMapper;
+import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
+import BusinessLayer.TransportsModule.Controllers.Transports;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Order{
     private LocalDate dateOfOrder;
@@ -16,16 +20,23 @@ public class Order{
     private Set<ProductInOrder> productsInOrder;
     private boolean isFixed;
     private int supplierID;
+    private String siteDestination;
 
-    public Order(LocalDate date,Boolean isFixed,int supplierID){
+    public Order(LocalDate date,Boolean isFixed,int supplierID,String siteDestination){
         setDateOfOrder(date);
-        shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=0;
         priceAfterDiscount=0;
         totalQuantity=0;
         productsInOrder=new LinkedHashSet<>();
         setisFixed(isFixed);
         this.supplierID=supplierID;
+        this.siteDestination=siteDestination;
+        if(siteDestination!=null){
+            findTransport();
+        }
+        else{
+            shipmentStatus=ShipmentStatus.TransportBySupplier;
+        }
     }
 
     /**
@@ -35,11 +46,10 @@ public class Order{
      * @param original
      * @param date
      */
-    public Order(Order original,LocalDate date,int supplierID){
+    public Order(Order original,LocalDate date,int supplierID,String siteDestination){
         if(!original.isFixed)
             throw new IllegalArgumentException("The order you want to re-order from isn't fixed!");
         setDateOfOrder(date);
-        shipmentStatus=ShipmentStatus.WaitingForDelivery;
         priceBeforeDiscount=original.priceBeforeDiscount;
         this.priceAfterDiscount=original.priceAfterDiscount;
         totalQuantity=original.totalQuantity;
@@ -47,8 +57,16 @@ public class Order{
         this.productsInOrder.addAll(original.productsInOrder);
         isFixed=true;
         this.supplierID=supplierID;
+        this.siteDestination=siteDestination;
+        if(siteDestination!=null){
+            findTransport();
+        }
+        else{
+            shipmentStatus=ShipmentStatus.TransportBySupplier;
+        }
     }
 
+    //@TODO: fix this constructor (which handles the construction of an order when loaded from database) to receive the destinationSite as well.
     public Order(LocalDate dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed,int supplierID) {
         this.dateOfOrder=dateOfOrder;
         this.orderID=orderID;
@@ -133,6 +151,33 @@ public class Order{
         return null;
     }
 
+    /**
+     * This function attempts to find an available transport for the given siteDestination - if wasn't found then shipment status
+     * is set to no transport available
+     * @return true - if found a transport, false otherwise
+     */
+    public boolean findTransport() {
+        if(siteDestination==null || !(shipmentStatus==ShipmentStatus.NoTransportAvailable || shipmentStatus==null))
+            throw new IllegalArgumentException("This order doesn't need a transportation");
+
+        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays())){
+            shipmentStatus=ShipmentStatus.NoTransportAvailable;
+            return false;
+        }
+        else
+            shipmentStatus=ShipmentStatus.WaitingForTransport;
+        return true;
+    }
+
+    /**
+     * This function tells if everything is ok with the order (a transportation was found either by supplier
+     * or by the store employees and we're waiting for the transport to arrive).
+     * @return return true if yes, false otherwise
+     */
+    public boolean isWaitingForDelivery(){
+        return !(shipmentStatus==ShipmentStatus.NoTransportAvailable);
+    }
+
 
     /**
      *  this function is used when an order is received
@@ -140,15 +185,15 @@ public class Order{
      *  throws an exception if the order was already in the status of delivered
      */
     public void receive() {
-        if(shipmentStatus==ShipmentStatus.Delivered)
-            throw new IllegalArgumentException("The order was already delivered!");
+        if(!(shipmentStatus==ShipmentStatus.TransportArrived || shipmentStatus==ShipmentStatus.TransportBySupplier)) //those are the only statuses in which the order can be received.
+            throw new IllegalArgumentException("This order can't be receive (either transportation hasn't arrived yet\n" +
+                    "or no transportation was assigned or the order was already delivered");
 
         //An assumption: the items received in an order are to expire in 3 weeks from when receiving an order
         for(ProductInOrder pio:productsInOrder)
             pio.getContract().getProduct().addSpecificItem(0,pio.getQuantity(), LocalDate.now().plusWeeks(3));
         shipmentStatus=ShipmentStatus.Delivered;
         OrderMapper.getInstance().update(this,supplierID);
-
     }
 
 
@@ -236,7 +281,16 @@ public class Order{
         return findProductInOrder(p)!=null;
     }
 
+    /**
+     * This function is called by the transport once it's arrived, updating the field of the shipment status
+     * so the storage manager can accept the truck and unpack its contents and place inside the store
+     */
+    public void transportHasArrived(){
+        if(shipmentStatus==ShipmentStatus.WaitingForTransport)
+            shipmentStatus=ShipmentStatus.TransportArrived;
+    }
+
     public enum ShipmentStatus{
-        Delivered,WaitingForDelivery;
+        TransportBySupplier,TransportArrived,Delivered,WaitingForTransport,NoTransportAvailable;
     }
 }

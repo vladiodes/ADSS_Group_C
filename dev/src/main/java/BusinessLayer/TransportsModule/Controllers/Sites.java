@@ -1,6 +1,7 @@
-package BusinessLayer.Controllers;
+package BusinessLayer.TransportsModule.Controllers;
 
-import BusinessLayer.Objects.Site;
+import BusinessLayer.Interfaces.Controller;
+import BusinessLayer.TransportsModule.Objects.Site;
 import DataAccessLayer.SectionsDAO;
 import DataAccessLayer.SiteDAO;
 import DTO.SectionDTO;
@@ -13,12 +14,19 @@ public class Sites implements Controller<Site> {
     private List<String> sections;
     private SectionsDAO SECDAO;
     private SiteDAO SITDAO;
+    private static Sites instance=null;
 
-    public Sites() {
+    private Sites() {
         this.sites = new HashMap<String, Site>();
         this.SECDAO = new SectionsDAO();
         this.SITDAO = new SiteDAO();
         this.sections = SECDAO.getAll();
+    }
+
+    public static Sites getInstance() {
+        if(instance==null)
+            instance=new Sites();
+        return instance;
     }
 
     public void addSite(String _ad, String _num, String _contact, String _section) throws Exception {

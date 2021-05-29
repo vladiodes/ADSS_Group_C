@@ -1,5 +1,6 @@
-package BusinessLayer.Objects;
+package BusinessLayer.TransportsModule.Objects;
 
+import BusinessLayer.Interfaces.persistentObject;
 import DTO.TruckDTO;
 
 public class Truck implements persistentObject<TruckDTO> {

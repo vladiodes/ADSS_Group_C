@@ -1,16 +1,16 @@
-package BusinessLayer.Controllers;
+package BusinessLayer.EmployeesModule.Controllers;
 
+import BusinessLayer.EmployeesModule.Objects.Driver;
+import BusinessLayer.EmployeesModule.Objects.Employee;
+import BusinessLayer.EmployeesModule.Objects.Shift;
+import DTO.DriverDTO;
+import DTO.EmployeeDTO;
 import DataAccessLayer.DriverDAO;
 import DataAccessLayer.EmployeeDAO;
 import DataAccessLayer.ShiftDAO;
-import DTO.DriverDTO;
-import DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import BusinessLayer.Objects.Driver;
-import BusinessLayer.Objects.Employee;
-import BusinessLayer.Objects.Shift;
 
 import java.util.*;
 
@@ -27,14 +27,23 @@ public class StaffController
     private DriverDAO driverDAO = new DriverDAO();
     private ShiftDAO shiftDAO = new ShiftDAO();
 
+    private static StaffController instance=null;
+
+    public static StaffController getInstance() {
+        if(instance==null)
+            instance=new StaffController();
+        return instance;
+
+    }
+
     //==================================================================Constructor============================================
 
 
-    public StaffController(TypeOfEmployee type)
+    private StaffController()
     {
         this.employees = new HashMap<>();
-        this.typeOfLoggedIn = type;
     }
+
 
     //===================================================================Methods===========================================================
 

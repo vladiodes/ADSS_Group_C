@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 import BusinessLayer.Facade.SupplierFacadeImpl;
+import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
 
 import java.util.HashMap;
@@ -10,7 +11,7 @@ public class StorageManagerWindow extends menuWindow {
     private SupplierFacadeImpl facade;
     private menuWindow[] windows;
     boolean shouldTerminate;
-    public StorageManagerWindow(SupplierFacadeImpl facade){
+    public StorageManagerWindow(SupplierFacadeImpl facade, TransportsEmployeesFacade transportsEmployeesFacade){
         super("Storage Manager");
         createMenu();
         shouldTerminate=false;

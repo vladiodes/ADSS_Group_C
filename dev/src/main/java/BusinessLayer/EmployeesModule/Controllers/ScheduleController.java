@@ -1,13 +1,13 @@
-package BusinessLayer.Controllers;
+package BusinessLayer.EmployeesModule.Controllers;
 
 
-import BusinessLayer.Objects.Employee;
+import BusinessLayer.EmployeesModule.Objects.Employee;
 import DataAccessLayer.ShiftDAO;
 import DTO.ShiftDTO;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import BusinessLayer.Objects.DailySchedule;
-import BusinessLayer.Objects.Shift;
+import BusinessLayer.EmployeesModule.Objects.DailySchedule;
+import BusinessLayer.EmployeesModule.Objects.Shift;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

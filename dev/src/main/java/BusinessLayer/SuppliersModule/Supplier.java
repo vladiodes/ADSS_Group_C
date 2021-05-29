@@ -8,7 +8,6 @@ import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import DTO.SupplierDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Supplier{
@@ -24,6 +23,7 @@ public class Supplier{
     private Map<Double,Integer> discountsByPrice;
     private List<Order> ordersFromSupplier;
     private List<Contract> supplierContracts;
+    private String siteDestination;
 
     public List<Contract> getSupplierContracts() {
         return supplierContracts;
@@ -44,7 +44,7 @@ public class Supplier{
         ordersFromSupplier=new LinkedList<>();
         supplierContracts=new LinkedList<>();
     }
-    public Supplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts) {
+    public Supplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts, String siteDestination) {
         setSupplierName(supplierName);
         setFixedDays(supplyingDays);
         setSelfPickUp(selfPickup);
@@ -56,6 +56,7 @@ public class Supplier{
         setDiscountsByPrice(discounts);
         this.ordersFromSupplier = new LinkedList<>();
         this.supplierContracts = new LinkedList<>();
+        this.siteDestination=siteDestination;
     }
 
     private void setDiscountsByPrice(Map<Double, Integer> discounts) {
@@ -193,7 +194,7 @@ public class Supplier{
      * @param isFixed is the order fixed (can be re-ordered)
      */
     public Order addOrder(LocalDate date, Boolean isFixed){
-        Order toAdd=new Order(date,isFixed,SupplierID);
+        Order toAdd=new Order(date,isFixed,SupplierID,siteDestination);
         ordersFromSupplier.add(toAdd);
         return toAdd;
     }
@@ -212,7 +213,7 @@ public class Supplier{
      * @param date the date issued with the new order
      */
     public Order reOrder(int originalOrderID, LocalDate date) {
-        Order toReturn = new Order(findOrder(originalOrderID), date,SupplierID);
+        Order toReturn = new Order(findOrder(originalOrderID), date,SupplierID,siteDestination);
         ordersFromSupplier.add(toReturn);
         return toReturn;
     }
@@ -370,6 +371,7 @@ public class Supplier{
      * @param orderID the id of the order to cancel
      */
     public void cancelOrder(int orderID) {
+
         Order order=findOrder(orderID);
         ordersFromSupplier.remove(order);
         OrderMapper.getInstance().remove(order);
@@ -424,6 +426,15 @@ public class Supplier{
         ContractMapper.getInstance().addDiscount(findContract(catalogueID),quantity,discount);
     }
 
+    /**
+     * finds a transport for the given order id
+     * @param orderID the id of the order to find transport to
+     */
+    public void findTransport(int orderID) {
+        if(!findOrder(orderID).findTransport())
+            throw new IllegalArgumentException("No transportation was found within a week from the date of the order");
+    }
+
     //Following are simple getters
     public String getSupplierName() {
         return supplierName;
@@ -464,4 +475,5 @@ public class Supplier{
     public Map<Double, Integer> getDiscountsByPrice() {
         return discountsByPrice;
     }
+
 }

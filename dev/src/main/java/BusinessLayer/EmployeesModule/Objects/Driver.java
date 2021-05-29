@@ -1,5 +1,6 @@
-package BusinessLayer.Objects;
+package BusinessLayer.EmployeesModule.Objects;
 
+import BusinessLayer.Interfaces.persistentObject;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;

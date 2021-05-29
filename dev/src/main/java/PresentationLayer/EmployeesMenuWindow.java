@@ -6,7 +6,7 @@ import Misc.TypeOfShift;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Menus extends menuWindow {
+public class EmployeesMenuWindow extends menuWindow {
     private final int NUMBER_OF_EMPLOYEE_FIELDS = 7; //magic number
     private final int NUMBER_OF_DRIVER_FIELDS = 8; //magic number
 
@@ -41,7 +41,7 @@ public class Menus extends menuWindow {
     private TransportsEmployeesFacade facade;
 
     //================================================Constructor===========================================================
-    public Menus(TransportsEmployeesFacade facade) {
+    public EmployeesMenuWindow(TransportsEmployeesFacade facade) {
         super("Human Resource manager");
         this.facade = facade;
     }
@@ -529,18 +529,18 @@ public class Menus extends menuWindow {
                     }
                     break;
                 }
-                case (10): //Print schedule
+                case (9): //Print schedule
                 {
                     System.out.println(this.facade.printSchedule());
                     break;
                 }
-                case (11): //Print Employee's Personal Details
+                case (10): //Print Employee's Personal Details
                 {
                     String idToPrint = checkIdExist();
                     System.out.println(this.facade.printPersonalDetails(idToPrint));
                     break;
                 }
-                case (12): //Exit The Program
+                case (11): //Exit The Program
                 {
                     return;
                 }
@@ -738,10 +738,9 @@ public class Menus extends menuWindow {
         menuMain.put(6, "Add/Remove Employee to shift");
         menuMain.put(7, "Add/Remove Constraint To Existing shift - Only allowed for HRManger");
         menuMain.put(8, "Add/Remove Shift - Only allowed for HRManger");
-        menuMain.put(9, "Initialize System with pre-made scenario");
-        menuMain.put(10, "Print Schedule");
-        menuMain.put(11, "Print Employee Personal Details");
-        menuMain.put(12, "Exit");
+        menuMain.put(9, "Print Schedule");
+        menuMain.put(10, "Print Employee Personal Details");
+        menuMain.put(11, "Exit");
     }
 
     private void createAREmployee() {

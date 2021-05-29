@@ -1,6 +1,7 @@
-package BusinessLayer.Controllers;
+package BusinessLayer.TransportsModule.Controllers;
 
-import BusinessLayer.Objects.Truck;
+import BusinessLayer.Interfaces.Controller;
+import BusinessLayer.TransportsModule.Objects.Truck;
 import DataAccessLayer.TrucksDAO;
 import DTO.TruckDTO;
 import java.util.ArrayList;
@@ -10,9 +11,17 @@ import java.util.List;
 public class Trucks implements Controller<Truck> {
     private HashMap<String, Truck> trucks;
     private TrucksDAO DAO;
-    public Trucks() {
+
+    private static Trucks instance=null;
+    private Trucks() {
         this.trucks = new HashMap<String, Truck>();
         DAO = new TrucksDAO();
+    }
+
+    public static Trucks getInstance() {
+        if(instance==null)
+            instance=new Trucks();
+        return instance;
     }
 
     public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {

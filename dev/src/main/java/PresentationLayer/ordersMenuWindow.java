@@ -3,6 +3,7 @@ package PresentationLayer;
 import BusinessLayer.Facade.ISuppliersFacade;
 import BusinessLayer.Facade.Response;
 import DTO.OrderDTO;
+import Misc.utills;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -28,7 +29,8 @@ public class ordersMenuWindow extends menuWindow {
         menu.put(6,"View all order by a given supplier");
         menu.put(7,"Cancel an order");
         menu.put(8,"Delete an item from an order");
-        menu.put(9,"Go back to the main menu");
+        menu.put(9,"Find a transportation for an order");
+        menu.put(10,"Go back to the main menu");
     }
 
 
@@ -61,11 +63,22 @@ public class ordersMenuWindow extends menuWindow {
                     deleteItemFromOrder();
                     break;
                 case 9:
+                    findTransportForOrder();
+                    break;
+                case 10:
                     terminate();
                     break;
             }
         }
         closeWindow();
+    }
+
+    private void findTransportForOrder() {
+        Response<Boolean> response=facade.findTransportForOrder(
+                utills.getNonNegativeNumber("\nEnter the id of the supplier that supplies this order"),
+                utills.getNonNegativeNumber("\nEnter the id of the order")
+        );
+        utills.printMessageOrSuccess(response,"Successfully found a transportation for the order!");
     }
 
     private void deleteItemFromOrder() {

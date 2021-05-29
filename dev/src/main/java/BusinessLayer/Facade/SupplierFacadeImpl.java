@@ -25,9 +25,9 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     }
 
     @Override
-    public Response<Integer> addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts) {
+    public Response<Integer> addSupplier(String supplierName, Set<DayOfWeek> supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String, String> contactInfo, Map<Double, Integer> discounts,String siteDestination) {
         try {
-             return new Response<>(suppliersController.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discounts));
+             return new Response<>(suppliersController.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount,paymentMethod,categories,manufactures,contactInfo,discounts,siteDestination));
         }
         catch (IllegalArgumentException e){
             return new Response<>(e);
@@ -239,6 +239,17 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
     public Response<Boolean> addDiscountProduct(int supplierID, int catalogueID, int quantity, int discount) {
         try {
             suppliersController.getSupplier(supplierID).addDiscount(catalogueID,quantity,discount);
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e){
+            return new Response<>(e);
+        }
+    }
+
+    @Override
+    public Response<Boolean> findTransportForOrder(int supplierID, int orderID) {
+        try {
+            suppliersController.getSupplier(supplierID).findTransport(orderID);
             return new Response<>(true);
         }
         catch (IllegalArgumentException e){

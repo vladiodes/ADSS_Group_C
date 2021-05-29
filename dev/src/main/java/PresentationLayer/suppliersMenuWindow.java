@@ -6,6 +6,7 @@ import BusinessLayer.Facade.Response;
 import BusinessLayer.SuppliersModule.PaymentAgreement;
 import DTO.ContractDTO;
 import DTO.SupplierDTO;
+import Misc.utills;
 
 import java.util.*;
 
@@ -185,7 +186,7 @@ public class suppliersMenuWindow extends menuWindow {
     private void addSupplier() {
         int paymentMethod=-1;
         boolean selfPickup=false;
-        String supplierName,bankAccount;
+        String supplierName,bankAccount,siteDestination;
         Set<DayOfWeek> supplyingDays=null;
         Set<String> categories=new HashSet<>(),manufactures=new HashSet<>();
         HashMap<String,String> contactInfo=new HashMap<>();
@@ -225,7 +226,10 @@ public class suppliersMenuWindow extends menuWindow {
             System.out.println("to continue press Enter or 'Q' if done");
         }
 
-        Response<Integer> response=facade.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount, PaymentAgreement.valueOf(paymentMethod),categories,manufactures,contactInfo,discount);
+        System.out.println("\nEnter the address of the site destination of this supplier");
+        siteDestination=scanner.nextLine();
+
+        Response<Integer> response=facade.addSupplier(supplierName,supplyingDays,selfPickup,bankAccount, PaymentAgreement.valueOf(paymentMethod),categories,manufactures,contactInfo,discount,siteDestination);
         utills.printMessageOrSuccess(response,"Supplier of id " + response.getValue() + " was added successfully!");
     }
 
