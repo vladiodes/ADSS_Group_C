@@ -175,7 +175,7 @@ public class TransportsMain extends menuWindow {
             ArrayList<ItemContract> contracts = makeItemContract(API);
             while (true) {
                 try {
-                    API.addTransport(transDate, weight, driverID, plateNum, contracts, source, typeOfShift);
+                    //API.addTransport(transDate, weight, driverID, plateNum, contracts, source, typeOfShift); TODO
                     System.out.println("The transport was successfuly recorded!");
                     break;
                 } catch (Exception e) {

@@ -2,23 +2,32 @@ package BusinessLayer.TransportsModule.Objects;
 
 import BusinessLayer.EmployeesModule.Objects.Driver;
 import BusinessLayer.Interfaces.persistentObject;
+import BusinessLayer.SuppliersModule.Order;
+import DTO.OrderDTO;
 import DTO.TransportDTO;
 import DTO.ItemContractDTO;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static Misc.Functions.LocalDateToString;
+
 public class Transport implements persistentObject<TransportDTO> {
-    private Date date;
+    private LocalDate date;
     private int weight;
     private Driver driver = null;
     private Truck truck = null;
-    private List<ItemContract> Contracts;
+    private List<Order> Orders;
     private Site source = null;
     private int ID;
     private boolean delivered;
 
-    public Transport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source, int ID) throws Exception {
+    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> contracts, Site source, int ID) throws Exception {
         setTruck(truck);
         setDate(date);
         setDriver(driver);
@@ -29,7 +38,7 @@ public class Transport implements persistentObject<TransportDTO> {
         delivered = false;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -53,15 +62,15 @@ public class Transport implements persistentObject<TransportDTO> {
         this.truck = _truck;
     }
 
-    public void setContracts(List<ItemContract> contracts) {
-        Contracts = contracts;
+    public void setContracts(List<Order> contracts) {
+        Orders = contracts;
     }
 
     public void setSource(Site source) {
         this.source = source;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -77,8 +86,8 @@ public class Transport implements persistentObject<TransportDTO> {
         return truck;
     }
 
-    public List<ItemContract> getContracts() {
-        return Contracts;
+    public List<Order> getOrders() {
+        return Orders;
     }
 
     public Site getSource() {
@@ -96,17 +105,17 @@ public class Transport implements persistentObject<TransportDTO> {
                 ", weight=" + weight +
                 ", driver=" + driver +
                 ", truck=" + truck +
-                ", Contracts=" + Contracts +
+                ", Contracts=" + Orders +
                 ", source=" + source +
                 '}';
     }
 
     @Override
     public TransportDTO toDTO() {
-        LinkedList<ItemContractDTO> contractsDTO = new LinkedList<>();
-        for (ItemContract contract : Contracts) {
-            contractsDTO.add(new ItemContractDTO(ID, contract.getDestination().getAddress(), contract.getItems(), contract.getPassed()));
+        LinkedList<OrderDTO> OrdersDTO = new LinkedList<>();
+        for (Order ord : Orders) {
+            OrdersDTO.add(new OrderDTO(ord, ord.getSupplierID()));
         }
-        return new TransportDTO(Misc.Functions.DateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(), contractsDTO, getSource().getAddress(), ID);
+        return new TransportDTO(LocalDateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(),  OrdersDTO, getSource().getAddress(), ID);
     }
 }

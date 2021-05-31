@@ -14,6 +14,8 @@ import DTO.ItemContractDTO;
 import DTO.TransportDTO;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Transports implements Controller<Transport> {
@@ -39,7 +41,7 @@ public class Transports implements Controller<Transport> {
         DAO = new TransportsDAO();
     }
 
-    public void addTransport(Date date, int weight, Driver driver, Truck truck, List<ItemContract> contracts, Site source) throws Exception {
+    public void addTransport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> contracts, Site source) throws Exception {
         Transport toAdd = new Transport(date, weight, driver, truck, contracts, source, ID);
         transports.add(toAdd);
         ID ++;
@@ -52,7 +54,7 @@ public class Transports implements Controller<Transport> {
 
     @Override
     public void Load() {
-        this.transports = new ArrayList<>();
+        /*this.transports = new ArrayList<>();
         ID = 0;
         try {
             List<TransportDTO> DTOS = DAO.getAll();
@@ -68,7 +70,7 @@ public class Transports implements Controller<Transport> {
         catch (Exception e )
         {
 
-        }
+        }*/ // TODO
     }
 
 
@@ -81,7 +83,31 @@ public class Transports implements Controller<Transport> {
      * @param fixedDays - the fixed days of the supplier (the constraint).
      * @return returns true if found a transport, returns false if no transport that fulfills the constraints was found.
      */
-    public boolean requestTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays) {
-        throw new NotImplementedException();
+    public boolean requestTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
+        if(order == null || sitesController.getSite(siteDestination) == null || fixedDays.isEmpty())
+            return false;
+        Transport TranstoAdd = null;
+        for(Transport temp : this.transports){
+            if(TranstoAdd !=null) break;
+            if(temp.getDate().isBefore(order.getDateOfOrder())){
+                long TimeDiff = ChronoUnit.DAYS.between(temp.getDate(),order.getDateOfOrder());
+                if(TimeDiff<= 7)
+                    for(DayOfWeek DOW : fixedDays)
+                        if(DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue()-1)%7)) == 0) {
+                            TranstoAdd = temp;
+                            break;
+                        }
+            }
+        }
+        if(TranstoAdd == null) return false;
+        else {
+            int newWeight = TranstoAdd.getWeight()+weight;
+            if(newWeight>TranstoAdd.getTruck().getMaxWeight())
+                return false;
+            TranstoAdd.getOrders().add(order);
+            try {TranstoAdd.setWeight(newWeight);} //because ima shitty programer dont ask questions please
+            catch(Exception e){}
+            return true;
+        }
     }
 }

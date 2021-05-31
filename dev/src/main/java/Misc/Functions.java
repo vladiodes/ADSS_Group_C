@@ -1,6 +1,8 @@
 package Misc;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Functions {
@@ -18,5 +20,9 @@ public class Functions {
 
         }
         return output;
+    }
+
+    public static String LocalDateToString(LocalDate d){
+        return d.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

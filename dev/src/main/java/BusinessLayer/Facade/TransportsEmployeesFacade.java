@@ -2,6 +2,7 @@ package BusinessLayer.Facade;
 
 import BusinessLayer.EmployeesModule.Controllers.ScheduleController;
 import BusinessLayer.EmployeesModule.Controllers.StaffController;
+import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.TransportsModule.Controllers.Sites;
 import BusinessLayer.TransportsModule.Controllers.Transports;
 import BusinessLayer.TransportsModule.Controllers.Trucks;
@@ -146,7 +147,7 @@ public class TransportsEmployeesFacade {
         Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
-    public String addTransport(Date date, int weight, String driverID, String TruckID, List<ItemContract> IC, String Source, TypeOfShift TransportationShift) throws Exception {
+    public String addTransport(Date date, int weight, String driverID, String TruckID, List<Order> Orders, String Source, TypeOfShift TransportationShift) throws Exception {
         if(!scheduleController.shiftContainsEmployee(driverID,date,TransportationShift))
             throw new Exception("Driver not in shift at the time of the transport.");
         if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
@@ -155,7 +156,7 @@ public class TransportsEmployeesFacade {
             throw new Exception("Id isn't legal.");
         if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
             throw new Exception("Requested ID isn't a Driver.");
-        Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));
+        /*Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));*/ //TODO
 
         int newDriverAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
         if(newDriverAmount==-1)

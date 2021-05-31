@@ -11,6 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class Order{
+
+    /**
+     * weightOf1Item is for adding this order to a transport, means the weight of 1 item.
+     * nothing but a constraint for transports.
+     */
+    private int weightOf1Item = 5;
     private LocalDate dateOfOrder;
     private int orderID=-1;
     private ShipmentStatus shipmentStatus;
@@ -80,6 +86,8 @@ public class Order{
     }
 
 //    simple getters
+    public int getSupplierID() {return supplierID;}
+
     public boolean getisFixed(){
         return isFixed;
     }
@@ -160,7 +168,7 @@ public class Order{
         if(siteDestination==null || !(shipmentStatus==ShipmentStatus.NoTransportAvailable || shipmentStatus==null))
             throw new IllegalArgumentException("This order doesn't need a transportation");
 
-        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays())){
+        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),weightOf1Item * this.totalQuantity)){
             shipmentStatus=ShipmentStatus.NoTransportAvailable;
             return false;
         }

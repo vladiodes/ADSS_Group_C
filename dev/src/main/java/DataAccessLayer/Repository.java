@@ -250,24 +250,6 @@ public class Repository {
                 "\tFOREIGN KEY(\"Source\") REFERENCES \"Sites\"(\"Address\")\n" +
                 ");";
 
-        String ItemcontractsTable = "CREATE TABLE IF NOT EXISTS \"ItemContracts\" (\n" +
-                "\t\"ID\"\tINTEGER,\n" +
-                "\t\"TransportID\"\tINTEGER,\n" +
-                "\t\"Destination\"\tTEXT,\n" +
-                "\t\"Passed\"\tTEXT,\n" +
-                "\tPRIMARY KEY(\"ID\",\"TransportID\"),\n" +
-                "\tFOREIGN KEY(\"TransportID\") REFERENCES \"Transports\"(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"Destination\") REFERENCES \"Sites\"(\"Address\")\n" +
-                ");";
-
-        String ItemsInItemcontractsTable = "CREATE TABLE IF NOT EXISTS \"ItemsInItemcontracts\" (\n" +
-                "\t\"Count\"\tINTEGER,\n" +
-                "\t\"Name\"\tTEXT,\n" +
-                "\t\"ItemContractID\"\tINTEGER,\n" +
-                "\t\"ItemContractTransportID\"\tINTEGER,\n" +
-                "\tPRIMARY KEY(\"Name\",\"ItemContractID\",\"ItemContractTransportID\")\n" +
-                ");";
-
         //Employees Tables ------------------------------------------------------------------------------------------------------------------
 
         String DriversTable = "CREATE TABLE IF NOT EXISTS \"Drivers\" (\n" +
@@ -368,8 +350,8 @@ public class Repository {
             stmt.execute(TrucksTable);
             stmt.execute(DriversTable);
             stmt.execute(TransportsTable);
-            stmt.execute(ItemcontractsTable);
-            stmt.execute(ItemsInItemcontractsTable);
+            /*stmt.execute(ItemcontractsTable);
+            stmt.execute(ItemsInItemcontractsTable);*/ //TODO: connect order and transports in DB
             //Employees tables------------------------
             stmt.execute(EmployeesTable);
             stmt.execute(ShiftsTable);

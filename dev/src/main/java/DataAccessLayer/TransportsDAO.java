@@ -16,7 +16,7 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
         this.tableName = "Transports";
     }
 
-    public int insert(TransportDTO Ob) {
+    public int insert(TransportDTO Ob) {/*
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
         String Values = String.format("(%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")", Ob.weight,Ob.date, Ob.ID, Ob.truck, Ob.source, Ob.driver);
@@ -40,7 +40,8 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
             return 0;
         } finally {
             Repository.getInstance().closeConnection(conn);
-        }
+        }*/ //TODO
+        return 0;
     }
 
     public int update(TransportDTO updatedOb) {
@@ -48,8 +49,8 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
     }
 
     public TransportDTO makeDTO(ResultSet RS) { //String date, int weight, String driver, String truck, List<ItemContractDTO> contracts, String source,int ID
-        TransportDTO output = null;
-        Connection conn = Repository.getInstance().connect();
+       TransportDTO output = null;
+        /* Connection conn = Repository.getInstance().connect();
         try {
             String date = RS.getString(2);
             int weight = RS.getInt(1);
@@ -78,7 +79,7 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
         }
         finally{
             Repository.getInstance().closeConnection(conn);
-        }
+        }*/ //TODO
         return output;
     }
 
