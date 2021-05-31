@@ -89,25 +89,25 @@ public class Transports implements Controller<Transport> {
         Transport TranstoAdd = null;
         for(Transport temp : this.transports){
             if(TranstoAdd !=null) break;
-            if(temp.getDate().isBefore(order.getDateOfOrder())){
+            if(temp.getDate().isAfter(order.getDateOfOrder())){ //if the order is ready before the transport
                 long TimeDiff = ChronoUnit.DAYS.between(temp.getDate(),order.getDateOfOrder());
-                if(TimeDiff<= 7)
+                if(TimeDiff<= 7) //weeek time difference
                     for(DayOfWeek DOW : fixedDays)
-                        if(DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue()-1)%7)) == 0) {
+                        if(DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue()-1)%8)) == 0) {
                             TranstoAdd = temp;
-                            break;
+                            int newWeight = TranstoAdd.getWeight()+weight;
+                            if(newWeight<=TranstoAdd.getTruck().getMaxWeight()) {
+                                TranstoAdd.getOrders().add(order);
+                                try {
+                                    TranstoAdd.setWeight(newWeight);
+                                } //because ima shitty programer dont ask questions please
+                                catch (Exception e) {
+                                }
+                                return true;
+                            }
                         }
             }
         }
-        if(TranstoAdd == null) return false;
-        else {
-            int newWeight = TranstoAdd.getWeight()+weight;
-            if(newWeight>TranstoAdd.getTruck().getMaxWeight())
-                return false;
-            TranstoAdd.getOrders().add(order);
-            try {TranstoAdd.setWeight(newWeight);} //because ima shitty programer dont ask questions please
-            catch(Exception e){}
-            return true;
-        }
+        return false;
     }
 }
