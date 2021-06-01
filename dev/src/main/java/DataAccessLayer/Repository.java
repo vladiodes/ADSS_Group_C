@@ -102,6 +102,7 @@ public class Repository {
                 "\t\"SellingPrice\"\tINTEGER NOT NULL,\n" +
                 "\t\"CategoryID\"\tINTEGER NOT NULL,\n" +
                 "\t\"Alert\"\tINTEGER NOT NULL,\n" +
+                "\t\"Weight\"\tINTEGER NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
                 "\tFOREIGN KEY(\"CategoryID\") REFERENCES \"Category\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
@@ -169,7 +170,9 @@ public class Repository {
                 "\t\"selfPickUp\"\tBoolean NOT NULL,\n" +
                 "\t\"bankAccount\"\tTEXT NOT NULL,\n" +
                 "\t\"paymentMethod\"\tTEXT NOT NULL,\n" +
-                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
+                "\t\"Address\"\tTEXT NOT NULL,\n" +
+                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
+                "\tFOREIGN KEY(\"Address\") REFERENCES \"Sites\"(\"Address\")\n" +
                 ");";
         String SupplierCat = "CREATE TABLE IF NOT EXISTS \"SupplierCatagories\" (\n" +
                 "\t\"SupplierID\"\tINTEGER NOT NULL,\n" +
@@ -237,17 +240,16 @@ public class Repository {
                 "\tPRIMARY KEY(\"Plate Num\")\n" +
                 ");";
 
-        String TransportsTable = "CREATE TABLE IF NOT EXISTS \"Transports\" (\n" +
+        String TransportsTable = "CREATE TABLE \"Transports\" (\n" +
                 "\t\"Weight\"\tINTEGER,\n" +
                 "\t\"Date\"\tTEXT,\n" +
                 "\t\"ID\"\tTEXT,\n" +
                 "\t\"Truck\"\tTEXT,\n" +
-                "\t\"Source\"\tTEXT,\n" +
                 "\t\"Driver\"\tTEXT,\n" +
+                "\t\"wasDelivered\"\tBoolean NOT NULL,\n" +
                 "\tPRIMARY KEY(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"Truck\") REFERENCES \"Trucks\"(\"Plate Num\"),\n" +
                 "\tFOREIGN KEY(\"Driver\") REFERENCES \"Drivers\"(\"ID\"),\n" +
-                "\tFOREIGN KEY(\"Source\") REFERENCES \"Sites\"(\"Address\")\n" +
+                "\tFOREIGN KEY(\"Truck\") REFERENCES \"Trucks\"(\"Plate Num\")\n" +
                 ");";
 
         //Employees Tables ------------------------------------------------------------------------------------------------------------------
@@ -350,8 +352,6 @@ public class Repository {
             stmt.execute(TrucksTable);
             stmt.execute(DriversTable);
             stmt.execute(TransportsTable);
-            /*stmt.execute(ItemcontractsTable);
-            stmt.execute(ItemsInItemcontractsTable);*/ //TODO: connect order and transports in DB
             //Employees tables------------------------
             stmt.execute(EmployeesTable);
             stmt.execute(ShiftsTable);
