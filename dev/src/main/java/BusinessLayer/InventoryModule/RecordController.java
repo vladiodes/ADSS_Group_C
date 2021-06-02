@@ -1,12 +1,9 @@
 package BusinessLayer.InventoryModule;
 
-import BusinessLayer.Mappers.ReportMapper;
 import BusinessLayer.Mappers.SaleMapper;
-import BusinessLayer.Mappers.SaleReportMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,14 +11,10 @@ public class RecordController {
     // -- fields
     private static RecordController recordControllerInstance = null;
     private SaleMapper salesMapper;
-    private ReportMapper reportsMapper;
-    private SaleReportMapper saleReportsMapper;
 
     // -- constructor
     private RecordController() {
         salesMapper=SaleMapper.getInstance();
-        reportsMapper=ReportMapper.getInstance();
-        saleReportsMapper=SaleReportMapper.getInstance();
     }
 
     public static RecordController getInstance(){
@@ -49,7 +42,6 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -70,7 +62,6 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -85,7 +76,6 @@ public class RecordController {
              }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now().minusWeeks(1),LocalDate.now());
-        reportsMapper.addReport(toReturn);
         return toReturn;
         }
 
@@ -106,7 +96,6 @@ public class RecordController {
             }
         }
         Report toReturn = new Report(itemsInReport,LocalDate.now(),LocalDate.now());
-        reportsMapper.addReport(toReturn);
         return toReturn;
 
     }
@@ -126,7 +115,6 @@ public class RecordController {
         SaleReport toReturn = new SaleReport(salesInReport,startDate,endDate);
         toReturn.setStartDate(startDate);
         toReturn.setEndDate(endDate);
-        saleReportsMapper.addReport(toReturn);
         return toReturn;
     }
 

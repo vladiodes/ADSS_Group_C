@@ -1,6 +1,5 @@
 package BusinessLayer.InventoryModule;
 
-import BusinessLayer.Mappers.SaleReportMapper;
 import DTO.SaleReportDTO;
 
 import java.time.LocalDate;

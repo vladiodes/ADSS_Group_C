@@ -106,13 +106,6 @@ public class Repository {
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT),\n" +
                 "\tFOREIGN KEY(\"CategoryID\") REFERENCES \"Category\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
-        String ItemsInReport = "CREATE TABLE IF NOT EXISTS \"ItemsInReport\" (\n" +
-                "\t\"ItemID\"\tINTEGER NOT NULL,\n" +
-                "\t\"ReportID\"\tINTEGER NOT NULL,\n" +
-                "\tPRIMARY KEY(\"ItemID\",\"ReportID\"),\n" +
-                "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\") ON DELETE CASCADE,\n" +
-                "\tFOREIGN KEY(\"ReportID\") REFERENCES \"Report\"(\"ID\") ON DELETE CASCADE\n" +
-                ");";
         String OrdersTable = "CREATE TABLE IF NOT EXISTS \"Orders\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
                 "\t\"DateOfOrder\"\tDateTime NOT NULL,\n" +
@@ -137,12 +130,6 @@ public class Repository {
                 "\tFOREIGN KEY(\"SupplierID\") REFERENCES \"Supplier\"(\"ID\") ON DELETE CASCADE,\n" +
                 "\tPRIMARY KEY(\"OrderID\",\"CatalogueID\",\"SupplierID\",\"ItemID\")\n" +
                 ");";
-        String ReportTable = "CREATE TABLE IF NOT EXISTS \"Report\" (\n" +
-                "\t\"ID\"\tINTEGER NOT NULL,\n" +
-                "\t\"StartDate\"\tDateTime NOT NULL,\n" +
-                "\t\"EndDate\"\tDateTime NOT NULL,\n" +
-                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
-                ");";
         String SaleTable = "CREATE TABLE IF NOT EXISTS \"Sale\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
                 "\t\"Quantity\"\tINTEGER NOT NULL,\n" +
@@ -150,19 +137,6 @@ public class Repository {
                 "\t\"SaleDate\"\tDateTime NOT NULL,\n" +
                 "\tFOREIGN KEY(\"ItemID\") REFERENCES \"Item\"(\"ID\") ON DELETE CASCADE,\n" +
                 "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
-                ");";
-        String SaleReportTable = "CREATE TABLE IF NOT EXISTS \"SaleReport\" (\n" +
-                "\t\"ID\"\tINTEGER NOT NULL,\n" +
-                "\t\"StartDate\"\tDateTime NOT NULL,\n" +
-                "\t\"EndDate\"\tDateTime NOT NULL,\n" +
-                "\tPRIMARY KEY(\"ID\" AUTOINCREMENT)\n" +
-                ");";
-        String SalesInReportTable = "CREATE TABLE IF NOT EXISTS \"SalesInReport\" (\n" +
-                "\t\"SaleID\"\tINTEGER NOT NULL,\n" +
-                "\t\"SaleReportID\"\tINTEGER NOT NULL,\n" +
-                "\tPRIMARY KEY(\"SaleID\",\"SaleReportID\"),\n" +
-                "\tFOREIGN KEY(\"SaleID\") REFERENCES \"Sale\"(\"ID\") ON DELETE CASCADE,\n" +
-                "\tFOREIGN KEY(\"SaleReportID\") REFERENCES \"SaleReport\"(\"ID\") ON DELETE CASCADE\n" +
                 ");";
         String SuppliersTable = "CREATE TABLE IF NOT EXISTS \"Supplier\" (\n" +
                 "\t\"ID\"\tINTEGER NOT NULL,\n" +
@@ -240,7 +214,7 @@ public class Repository {
                 "\tPRIMARY KEY(\"Plate Num\")\n" +
                 ");";
 
-        String TransportsTable = "CREATE TABLE \"Transports\" (\n" +
+        String TransportsTable = "CREATE TABLE IF NOT EXISTS \"Transports\" (\n" +
                 "\t\"Weight\"\tINTEGER,\n" +
                 "\t\"Date\"\tTEXT,\n" +
                 "\t\"ID\"\tTEXT,\n" +
@@ -331,19 +305,15 @@ public class Repository {
             stmt.execute(contractsTable);
             stmt.execute(contractDiscountsTable);
             stmt.execute(ItemsTable);
-            stmt.execute(ItemsInReport);
             stmt.execute(OrdersTable);
             stmt.execute(PIOTable);
-            stmt.execute(ReportTable);
             stmt.execute(SaleTable);
-            stmt.execute(SaleReportTable);
             stmt.execute(SuppliersTable);
             stmt.execute(SupplierCat);
             stmt.execute(SupplierContact);
             stmt.execute(SupplierDiscounts);
             stmt.execute(SupplierFixedDays);
             stmt.execute(SupplierManu);
-            stmt.execute(SalesInReportTable);
             stmt.execute(specificItem);
 
             //Transportation tables--------------------
