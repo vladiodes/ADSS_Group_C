@@ -12,7 +12,6 @@ import BusinessLayer.TransportsModule.Objects.Truck;
 import DataAccessLayer.TransportsDAO;
 import DTO.ItemContractDTO;
 import DTO.TransportDTO;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

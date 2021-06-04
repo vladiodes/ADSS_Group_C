@@ -43,6 +43,12 @@ public class TransportsEmployeesFacade {
         loadAllControllers();
     }
 
+    //Gets list of dates sorted by date from previous to latest
+    //Returns list of shifts sorted by date from previous to latest
+    public List<Shift> getWeeklyShiftsForTransport(List<Date> dates)
+    {
+        return this.scheduleController.getWeeklyShiftsForTransport(dates);
+    }
 
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) {
         return  staffController.addEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, skills);

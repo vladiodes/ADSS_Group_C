@@ -166,12 +166,13 @@ public class ScheduleController {
         {
             return "Shift doesn't contain this employee";
         }
+        //check this change
+        TypeOfEmployee typeOfEmp = s.getTypeOfSpecificEmployee(id);//already check if shift contain this employee
 
         if (!s.removeEmployee(id))
         {
             return "Employee was not removed from shift";
         }
-        TypeOfEmployee typeOfEmp = s.getTypeOfSpecificEmployee(id);//already check if shift contain this employee
         if (this.staffController.getEmployeeByID(id).getSkills().contains(Driver))
         {
             this.shiftDAO.removeEmployeeFromShift(id,s.getID(),typeOfEmp.toString());
@@ -395,4 +396,21 @@ public class ScheduleController {
     }
 
 
+    public List<Shift> getWeeklyShiftsForTransport(List<Date> dates)
+    {
+        List<Shift> toReturn = new LinkedList<>();
+        for(Date currDate : dates)
+        {
+            if(this.schedule.containsKey(currDate))
+            {
+                DailySchedule currDS = this.schedule.get(currDate);
+                List<Shift> dailyShifts = currDS.getShifts();
+                for(Shift s : dailyShifts)
+                {
+                    toReturn.add(s);
+                }
+            }
+        }
+        return toReturn;
+    }
 }
