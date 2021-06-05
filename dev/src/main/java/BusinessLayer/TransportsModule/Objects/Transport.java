@@ -2,6 +2,7 @@ package BusinessLayer.TransportsModule.Objects;
 
 import BusinessLayer.EmployeesModule.Objects.Driver;
 import BusinessLayer.Interfaces.persistentObject;
+import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
@@ -93,7 +94,28 @@ public class Transport implements persistentObject<TransportDTO> {
         return source;
     }
 
-    public void setDelivered() {
+    /***
+     * when an order arrives this function is called. Its purpose is to update  the Mlai with the items.
+     * In case some orders and not Ok, and needed to be inserted manualy, allgood is false and bad orders has bad orders IDS.
+     * @param AllGood are all the items alright?
+     * @param badOrders what orders are bad and shouldnt update in the Mlai
+     */
+    public void setDelivered(boolean AllGood, List<Integer> badOrders) {
+        SuppliersController SC = SuppliersController.getInstance();
+        if(AllGood)
+            for(Order d : this.getOrders()){
+                SC.receiveOrder(d.getSupplierID(),d.getOrderID());
+                d.transportHasArrived();
+            }
+        else {
+             if(badOrders == null || badOrders.size() == 0)
+                 throw new IllegalArgumentException();
+             for(Order d : this.getOrders()){
+                 d.transportHasArrived();
+                 if(!badOrders.contains(d.getOrderID()))
+                     SC.receiveOrder(d.getSupplierID(),d.getOrderID());
+             }
+        }
         this.delivered = true;
     }
 
