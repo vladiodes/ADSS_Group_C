@@ -407,7 +407,8 @@ public class ScheduleController {
                 List<Shift> dailyShifts = currDS.getShifts();
                 for(Shift s : dailyShifts)
                 {
-                    toReturn.add(s);
+                    if(s.isReadyForTransport())//Contains a driver and a storage employee
+                        toReturn.add(s);
                 }
             }
         }

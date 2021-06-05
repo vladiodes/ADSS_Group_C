@@ -424,4 +424,18 @@ public class Shift implements persistentObject {
         }
         return false;
     }
+
+    public boolean isReadyForTransport()
+    {
+        boolean containsDriver = false;
+        boolean containsStorage = false;
+        for(Pair<String,TypeOfEmployee> p : this.currentShiftEmployees)
+        {
+            if(p.second == Driver)
+                containsDriver = true;
+            if(p.second == Storage)
+                containsStorage = true;
+        }
+        return (containsDriver && containsStorage);
+    }
 }
