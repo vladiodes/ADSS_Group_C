@@ -1,5 +1,6 @@
 package BusinessLayer.TransportsModule.Controllers;
 
+import BusinessLayer.EmployeesModule.Controllers.ScheduleController;
 import BusinessLayer.EmployeesModule.Controllers.StaffController;
 import BusinessLayer.Interfaces.Controller;
 import BusinessLayer.EmployeesModule.Objects.*;
@@ -12,10 +13,15 @@ import BusinessLayer.TransportsModule.Objects.Truck;
 import DataAccessLayer.TransportsDAO;
 import DTO.ItemContractDTO;
 import DTO.TransportDTO;
+import Misc.Pair;
+import Misc.TypeOfEmployee;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static Misc.Functions.LocalDateToDate;
+import static Misc.Functions.convertToLocalDateViaInstant;
 
 public class Transports implements Controller<Transport> {
     private ArrayList<Transport> transports;
@@ -23,6 +29,7 @@ public class Transports implements Controller<Transport> {
     private Trucks trucksController;
     private Sites sitesController;
     private StaffController staffController;
+    private ScheduleController scheduleController;
     private TransportsDAO DAO;
 
     private static Transports instance=null;
@@ -83,6 +90,50 @@ public class Transports implements Controller<Transport> {
      * @return returns true if found a transport, returns false if no transport that fulfills the constraints was found.
      */
     public boolean requestTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
+        if(checkForExistingTransport(order, siteDestination, fixedDays, weight))
+            return true;
+        else return tryMakeTransport(order, siteDestination, fixedDays, weight);
+    }
+
+    private boolean tryMakeTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
+        LocalDate orderDate = order.getDateOfOrder();
+        int dayslater = 0;
+        List<Date> maybeDates = new ArrayList<>();
+        while (dayslater<8){
+            for(DayOfWeek DOW : fixedDays)
+            {
+                if((orderDate.getDayOfWeek().getValue()+1)%7 != 0 && DayOfWeek.valueOf((orderDate.getDayOfWeek().getValue()+1)%7).equals(DOW))
+                    maybeDates.add(LocalDateToDate(orderDate));
+            }
+            orderDate = orderDate.plusDays(1);
+            dayslater++;
+        }
+        List <Shift> maybeShifts = scheduleController.getWeeklyShiftsForTransport(maybeDates);
+        if(maybeShifts == null)
+            return false;
+        else{
+            Shift S = maybeShifts.get(0);
+            Driver D = null;
+            for(Pair<String, TypeOfEmployee> currP : S.getCurrentShiftEmployees())
+                if(currP.second == TypeOfEmployee.Driver)
+                    D = (Driver) staffController.getEmployeeByID(currP.first);
+            List<Order> ords = new ArrayList<>();
+            Site Si = null;
+            ords.add(order);
+            try{
+                Si = Sites.getInstance().getSite(siteDestination);
+            } catch (Exception e) {return false;}
+            try{
+                Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder());
+                if(Ttruck == null) return false;
+                this.addTransport(convertToLocalDateViaInstant(S.getDate()), Ttruck.getFactoryWeight()+weight, D, Ttruck ,ords,Si);
+            }
+            catch (Exception e ){return false;}
+        }
+        return false;
+    }
+
+    private boolean checkForExistingTransport( Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight){
         if(order == null || sitesController.getSite(siteDestination) == null || fixedDays.isEmpty())
             return false;
         Transport TranstoAdd = null;
@@ -90,7 +141,7 @@ public class Transports implements Controller<Transport> {
             if(TranstoAdd !=null) break;
             if(temp.getDate().isAfter(order.getDateOfOrder())){ //if the order is ready before the transport
                 long TimeDiff = ChronoUnit.DAYS.between(temp.getDate(),order.getDateOfOrder());
-                if(TimeDiff<= 7) //weeek time difference
+                if(TimeDiff<= 7) //week time difference
                     for(DayOfWeek DOW : fixedDays)
                         if(DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue()-1)%8)) == 0) {
                             TranstoAdd = temp;

@@ -4,9 +4,9 @@ import BusinessLayer.Interfaces.Controller;
 import BusinessLayer.TransportsModule.Objects.Truck;
 import DataAccessLayer.TrucksDAO;
 import DTO.TruckDTO;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import java.time.LocalDate;
+import java.util.*;
 
 public class Trucks implements Controller<Truck> {
     private HashMap<String, Truck> trucks;
@@ -24,6 +24,17 @@ public class Trucks implements Controller<Truck> {
         return instance;
     }
 
+    /***
+     * bullshit overload
+     * @param dateOfOrder date for an available truck
+     * @return
+     */
+    public Truck getAvailableTruck(LocalDate dateOfOrder) {
+        for(Map.Entry<String, Truck> kaki : trucks.entrySet())
+            return kaki.getValue();
+        return null;
+    }
+
     public void addTruck(String plate, String model, int maxweight, String type, int factoryweight) throws Exception {
         Truck temp = null;
         try{
@@ -33,7 +44,7 @@ public class Trucks implements Controller<Truck> {
             //truck doesn't exist in the database
         }
         if(temp !=null)
-            throw new Exception("Truck already exists in the databse with the same plate num.");
+            throw new IllegalArgumentException("Truck already exists in the databse with the same plate num.");
         Truck toAdd = new Truck(plate, model, maxweight, type, factoryweight);
         trucks.put(plate, toAdd);
         DAO.insert(toAdd.toDTO());
