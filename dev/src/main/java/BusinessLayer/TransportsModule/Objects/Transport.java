@@ -6,15 +6,9 @@ import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
-import DTO.ItemContractDTO;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import static Misc.Functions.LocalDateToString;
 
 public class Transport implements persistentObject<TransportDTO> {
@@ -27,11 +21,11 @@ public class Transport implements persistentObject<TransportDTO> {
     private int ID;
     private boolean delivered;
 
-    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> contracts, Site source, int ID) throws Exception {
+    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, Site source, int ID) throws Exception {
         setTruck(truck);
         setDate(date);
         setDriver(driver);
-        setContracts(contracts);
+        setOrders(orders);
         setSource(source);
         setWeight(weight);
         this.ID = ID;
@@ -62,8 +56,8 @@ public class Transport implements persistentObject<TransportDTO> {
         this.truck = _truck;
     }
 
-    public void setContracts(List<Order> contracts) {
-        Orders = contracts;
+    public void setOrders(List<Order> orders) {
+        Orders = orders;
     }
 
     public void setSource(Site source) {
@@ -102,19 +96,19 @@ public class Transport implements persistentObject<TransportDTO> {
      */
     public void setDelivered(boolean AllGood, List<Integer> badOrders) {
         SuppliersController SC = SuppliersController.getInstance();
-        if(AllGood)
-            for(Order d : this.getOrders()){
-                SC.receiveOrder(d.getSupplierID(),d.getOrderID());
+        if (AllGood)
+            for (Order d : this.getOrders()) {
+                SC.receiveOrder(d.getSupplierID(), d.getOrderID());
                 d.transportHasArrived();
             }
         else {
-             if(badOrders == null || badOrders.size() == 0)
-                 throw new IllegalArgumentException();
-             for(Order d : this.getOrders()){
-                 d.transportHasArrived();
-                 if(!badOrders.contains(d.getOrderID()))
-                     SC.receiveOrder(d.getSupplierID(),d.getOrderID());
-             }
+            if (badOrders == null || badOrders.size() == 0)
+                throw new IllegalArgumentException();
+            for (Order d : this.getOrders()) {
+                d.transportHasArrived();
+                if (!badOrders.contains(d.getOrderID()))
+                    SC.receiveOrder(d.getSupplierID(), d.getOrderID());
+            }
         }
         this.delivered = true;
     }
@@ -137,6 +131,6 @@ public class Transport implements persistentObject<TransportDTO> {
         for (Order ord : Orders) {
             OrdersDTO.add(new OrderDTO(ord, ord.getSupplierID()));
         }
-        return new TransportDTO(LocalDateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(),  OrdersDTO, getSource().getAddress(), ID);
+        return new TransportDTO(LocalDateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(), OrdersDTO, getSource().getAddress(), ID);
     }
 }

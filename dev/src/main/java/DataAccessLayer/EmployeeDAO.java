@@ -1,16 +1,16 @@
 package DataAccessLayer;
 
-import Misc.Pair;
 import DTO.EmployeeDTO;
-
+import Misc.Functions;
+import Misc.Pair;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 
 public class EmployeeDAO extends DAOV2<EmployeeDTO> {
 
@@ -18,19 +18,18 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
     private EmployeesSkillsDAO employeesSkillsDAO;
 
     public EmployeeDAO() {
-
         this.tableName = "Employees";
-        availableShiftForEmployeeDAO=new AvailableShiftForEmployeeDAO();
-        employeesSkillsDAO=new EmployeesSkillsDAO();
+        availableShiftForEmployeeDAO = new AvailableShiftForEmployeeDAO();
+        employeesSkillsDAO = new EmployeesSkillsDAO();
     }
+
     //=====================================Employee===================================
     @Override
     public int insert(EmployeeDTO Ob) {
-        int ans=0;
+        int ans = 0;
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
         String toInsertEmp = Ob.fieldsToString();
-
         Statement s;
         try {
             s = conn.createStatement();
@@ -38,20 +37,16 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
             int resAs = insertToAvailableShifts(Ob);
             int resES = insertToEmployeeSkills(Ob);
             if (resAs + resES == 2) //If both inserts worked
-                ans= 1;
-            else
-            {
-                ans=0;
+                ans = 1;
+            else {
+                ans = 0;
             }
-
         } catch (Exception e) {
-            ans= 0;
-        }
-        finally {
+            ans = 0;
+        } finally {
             Repository.getInstance().closeConnection(conn);
         }
         return ans;
-
     }
 
     private int insertToAvailableShifts(EmployeeDTO Ob) {
@@ -93,12 +88,12 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
         EmployeeDTO output = null;
         Connection conn = Repository.getInstance().connect();
         try {
-            String id=RS.getString(3);
+            String id = RS.getString(3);
             List<String> skills = getSkillsList(id, conn);
             if (skills == null) {
                 return null;
             }
-            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
+            List<Pair<LocalDate, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
             if (availableShifts == null) {
                 return null;
             }
@@ -107,23 +102,21 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
                     /*start working date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(7)), skills, availableShifts);
         } catch (Exception e) {
             output = null;
-        }
-        finally {
+        } finally {
             Repository.getInstance().closeConnection(conn);
         }
-
         return output;
     }
 
-    private List<Pair<Date, String>> getavailableShiftList(String empId, Connection conn) {
-        List<Pair<Date, String>> ans = new LinkedList<>();
+    private List<Pair<LocalDate, String>> getavailableShiftList(String empId, Connection conn) {
+        List<Pair<LocalDate, String>> ans = new LinkedList<>();
         ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId, conn);
         try {
             while (rs.next()) {
                 String dateSTR = rs.getString(2);
-                Date date= new SimpleDateFormat("dd/MM/yyyy").parse(dateSTR);
+                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateSTR);
                 String type = rs.getString(3);
-                Pair<Date, String> p = new Pair<>(date, type);//have to check
+                Pair<LocalDate, String> p = new Pair<>(Functions.convertToLocalDateViaInstant(date), type);//have to check
                 ans.add(p);
             }
         } catch (Exception e) {
@@ -143,63 +136,43 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
             return null;
         }
         return ans;
-
     }
 
     @Override
     public int update(EmployeeDTO updatedOb)//not allowed to change ID
     {
         Connection conn = Repository.getInstance().connect();
-        if(updatedOb == null) return 0;
+        if (updatedOb == null) return 0;
         String updateString = String.format("UPDATE %s" +
                         " SET \"FirstName\"= \"%s\", \"LastName\"= \"%s\" " +
                         ", \"BankAccountNumber\"=\"%s\", \"Salary\"=%s,  \"EmpConditions\"=\"%s\", \"StartWorkingDate\"=\"%s\" " +
                         "WHERE \"ID\" == \"%s\";",
-                tableName,updatedOb.firstName,updatedOb.lastName,
-                updatedOb.bankAccountNumber,updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate, updatedOb.id);
+                tableName, updatedOb.firstName, updatedOb.lastName,
+                updatedOb.bankAccountNumber, updatedOb.salary, updatedOb.empConditions, updatedOb.startWorkingDate, updatedOb.id);
         Statement s;
         try {
             s = conn.createStatement();
-            return  s.executeUpdate(updateString);
-        }
-        catch (Exception e ){
+            return s.executeUpdate(updateString);
+        } catch (Exception e) {
             return 0;
         }
     }
-    //=====================================EmployeeSkills===================================
 
-    public int addSkill(String empID, String skillToAdd)
-    {
+    //=====================================EmployeeSkills===================================
+    public int addSkill(String empID, String skillToAdd) {
         return employeesSkillsDAO.addSkill(empID, skillToAdd);
     }
-    public int removeSkill(String empID, String skillToRemove)
-    {
-        return employeesSkillsDAO.removeSkill(empID, skillToRemove);
 
+    public int removeSkill(String empID, String skillToRemove) {
+        return employeesSkillsDAO.removeSkill(empID, skillToRemove);
     }
 
-
-
-
-
-
     //=====================================AvailableShift===================================
-    public int addAvailableShifts(String empID, Date date, String typeOfShift) {
+    public int addAvailableShifts(String empID, LocalDate date, String typeOfShift) {
         return availableShiftForEmployeeDAO.addAvailableShifts(empID, date, typeOfShift);
     }
 
-    public int removeAvailableShifts(String empID, Date date, String typeOfShift)
-    {
-        return availableShiftForEmployeeDAO.removeAvailableShifts(empID, date,typeOfShift );
+    public int removeAvailableShifts(String empID, Date date, String typeOfShift) {
+        return availableShiftForEmployeeDAO.removeAvailableShifts(empID, date, typeOfShift);
     }
-
-
-
-
-
-
-
-
-
-
 }

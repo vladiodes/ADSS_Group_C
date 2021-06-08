@@ -3,6 +3,7 @@ package DTO;
 import Misc.Pair;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class EmployeeDTO {
     public String empConditions;
     public Date startWorkingDate;
     public List<String> skills;
-    public List<Pair<Date, String>> availableShifts;
+    public List<Pair<LocalDate, String>> availableShifts;
 
-    public EmployeeDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<String> skills, List<Pair<Date, String>> availableShifts) {
+    public EmployeeDTO(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<String> skills, List<Pair<LocalDate, String>> availableShifts) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
@@ -31,13 +32,13 @@ public class EmployeeDTO {
 
     public String fieldsToString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",%s,\"%s\",\"%s\")", this.firstName, this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions,formatter.format(this.startWorkingDate));
+        return String.format("(\"%s\",\"%s\",\"%s\",\"%s\",%s,\"%s\",\"%s\")", this.firstName, this.lastName, this.id, this.bankAccountNumber, Integer.toString(this.salary), this.empConditions, formatter.format(this.startWorkingDate));
     }
 
     public String getAvailableShifts(int index) {
-        Pair<Date, String> p = this.availableShifts.get(index);
+        Pair<LocalDate, String> p = this.availableShifts.get(index);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date currDate = p.first;
+        LocalDate currDate = p.first;
         String currType = p.second;
         return String.format("(\"%s\",\"%s\",\"%s\",%s)", this.id, formatter.format(currDate), currType, null);
     }
@@ -51,7 +52,7 @@ public class EmployeeDTO {
     }
 
     public String getSkills(int index) {
-        return String.format("(\"%s\",\"%s\", %s)", this.id, skills.get(index),null);
+        return String.format("(\"%s\",\"%s\", %s)", this.id, skills.get(index), null);
     }
 
     public String getId() {

@@ -3,7 +3,10 @@ package PresentationLayer;
 import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
+import Misc.utills;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class EmployeesMenuWindow extends menuWindow {
@@ -261,7 +264,7 @@ public class EmployeesMenuWindow extends menuWindow {
                     switch (ARAvailableShiftOption) {
                         case (1): //Add available shift
                         {
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please Enter Date Of Shift");
                             System.out.println("Please Enter Type Of Shift To Add");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -370,7 +373,7 @@ public class EmployeesMenuWindow extends menuWindow {
                                 skill = s.nextLine();
                                 typeOfEmployee = parseTypeOfEmp(skill);
                             }
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -386,7 +389,7 @@ public class EmployeesMenuWindow extends menuWindow {
                         }
                         case (2): //Remove Employee to shift
                         {
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -414,7 +417,7 @@ public class EmployeesMenuWindow extends menuWindow {
                         case (1): //Add Constraint
                         {
                             //Get Shift identifiers from user (date and type)
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -452,7 +455,7 @@ public class EmployeesMenuWindow extends menuWindow {
                         case (2): //Remove Constraint
                         {
                             //Get Shift identifiers from user (date and type)
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -491,7 +494,7 @@ public class EmployeesMenuWindow extends menuWindow {
                         case (1): //Add shift
                         {
                             //Get Shift identifiers from user (date and type)
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift to add");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -508,7 +511,7 @@ public class EmployeesMenuWindow extends menuWindow {
                         case (2): //Remove Shift
                         {
                             //Get Shift identifiers from user (date and type)
-                            Date date = getDateFromUser();
+                            LocalDate date = utills.getDateFromUser("Please enter date");
                             System.out.println("Enter Type of shift to remove");
                             String type = s.nextLine();
                             TypeOfShift typeOfShift;
@@ -599,30 +602,6 @@ public class EmployeesMenuWindow extends menuWindow {
             typeOfEmployee = null; //return null if conversion failed
         }
         return typeOfEmployee;
-    }
-
-    /**
-     * Asks Valid date from user in a format of dd/MM/yyyy until a valid Date was inserted by the user
-     *
-     * @return Valid Date from user
-     */
-    private Date getDateFromUser() {
-        Scanner s = new Scanner(System.in);
-        System.out.println("Please Enter Date in format dd/MM/yyyy");
-        String dateOfShift = s.nextLine();
-        boolean validDate = false;
-        Date date = null;
-        while (!validDate) {
-            validDate = true;
-            try {
-                date = new SimpleDateFormat("dd/MM/yyyy").parse(dateOfShift);
-            } catch (Exception e) {
-                System.out.println("Invalid Input, please enter again");
-                dateOfShift = s.nextLine();
-                validDate = false;
-            }
-        }
-        return date;
     }
 
     /**

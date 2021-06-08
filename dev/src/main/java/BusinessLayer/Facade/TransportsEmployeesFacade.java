@@ -2,19 +2,20 @@ package BusinessLayer.Facade;
 
 import BusinessLayer.EmployeesModule.Controllers.ScheduleController;
 import BusinessLayer.EmployeesModule.Controllers.StaffController;
+import BusinessLayer.EmployeesModule.Objects.Driver;
+import BusinessLayer.EmployeesModule.Objects.Shift;
+import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.TransportsModule.Controllers.Sites;
 import BusinessLayer.TransportsModule.Controllers.Transports;
 import BusinessLayer.TransportsModule.Controllers.Trucks;
-import BusinessLayer.TransportsModule.Objects.ItemContract;
 import BusinessLayer.TransportsModule.Objects.Site;
 import BusinessLayer.TransportsModule.Objects.Transport;
 import BusinessLayer.TransportsModule.Objects.Truck;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import BusinessLayer.EmployeesModule.Objects.*;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,33 +29,34 @@ public class TransportsEmployeesFacade {
     private TypeOfEmployee typeOfLoggedIn;
     private ScheduleController scheduleController;
     private StaffController staffController;
+    private SuppliersController suppliersController;
     private Sites Sit = Sites.getInstance();
     private Trucks Tru = Trucks.getInstance();
     private Transports Tra;
 
     //When creating the assignment screen add the skills of each employee
-    public TransportsEmployeesFacade(TypeOfEmployee typeOfLoggedIn)
-    {
-        this.typeOfLoggedIn=typeOfLoggedIn;
-        this.staffController=StaffController.getInstance();
+    public TransportsEmployeesFacade(TypeOfEmployee typeOfLoggedIn) {
+        this.typeOfLoggedIn = typeOfLoggedIn;
+        this.staffController = StaffController.getInstance();
         staffController.setTypeOfLoggedIn(typeOfLoggedIn);
-        this.scheduleController=new ScheduleController(typeOfLoggedIn, this.staffController);
+        suppliersController = SuppliersController.getInstance();
+        this.scheduleController = new ScheduleController(typeOfLoggedIn, this.staffController);
         Tra = Transports.getInstance();
         loadAllControllers();
     }
 
     //Gets list of dates sorted by date from previous to latest
     //Returns list of shifts sorted by date from previous to latest
-    public List<Shift> getWeeklyShiftsForTransport(List<Date> dates)
-    {
+    public List<Shift> getWeeklyShiftsForTransport(List<LocalDate> dates) {
         return this.scheduleController.getWeeklyShiftsForTransport(dates);
     }
 
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) {
-        return  staffController.addEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, skills);
+        return staffController.addEmployee(firstName, lastName, id, bankAccountNumber, salary, empConditions, startWorkingDate, skills);
     }
+
     public String addDriverEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, int License) {
-        return staffController.addDriverEmployee(firstName,lastName,id, bankAccountNumber, salary, empConditions, startWorkingDate, License);
+        return staffController.addDriverEmployee(firstName, lastName, id, bankAccountNumber, salary, empConditions, startWorkingDate, License);
     }
 
     public String RemoveEmployee(String id) {
@@ -66,7 +68,7 @@ public class TransportsEmployeesFacade {
     }
 
     public String editLastName(String idToEdit, String lastName) {
-        return staffController.editLastName(idToEdit,lastName);
+        return staffController.editLastName(idToEdit, lastName);
     }
 
     public String editBankAccountNumber(String idToEdit, String newBankAccountNumber) {
@@ -81,27 +83,27 @@ public class TransportsEmployeesFacade {
         return staffController.editEmpConditions(idToEdit, newEmpConditions);
     }
 
-    public String addAvailableShift(String idToEdit, Date date, TypeOfShift type) {
-        return this.staffController.addAvailableShift(idToEdit, new Pair<Date, TypeOfShift>(date,type));
+    public String addAvailableShift(String idToEdit, LocalDate date, TypeOfShift type) {
+        return this.staffController.addAvailableShift(idToEdit, new Pair<LocalDate, TypeOfShift>(date, type));
     }
 
     public String removeAvailableShift(String idToEdit, Date date, TypeOfShift type) {
-        return this.staffController.removeAvailableShift(idToEdit , new Pair<Date, TypeOfShift>(date, type));
+        return this.staffController.removeAvailableShift(idToEdit, new Pair<Date, TypeOfShift>(date, type));
     }
 
     public String addSkill(String idToEdit, TypeOfEmployee type) {
-        return this.staffController.addSkill(idToEdit,type);
+        return this.staffController.addSkill(idToEdit, type);
     }
 
     public String removeSkill(String idToEdit, TypeOfEmployee type) {
-        return this.staffController.removeSkill(idToEdit,type);
+        return this.staffController.removeSkill(idToEdit, type);
     }
 
-    public String addEmployeeToShift(String idToEdit, TypeOfEmployee typeEmp, Date date, TypeOfShift typeShift) {
-        return this.scheduleController.addEmployeeToShift(idToEdit,typeEmp, date, typeShift);
+    public String addEmployeeToShift(String idToEdit, TypeOfEmployee typeEmp, LocalDate date, TypeOfShift typeShift) {
+        return this.scheduleController.addEmployeeToShift(idToEdit, typeEmp, date, typeShift);
     }
 
-    public String removeEmployeeFromShift(String idToEdit, Date date, TypeOfShift typeShift) {
+    public String removeEmployeeFromShift(String idToEdit, LocalDate date, TypeOfShift typeShift) {
         return this.scheduleController.removeEmployeeFromShift(idToEdit, date, typeShift);
     }
 
@@ -109,20 +111,20 @@ public class TransportsEmployeesFacade {
         return this.staffController.checkIfEmpExist(idToEdit);
     }
 
-    public String addConstraintToShift(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
-        return this.scheduleController.addConstraint(date, typeOfShift,typeOfEmployee,numOfEmp);
+    public String addConstraintToShift(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
+        return this.scheduleController.addConstraint(date, typeOfShift, typeOfEmployee, numOfEmp);
     }
 
-    public String removeConstraintToShift(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
-        return this.scheduleController.removeConstraint(date, typeOfShift,typeOfEmployee);
+    public String removeConstraintToShift(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
+        return this.scheduleController.removeConstraint(date, typeOfShift, typeOfEmployee);
     }
 
-    public String addShift(Date date, TypeOfShift typeOfShift) {
-       return this.scheduleController.addShift(date,typeOfShift);
+    public String addShift(LocalDate date, TypeOfShift typeOfShift) {
+        return this.scheduleController.addShift(date, typeOfShift);
     }
 
-    public String removeShift(Date date, TypeOfShift typeOfShift) {
-        return this.scheduleController.removeShift(date,typeOfShift);
+    public String removeShift(LocalDate date, TypeOfShift typeOfShift) {
+        return this.scheduleController.removeShift(date, typeOfShift);
     }
 
     public String printSchedule() {
@@ -153,37 +155,29 @@ public class TransportsEmployeesFacade {
         Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
-    public String addTransport(Date date, int weight, String driverID, String TruckID, List<Order> Orders, String Source, TypeOfShift TransportationShift) throws Exception {
-        if(!scheduleController.shiftContainsEmployee(driverID,date,TransportationShift))
+    public void addTransport(LocalDate date, int weight, String driverID, String TruckID, List<Pair<Integer, Integer>> OrderIDs, String Source, TypeOfShift TransportationShift) throws Exception {
+        if (!scheduleController.shiftContainsEmployee(driverID, date, TransportationShift))
             throw new Exception("Driver not in shift at the time of the transport.");
-        if(!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage,date ,TransportationShift))
+        if (!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage, date, TransportationShift))
             throw new Exception("No storage employee at the time of the shift, can't register transport.");
-        if(staffController.getEmployeeByID(driverID) == null)
+        if (staffController.getEmployeeByID(driverID) == null)
             throw new Exception("Id isn't legal.");
-        if(!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
+        if (!staffController.getEmployeeByID(driverID).getSkills().contains(TypeOfEmployee.Driver))
             throw new Exception("Requested ID isn't a Driver.");
-        /*Tra.addTransport(date, weight, (Driver)staffController.getEmployeeByID(driverID) , Tru.getTruck(TruckID), IC, Sit.getSite(Source));*/ //TODO
-
+        ArrayList<Order> orders = new ArrayList<>();
+        for (Pair<Integer, Integer> pair : OrderIDs)
+            orders.add(suppliersController.getOrder(pair.first, pair.second));
+        Tra.addTransport(date, weight, (Driver) staffController.getEmployeeByID(driverID), Tru.getTruck(TruckID), orders, Sit.getSite(Source)); //TODO
         int newDriverAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
-        if(newDriverAmount==-1)
-        {
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver,1);
-        }
+        if (newDriverAmount == -1)
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, 1);
         else
-        {
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, newDriverAmount+1);
-        }
-
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, newDriverAmount + 1);
         int newStorageAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Storage);
-        if(newStorageAmount==-1)
-        {
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage,1);
-        }
+        if (newStorageAmount == -1)
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, 1);
         else
-        {
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, newStorageAmount+1);
-        }
-        return "Transport Registered Successfuly.";
+            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, newStorageAmount + 1);
     }
 
     public void addSection(String section) throws Exception {
