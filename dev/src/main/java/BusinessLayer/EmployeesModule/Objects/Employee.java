@@ -5,7 +5,6 @@ import DTO.EmployeeDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Employee implements persistentObject {
-    final int ID_LENGTH = 9;//magic number
+    final int ID_LENGTH = 9; //magic number
     //======================================================Fields=================================================================
     protected String firstName;
     protected String lastName;
@@ -56,11 +55,9 @@ public class Employee implements persistentObject {
         this.availableShifts = availableShiftsFromDTOToBus(DTO.availableShifts);
     }
 
-    private List<Pair<LocalDate, TypeOfShift>> availableShiftsFromDTOToBus(List<Pair<LocalDate, String>> DTOAvaShifts)
-    {
+    private List<Pair<LocalDate, TypeOfShift>> availableShiftsFromDTOToBus(List<Pair<LocalDate, String>> DTOAvaShifts) {
         List<Pair<LocalDate, TypeOfShift>> toReturn = new LinkedList<>();
-        for(Pair<LocalDate,String> p : DTOAvaShifts)
-        {
+        for (Pair<LocalDate, String> p : DTOAvaShifts) {
             toReturn.add(new Pair(p.first, TypeOfShift.valueOf(p.second)));
         }
         return toReturn;
@@ -86,7 +83,6 @@ public class Employee implements persistentObject {
             if (id.charAt(i) < '0' || id.charAt(i) > '9') {
                 return false;
             }
-
         }
         return true;
     }
@@ -135,8 +131,7 @@ public class Employee implements persistentObject {
     }
 
     public void addSkill(TypeOfEmployee type) throws Exception {
-        if (type==TypeOfEmployee.Driver)
-        {
+        if (type == TypeOfEmployee.Driver) {
             throw new Exception("Driver skill can not be added");
         }
         if (this.skills.contains(type)) {
@@ -148,8 +143,7 @@ public class Employee implements persistentObject {
     public void removeSkill(TypeOfEmployee type) throws Exception {
         if (this.skills.contains(TypeOfEmployee.Driver))//driver
         {
-            if (type==TypeOfEmployee.Driver)
-            {
+            if (type == TypeOfEmployee.Driver) {
                 throw new Exception("Driver can't remove his driver skill");
             }
         }
@@ -160,7 +154,6 @@ public class Employee implements persistentObject {
         if (!this.skills.contains(type)) {
             throw new Exception("Skill doesn't exist");
         }
-
         this.skills.remove(type);
     }
 
@@ -208,7 +201,7 @@ public class Employee implements persistentObject {
         builder.append("\n");
         builder.append("\n\tAvailable Shifts:");
         for (Pair<LocalDate, TypeOfShift> p : availableShifts) {
-            builder.append("\n\t\tDate: " + dateFormat.format(p.first));
+            builder.append("\n\t\tDate: " + p.first);
             builder.append("\n\t\tType: " + p.second.toString() + "\n");
         }
         builder.append("\n");
@@ -261,18 +254,14 @@ public class Employee implements persistentObject {
     }
 
     public void setBankAccountNumber(String bankAccountNumber) throws Exception {
-        if (bankAccountNumber == null || bankAccountNumber.length() <= 0) {
+        if (bankAccountNumber == null || bankAccountNumber.length() <= 0)
             throw new Exception("Bank account is empty");
-        }
         this.bankAccountNumber = bankAccountNumber;
     }
 
     public void setEmpConditions(String empConditions) throws Exception {
         if (empConditions == null) //can be empty
-        {
             throw new Exception("Employee conditions cant be null");
-
-        }
         this.empConditions = empConditions;
     }
 
@@ -283,9 +272,8 @@ public class Employee implements persistentObject {
     }
 
     public void setId(String id) throws Exception {
-        if (!isValidId(id)) {
+        if (!isValidId(id))
             throw new Exception("Invalid id");
-        }
         this.id = id;
     }
 
@@ -296,48 +284,40 @@ public class Employee implements persistentObject {
     }
 
     public void setSalary(int salary) throws Exception {
-        if (salary < 0) {
+        if (salary < 0)
             throw new Exception("Salary must be greater than 0");
-
-        }
         this.salary = salary;
     }
 
     public void setSkills(List<TypeOfEmployee> skills) throws Exception {
-        if (skills == null || skills.size() == 0) {
+        if (skills == null || skills.size() == 0)
             throw new Exception("employee must have skills");
-        }
         this.skills = skills;
     }
 
     public void setStartWorkingDate(Date startWorkingDate) throws Exception {
-        if (startWorkingDate == null) {
+        if (startWorkingDate == null)
             throw new Exception("Date was not inserted");
-        }
         this.startWorkingDate = startWorkingDate;
     }
 
     @Override
     public EmployeeDTO toDTO() {
-        return new EmployeeDTO(this.firstName, this.lastName, this.id, this.bankAccountNumber, this.salary, this.empConditions, this.startWorkingDate, skillsToDTO(this.skills),availableShiftsToDTO(this.availableShifts));
+        return new EmployeeDTO(this.firstName, this.lastName, this.id, this.bankAccountNumber, this.salary, this.empConditions, this.startWorkingDate, skillsToDTO(this.skills), availableShiftsToDTO(this.availableShifts));
     }
-    private List<String> skillsToDTO (List<TypeOfEmployee> skillsBusiness)
-    {
-        List<String > skills = new LinkedList<>();
-        for (TypeOfEmployee type: skillsBusiness)
-        {
+
+    private List<String> skillsToDTO(List<TypeOfEmployee> skillsBusiness) {
+        List<String> skills = new LinkedList<>();
+        for (TypeOfEmployee type : skillsBusiness) {
             skills.add(type.toString());
         }
         return skills;
     }
-    private List<Pair<LocalDate, String>> availableShiftsToDTO (List<Pair<LocalDate, TypeOfShift>>availableShiftBusiness)
-    {
-        List<Pair<LocalDate, String>> availableShift = new LinkedList<>();
-        for (Pair<LocalDate, TypeOfShift> p: availableShiftBusiness)
-        {
 
+    private List<Pair<LocalDate, String>> availableShiftsToDTO(List<Pair<LocalDate, TypeOfShift>> availableShiftBusiness) {
+        List<Pair<LocalDate, String>> availableShift = new LinkedList<>();
+        for (Pair<LocalDate, TypeOfShift> p : availableShiftBusiness)
             availableShift.add(new Pair<LocalDate, String>(p.first, p.second.toString()));
-        }
         return availableShift;
     }
 }
