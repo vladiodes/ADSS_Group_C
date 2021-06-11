@@ -1,13 +1,11 @@
 package DataAccessLayer;
 
 import DTO.EmployeeDTO;
-import Misc.Functions;
 import Misc.Pair;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +91,7 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
             if (skills == null) {
                 return null;
             }
-            List<Pair<LocalDate, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
+            List<Pair<Date, String>> availableShifts = getAvailableShiftList(RS.getString(3)/*id*/, conn);
             if (availableShifts == null) {
                 return null;
             }
@@ -108,15 +106,15 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
         return output;
     }
 
-    private List<Pair<LocalDate, String>> getavailableShiftList(String empId, Connection conn) {
-        List<Pair<LocalDate, String>> ans = new LinkedList<>();
+    private List<Pair<Date, String>> getAvailableShiftList(String empId, Connection conn) {
+        List<Pair<Date, String>> ans = new LinkedList<>();
         ResultSet rs = get("AvailableShiftsForEmployees", "EmpID", empId, conn);
         try {
             while (rs.next()) {
                 String dateSTR = rs.getString(2);
                 Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateSTR);
                 String type = rs.getString(3);
-                Pair<LocalDate, String> p = new Pair<>(Functions.convertToLocalDateViaInstant(date), type);//have to check
+                Pair<Date, String> p = new Pair<>(date, type);//have to check
                 ans.add(p);
             }
         } catch (Exception e) {
@@ -168,7 +166,7 @@ public class EmployeeDAO extends DAOV2<EmployeeDTO> {
     }
 
     //=====================================AvailableShift===================================
-    public int addAvailableShifts(String empID, LocalDate date, String typeOfShift) {
+    public int addAvailableShifts(String empID, Date date, String typeOfShift) {
         return availableShiftForEmployeeDAO.addAvailableShifts(empID, date, typeOfShift);
     }
 

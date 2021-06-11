@@ -1,12 +1,12 @@
 package DataAccessLayer;
 
-import Misc.Pair;
 import DTO.ShiftDTO;
+import Misc.Pair;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 public class ShiftDAO extends DAOV2<ShiftDTO> {
@@ -65,7 +65,7 @@ public class ShiftDAO extends DAOV2<ShiftDTO> {
         }
     }
 
-    public int getShiftIdByDateAndType(LocalDate date, String type) {
+    public int getShiftIdByDateAndType(Date date, String type) {
         Connection conn = Repository.getInstance().connect();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String updateString = String.format("select ID From Shifts where Date = \"%s\" AND TypeOfShift==\"%s\"", formatter.format(date), type);
@@ -85,7 +85,7 @@ public class ShiftDAO extends DAOV2<ShiftDTO> {
         }
     }
 
-    public int updateConstraint(LocalDate date, String typeOfShift, String TypeOfEmployee, int amount) {
+    public int updateConstraint(Date date, String typeOfShift, String TypeOfEmployee, int amount) {
         int ShiftID = getShiftIdByDateAndType(date, typeOfShift);
         Connection conn = Repository.getInstance().connect();
         if (TypeOfEmployee == null || ShiftID < 0 || amount < 0) return 0;
@@ -121,7 +121,7 @@ public class ShiftDAO extends DAOV2<ShiftDTO> {
             /*
              public ShiftDTO(Integer Id,String type, Date date)
              */
-            output = new ShiftDTO(/*id*/RS.getInt(1),/*type*/RS.getString(3),/*date*/LocalDate.parse(RS.getString(2)), RS.getInt(4), constraints, currentShiftEmployees);
+            output = new ShiftDTO(/*id*/RS.getInt(1),/*type*/RS.getString(3),/*date*/new SimpleDateFormat("dd/MM/yyyy").parse(RS.getString(2)), RS.getInt(4), constraints, currentShiftEmployees);
         } catch (Exception e) {
             output = null;
         }

@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,12 +101,12 @@ public class DriverDAO extends DAOV2<DriverDTO> {
         }
     }
 
-    public int addAvailableShifts(String empID, LocalDate date, String typeOfShift) {
+    public int addAvailableShifts(String empID, Date date, String typeOfShift) {
         Connection conn = Repository.getInstance().connect();
         String updateString;
         if (empID == null || date == null || typeOfShift == null) return 0;
         updateString = String.format("INSERT INTO %s \n" +
-                "VALUES (%s,\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", null, Functions.LocalDateToString(date), typeOfShift, empID);
+                "VALUES (%s,\"%s\",\"%s\",\"%s\");", "AvailableShiftsForEmployees", null, Functions.DateToString(date), typeOfShift, empID);
         Statement s;
         try {
             s = conn.createStatement();

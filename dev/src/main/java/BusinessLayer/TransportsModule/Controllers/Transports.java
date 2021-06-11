@@ -14,11 +14,13 @@ import BusinessLayer.TransportsModule.Objects.Truck;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
 import DataAccessLayer.TransportsDAO;
+import Misc.Functions;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -68,12 +70,10 @@ public class Transports implements Controller<Transport> {
                 for (OrderDTO el2 : el.orders) {
                     ORDS.add(OrderMapper.getInstance().getOrder(el2.orderID));
                 }
-                this.transports.add(new Transport(Misc.Functions.convertToLocalDateViaInstant(Misc.Functions.StringToDate(el.date)), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ORDS, el.ID, el.wasDelivered));
-                ID ++;
+                this.transports.add(new Transport(Misc.Functions.convertToLocalDateViaInstant(Misc.Functions.StringToDate(el.date)), el.weight, (Driver) staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ORDS, el.ID, el.wasDelivered));
+                ID++;
             }
-        }
-        catch (Exception e )
-        {
+        } catch (Exception e) {
 
         }
     }
@@ -106,7 +106,10 @@ public class Transports implements Controller<Transport> {
             orderDate = orderDate.plusDays(1);
             dayslater++;
         }
-        List<Shift> maybeShifts = scheduleController.getWeeklyShiftsForTransport(maybeDates);
+        ArrayList<Date> dateTimes = new ArrayList<>();
+        for (LocalDate d : maybeDates)
+            dateTimes.add(Functions.LocalDateToDate(d));
+        List<Shift> maybeShifts = scheduleController.getWeeklyShiftsForTransport(dateTimes);
         if (maybeShifts == null)
             return false;
         else {
@@ -126,7 +129,7 @@ public class Transports implements Controller<Transport> {
             try {
                 Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder(), D.getLicense());
                 if (Ttruck == null) return false;
-                this.addTransport(S.getDate(), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords, Si);
+                this.addTransport(Functions.convertToLocalDateViaInstant(S.getDate()), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords, Si);
             } catch (Exception e) {
                 return false;
             }
@@ -164,9 +167,9 @@ public class Transports implements Controller<Transport> {
         return false;
     }
 
-    public Transport getTransport(int ID){
-        for(Transport transport:transports){
-            if(transport.getID()==ID)
+    public Transport getTransport(int ID) {
+        for (Transport transport : transports) {
+            if (transport.getID() == ID)
                 return transport;
         }
         throw new IllegalArgumentException("No such transport with the given ID");

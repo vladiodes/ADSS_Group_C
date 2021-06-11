@@ -249,7 +249,7 @@ public class StaffController {
      * @param shift
      * @return Success/Fail Message
      */
-    public String addAvailableShift(String id, Pair<LocalDate, TypeOfShift> shift) {
+    public String addAvailableShift(String id, Pair<Date, TypeOfShift> shift) {
         try {
             Employee e = getEmpIfExists(id);
             e.addAvailableShift(shift);

@@ -9,7 +9,6 @@ import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import static Misc.TypeOfEmployee.Driver;
 import static Misc.TypeOfEmployee.HRManager;
@@ -20,7 +19,7 @@ public class ScheduleController {
 
     private int shiftId = 0;
     private TypeOfEmployee typeOfLoggedIn;
-    private Map<LocalDate, DailySchedule> schedule;
+    private Map<Date, DailySchedule> schedule;
     private StaffController staffController;
     private ShiftDAO shiftDAO;
 
@@ -43,7 +42,7 @@ public class ScheduleController {
      * @param type
      * @return Success/Fail message
      */
-    public String addShift(LocalDate date, TypeOfShift type) {
+    public String addShift(Date date, TypeOfShift type) {
         if (this.typeOfLoggedIn != HRManager)//Only HRManager can add shifts
             return "Only HRManager can add shifts";
         if (isShiftExists(date, type))
@@ -64,7 +63,7 @@ public class ScheduleController {
         return "Shift added successfully";
     }
 
-    private boolean isShiftExists(LocalDate date, TypeOfShift type) {
+    private boolean isShiftExists(Date date, TypeOfShift type) {
         if (!schedule.containsKey(date))
             return false;
         DailySchedule cur = schedule.get(date);
@@ -79,7 +78,7 @@ public class ScheduleController {
      * @param type
      * @return Success/Fail message
      */
-    public String removeShift(LocalDate date, TypeOfShift type) {
+    public String removeShift(Date date, TypeOfShift type) {
         if (this.typeOfLoggedIn != HRManager)//Only HRManager can remove shifts
             return "Only HRManager can remove shifts";
         if (!isShiftExists(date, type))
@@ -100,7 +99,7 @@ public class ScheduleController {
      * @param type
      * @return Success/Fail message
      */
-    public String addEmployeeToShift(String id, TypeOfEmployee toSkill, LocalDate date, TypeOfShift type) {
+    public String addEmployeeToShift(String id, TypeOfEmployee toSkill, Date date, TypeOfShift type) {
         if (!isShiftExists(date, type)) //Cant add an employee to a shift that doesn't exist
             return "Shift doesn't exist";
         try {
@@ -125,7 +124,7 @@ public class ScheduleController {
      * @param type
      * @return Success/Fail message
      */
-    public String removeEmployeeFromShift(String id, LocalDate date, TypeOfShift type) {
+    public String removeEmployeeFromShift(String id, Date date, TypeOfShift type) {
         if (!isShiftExists(date, type))
             return "Shift doesn't exist";
         Shift s = getShift(date, type);
@@ -152,7 +151,7 @@ public class ScheduleController {
      * @param numOfEmp
      * @return Success/Fail message
      */
-    public String addConstraint(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
+    public String addConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
         if (typeOfLoggedIn != HRManager)
             return "Only a HR Manager is allowed to modify number and type of employees in a shift";
         try {
@@ -182,7 +181,7 @@ public class ScheduleController {
      * @param typeOfEmployee
      * @return Success/Fail message
      */
-    public String removeConstraint(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
+    public String removeConstraint(Date date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
         if (typeOfLoggedIn != HRManager)
             return "only a HR Manager is allowed to modify number and type of employees in a shift";
         try {
@@ -208,7 +207,7 @@ public class ScheduleController {
      * @param type
      * @return true is the shift requested contains the specific employee, false if not contains
      */
-    public boolean shiftContainsEmployee(String id, LocalDate date, TypeOfShift type) throws Exception {
+    public boolean shiftContainsEmployee(String id, Date date, TypeOfShift type) throws Exception {
         if (getShift(date, type) == null)
             throw new Exception("Shift doesn't exist");
         return this.getShift(date, type).isEmployeeInShift(id);
@@ -222,7 +221,7 @@ public class ScheduleController {
      * @param shiftType
      * @return true if contains, false if not contains
      */
-    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, LocalDate date, TypeOfShift shiftType) throws Exception {
+    public boolean shiftContainsTypeOfEmployee(TypeOfEmployee empType, Date date, TypeOfShift shiftType) throws Exception {
         if (getShift(date, shiftType) == null)
             throw new Exception("shift doesn't exist.");
         return this.getShift(date, shiftType).isTypeEmployeeInShift(empType);
@@ -240,7 +239,7 @@ public class ScheduleController {
         this.shiftId = max + 1;
     }
 
-    public int getNumOfConstraint(LocalDate date, TypeOfShift type, TypeOfEmployee empType) {
+    public int getNumOfConstraint(Date date, TypeOfShift type, TypeOfEmployee empType) {
         Shift s = getShift(date, type);
         Map<TypeOfEmployee, Integer> cons = s.getConstraints();
         int curr = -1;
@@ -256,7 +255,7 @@ public class ScheduleController {
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         StringBuilder builder = new StringBuilder();
-        for (LocalDate d : schedule.keySet()) {
+        for (Date d : schedule.keySet()) {
             builder.append("\nDate Of Daily Schedule: " + dateFormat.format(d));
             builder.append("\n" + schedule.get(d).toString(this.staffController));
         }
@@ -266,11 +265,11 @@ public class ScheduleController {
 
     //-----------------------------------------------------getters-----------------------------------------------
 
-    public Map<LocalDate, DailySchedule> getSchedule() {
+    public Map<Date, DailySchedule> getSchedule() {
         return this.schedule;
     }
 
-    public Shift getShift(LocalDate date, TypeOfShift type) {
+    public Shift getShift(Date date, TypeOfShift type) {
         DailySchedule ds = schedule.get(date);
         if (ds == null) {
             return null;
@@ -286,7 +285,7 @@ public class ScheduleController {
 
     public List<Shift> getShiftWithEmp(String id) {
         List<Shift> toReturn = new LinkedList<>();
-        for (LocalDate d : schedule.keySet()) {
+        for (Date d : schedule.keySet()) {
             DailySchedule daily = schedule.get(d);
             for (Shift s : daily.getShifts()) {
                 if (s.isEmployeeInShift(id))
@@ -297,7 +296,7 @@ public class ScheduleController {
     }
 
     public void getAllShifts() {
-        Map<LocalDate, List<Shift>> shiftsBus = new HashMap<>();
+        Map<Date, List<Shift>> shiftsBus = new HashMap<>();
         List<ShiftDTO> allShiftsDTO = this.shiftDAO.getAll();
         this.restoreMaxShiftID(allShiftsDTO);
         for (ShiftDTO s : allShiftsDTO) //Getting shifts from DB
@@ -306,21 +305,21 @@ public class ScheduleController {
                 shiftsBus.put(s.date, new LinkedList<Shift>());
             shiftsBus.get(s.date).add(new Shift(s));
         }
-        for (LocalDate d : shiftsBus.keySet()) {
+        for (Date d : shiftsBus.keySet()) {
             List<Shift> toAdd = shiftsBus.get(d);
             DailySchedule ds = new DailySchedule(toAdd);
             this.schedule.put(d, ds);
         }
     }
 
-    public List<Shift> getWeeklyShiftsForTransport(List<LocalDate> dates) {
+    public List<Shift> getWeeklyShiftsForTransport(List<Date> dates) {
         List<Shift> toReturn = new LinkedList<>();
-        for (LocalDate currDate : dates) {
+        for (Date currDate : dates) {
             if (this.schedule.containsKey(currDate)) {
                 DailySchedule currDS = this.schedule.get(currDate);
                 List<Shift> dailyShifts = currDS.getShifts();
                 for (Shift s : dailyShifts) {
-                    if (s.isReadyForTransport())//Contains a driver and a storage employee
+                    if (s.isReadyForTransport()) //Contains a driver and a storage employee
                         toReturn.add(s);
                 }
             }

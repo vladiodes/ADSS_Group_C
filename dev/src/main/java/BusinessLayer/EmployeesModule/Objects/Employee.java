@@ -7,7 +7,6 @@ import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ public class Employee implements persistentObject {
     protected String empConditions;
     protected Date startWorkingDate;
     protected List<TypeOfEmployee> skills;
-    protected List<Pair<LocalDate, TypeOfShift>> availableShifts;
+    protected List<Pair<Date, TypeOfShift>> availableShifts;
 
     //======================================================Constructor=================================================================
     public Employee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) throws Exception {
@@ -55,9 +54,9 @@ public class Employee implements persistentObject {
         this.availableShifts = availableShiftsFromDTOToBus(DTO.availableShifts);
     }
 
-    private List<Pair<LocalDate, TypeOfShift>> availableShiftsFromDTOToBus(List<Pair<LocalDate, String>> DTOAvaShifts) {
-        List<Pair<LocalDate, TypeOfShift>> toReturn = new LinkedList<>();
-        for (Pair<LocalDate, String> p : DTOAvaShifts) {
+    private List<Pair<Date, TypeOfShift>> availableShiftsFromDTOToBus(List<Pair<Date, String>> DTOAvaShifts) {
+        List<Pair<Date, TypeOfShift>> toReturn = new LinkedList<>();
+        for (Pair<Date, String> p : DTOAvaShifts) {
             toReturn.add(new Pair(p.first, TypeOfShift.valueOf(p.second)));
         }
         return toReturn;
@@ -164,10 +163,10 @@ public class Employee implements persistentObject {
      * @param shift
      * @throws Exception
      */
-    public void addAvailableShift(Pair<LocalDate, TypeOfShift> shift) throws Exception {
-        LocalDate date = shift.first;
+    public void addAvailableShift(Pair<Date, TypeOfShift> shift) throws Exception {
+        Date date = shift.first;
         long m = System.currentTimeMillis();
-        if (date.isBefore(LocalDate.now())) //An employee cant request a shift in the past
+        if (date.before(new Date(m))) //An employee cant request a shift in the past
         {
             throw new Exception("Date of available shift cant be in the past");
         }
@@ -200,8 +199,8 @@ public class Employee implements persistentObject {
             builder.append("\n\t\t" + type.toString());
         builder.append("\n");
         builder.append("\n\tAvailable Shifts:");
-        for (Pair<LocalDate, TypeOfShift> p : availableShifts) {
-            builder.append("\n\t\tDate: " + p.first);
+        for (Pair<Date, TypeOfShift> p : availableShifts) {
+            builder.append("\n\t\tDate: " + dateFormat.format(p.first));
             builder.append("\n\t\tType: " + p.second.toString() + "\n");
         }
         builder.append("\n");
@@ -225,7 +224,7 @@ public class Employee implements persistentObject {
         return bankAccountNumber;
     }
 
-    public List<Pair<LocalDate, TypeOfShift>> getAvailableShifts() {
+    public List<Pair<Date, TypeOfShift>> getAvailableShifts() {
         return availableShifts;
     }
 
@@ -247,7 +246,7 @@ public class Employee implements persistentObject {
 
     //------------------------------------------------------------setters----------------------------------------------------------------------------------------------
 
-    public void setAvailableShifts(List<Pair<LocalDate, TypeOfShift>> availableShifts) throws Exception {
+    public void setAvailableShifts(List<Pair<Date, TypeOfShift>> availableShifts) throws Exception {
         if (availableShifts == null)
             throw new Exception("available shifts cant be null");
         this.availableShifts = availableShifts;
@@ -314,10 +313,10 @@ public class Employee implements persistentObject {
         return skills;
     }
 
-    private List<Pair<LocalDate, String>> availableShiftsToDTO(List<Pair<LocalDate, TypeOfShift>> availableShiftBusiness) {
-        List<Pair<LocalDate, String>> availableShift = new LinkedList<>();
-        for (Pair<LocalDate, TypeOfShift> p : availableShiftBusiness)
-            availableShift.add(new Pair<LocalDate, String>(p.first, p.second.toString()));
+    private List<Pair<Date, String>> availableShiftsToDTO(List<Pair<Date, TypeOfShift>> availableShiftBusiness) {
+        List<Pair<Date, String>> availableShift = new LinkedList<>();
+        for (Pair<Date, TypeOfShift> p : availableShiftBusiness)
+            availableShift.add(new Pair<Date, String>(p.first, p.second.toString()));
         return availableShift;
     }
 }

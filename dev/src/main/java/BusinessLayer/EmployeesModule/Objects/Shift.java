@@ -6,7 +6,6 @@ import DTO.ShiftDTO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
-import java.time.LocalDate;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,13 +16,13 @@ public class Shift implements persistentObject {
     //==================================================================Fields==================================================================
     private int id;
     private TypeOfShift type;
-    private LocalDate date;
+    private Date date;
     private Map<TypeOfEmployee, Integer> constraints;
     private List<Pair<String, TypeOfEmployee>> currentShiftEmployees;
     private boolean isSealed;
 
     //==================================================================Constructor==============================================================
-    public Shift(int id, TypeOfShift type, LocalDate date) throws Exception {
+    public Shift(int id, TypeOfShift type, Date date) throws Exception {
         shiftValidityCheck(date);
         this.id = id;
         this.type = type;
@@ -67,11 +66,12 @@ public class Shift implements persistentObject {
      * @param date
      * @throws Exception
      */
-    private void shiftValidityCheck(LocalDate date) throws Exception {
+    private void shiftValidityCheck(Date date) throws Exception {
         if (date == null) {
             throw new Exception("Date can't be null");
         }
-        if (date.isBefore(LocalDate.now())) {
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m))) {
             throw new Exception("Date of available shift cant be in the past");
         }
     }
@@ -315,7 +315,7 @@ public class Shift implements persistentObject {
     }
 
     //-------------------------------------------------------------------------getters-------------------------------------------------------------------------
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -332,11 +332,12 @@ public class Shift implements persistentObject {
     }
 
     //--------------------------------------------------------------------------------setters---------------------------------------------------------------------
-    public void setDate(LocalDate date) throws Exception {
+    public void setDate(Date date) throws Exception {
         if (date == null) {
             throw new Exception("date can't be null");
         }
-        if (date.isBefore(LocalDate.now())) {
+        long m = System.currentTimeMillis();
+        if (date.before(new Date(m))) {
             throw new Exception("date of available shift cant be in the past");
         }
         this.date = date;

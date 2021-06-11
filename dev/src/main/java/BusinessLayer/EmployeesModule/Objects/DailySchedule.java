@@ -2,7 +2,7 @@ package BusinessLayer.EmployeesModule.Objects;
 
 import BusinessLayer.EmployeesModule.Controllers.StaffController;
 import Misc.TypeOfShift;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class DailySchedule {
      * @param date
      * @param type
      */
-    public void removeShift(LocalDate date, TypeOfShift type) {
+    public void removeShift(Date date, TypeOfShift type) {
         int loc = getShiftLocation(type);
         if (loc != -1)
             this.shifts.remove(loc);

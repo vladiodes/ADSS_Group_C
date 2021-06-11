@@ -12,6 +12,7 @@ import BusinessLayer.TransportsModule.Controllers.Trucks;
 import BusinessLayer.TransportsModule.Objects.Site;
 import BusinessLayer.TransportsModule.Objects.Transport;
 import BusinessLayer.TransportsModule.Objects.Truck;
+import Misc.Functions;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
 import Misc.TypeOfShift;
@@ -48,7 +49,10 @@ public class TransportsEmployeesFacade {
     //Gets list of dates sorted by date from previous to latest
     //Returns list of shifts sorted by date from previous to latest
     public List<Shift> getWeeklyShiftsForTransport(List<LocalDate> dates) {
-        return this.scheduleController.getWeeklyShiftsForTransport(dates);
+        ArrayList<Date> dateTimes = new ArrayList<>();
+        for(LocalDate d : dates)
+            dateTimes.add(Functions.LocalDateToDate(d));
+        return this.scheduleController.getWeeklyShiftsForTransport(dateTimes);
     }
 
     public String addEmployee(String firstName, String lastName, String id, String bankAccountNumber, int salary, String empConditions, Date startWorkingDate, List<TypeOfEmployee> skills) {
@@ -84,7 +88,7 @@ public class TransportsEmployeesFacade {
     }
 
     public String addAvailableShift(String idToEdit, LocalDate date, TypeOfShift type) {
-        return this.staffController.addAvailableShift(idToEdit, new Pair<LocalDate, TypeOfShift>(date, type));
+        return this.staffController.addAvailableShift(idToEdit, new Pair<Date, TypeOfShift>(Functions.LocalDateToDate(date), type));
     }
 
     public String removeAvailableShift(String idToEdit, Date date, TypeOfShift type) {
@@ -100,11 +104,11 @@ public class TransportsEmployeesFacade {
     }
 
     public String addEmployeeToShift(String idToEdit, TypeOfEmployee typeEmp, LocalDate date, TypeOfShift typeShift) {
-        return this.scheduleController.addEmployeeToShift(idToEdit, typeEmp, date, typeShift);
+        return this.scheduleController.addEmployeeToShift(idToEdit, typeEmp, Functions.LocalDateToDate(date), typeShift);
     }
 
     public String removeEmployeeFromShift(String idToEdit, LocalDate date, TypeOfShift typeShift) {
-        return this.scheduleController.removeEmployeeFromShift(idToEdit, date, typeShift);
+        return this.scheduleController.removeEmployeeFromShift(idToEdit, Functions.LocalDateToDate(date), typeShift);
     }
 
     public boolean checkIfEmpExist(String idToEdit) {
@@ -112,19 +116,19 @@ public class TransportsEmployeesFacade {
     }
 
     public String addConstraintToShift(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee, Integer numOfEmp) {
-        return this.scheduleController.addConstraint(date, typeOfShift, typeOfEmployee, numOfEmp);
+        return this.scheduleController.addConstraint(Functions.LocalDateToDate(date), typeOfShift, typeOfEmployee, numOfEmp);
     }
 
     public String removeConstraintToShift(LocalDate date, TypeOfShift typeOfShift, TypeOfEmployee typeOfEmployee) {
-        return this.scheduleController.removeConstraint(date, typeOfShift, typeOfEmployee);
+        return this.scheduleController.removeConstraint(Functions.LocalDateToDate(date), typeOfShift, typeOfEmployee);
     }
 
     public String addShift(LocalDate date, TypeOfShift typeOfShift) {
-        return this.scheduleController.addShift(date, typeOfShift);
+        return this.scheduleController.addShift(Functions.LocalDateToDate(date), typeOfShift);
     }
 
     public String removeShift(LocalDate date, TypeOfShift typeOfShift) {
-        return this.scheduleController.removeShift(date, typeOfShift);
+        return this.scheduleController.removeShift(Functions.LocalDateToDate(date), typeOfShift);
     }
 
     public String printSchedule() {
@@ -156,9 +160,9 @@ public class TransportsEmployeesFacade {
     }
 
     public void addTransport(LocalDate date, int weight, String driverID, String TruckID, List<Pair<Integer, Integer>> OrderIDs, String Source, TypeOfShift TransportationShift) throws Exception {
-        if (!scheduleController.shiftContainsEmployee(driverID, date, TransportationShift))
+        if (!scheduleController.shiftContainsEmployee(driverID, Functions.LocalDateToDate(date), TransportationShift))
             throw new Exception("Driver not in shift at the time of the transport.");
-        if (!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage, date, TransportationShift))
+        if (!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage, Functions.LocalDateToDate(date), TransportationShift))
             throw new Exception("No storage employee at the time of the shift, can't register transport.");
         if (staffController.getEmployeeByID(driverID) == null)
             throw new Exception("Id isn't legal.");
@@ -168,16 +172,16 @@ public class TransportsEmployeesFacade {
         for (Pair<Integer, Integer> pair : OrderIDs)
             orders.add(suppliersController.getOrder(pair.first, pair.second));
         Tra.addTransport(date, weight, (Driver) staffController.getEmployeeByID(driverID), Tru.getTruck(TruckID), orders, Sit.getSite(Source)); //TODO
-        int newDriverAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Driver);
+        int newDriverAmount = scheduleController.getNumOfConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Driver);
         if (newDriverAmount == -1)
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, 1);
+            this.scheduleController.addConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Driver, 1);
         else
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Driver, newDriverAmount + 1);
-        int newStorageAmount = scheduleController.getNumOfConstraint(date, TransportationShift, TypeOfEmployee.Storage);
+            this.scheduleController.addConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Driver, newDriverAmount + 1);
+        int newStorageAmount = scheduleController.getNumOfConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Storage);
         if (newStorageAmount == -1)
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, 1);
+            this.scheduleController.addConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Storage, 1);
         else
-            this.scheduleController.addConstraint(date, TransportationShift, TypeOfEmployee.Storage, newStorageAmount + 1);
+            this.scheduleController.addConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Storage, newStorageAmount + 1);
     }
 
     public void addSection(String section) throws Exception {

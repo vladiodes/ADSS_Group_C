@@ -1,10 +1,9 @@
 package DTO;
 
 import Misc.Pair;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 public class ShiftDTO {
@@ -12,13 +11,13 @@ public class ShiftDTO {
 
     public int shiftId;
     public String type;
-    public LocalDate date;
+    public Date date;
     public Map<String, Integer> constraints;
     public List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees;//----------------------------change EmployeeDTO to String(emp Id)
     public boolean isSealed;
 
     //==================================================================Constructor==============================================================
-    public ShiftDTO(int shiftId, String type, LocalDate date, int isSealed, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
+    public ShiftDTO(int shiftId, String type, Date date, int isSealed, Map<String, Integer> constraints, List<Pair<String/*empID*/, String/*typeOfEmployee*/>> currentShiftEmployees) {
         this.shiftId = shiftId;
         this.type = type;
         this.date = date;
