@@ -40,6 +40,7 @@ public class DriverDAO extends DAOV2<DriverDTO> {
             else {
                 ans = 0;
             }
+
         } catch (Exception e) {
             ans = 0;
         } finally {
@@ -171,7 +172,7 @@ public class DriverDAO extends DAOV2<DriverDTO> {
             if (skills == null) {
                 return null;
             }
-            List<Pair<LocalDate, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
+            List<Pair<Date, String>> availableShifts = getavailableShiftList(RS.getString(3)/*id*/, conn);
             if (availableShifts == null) {
                 return null;
             }
@@ -186,15 +187,12 @@ public class DriverDAO extends DAOV2<DriverDTO> {
         return output;
     }
 
-    private List<Pair<LocalDate, String>> getavailableShiftList(String driverId, Connection conn) {
-        List<Pair<LocalDate, String>> ans = new LinkedList<>();
+    private List<Pair<Date, String>> getavailableShiftList(String driverId, Connection conn) {
+        List<Pair<Date, String>> ans = new LinkedList<>();
         ResultSet rs = get("AvailableShiftsForEmployees", "DriverID", driverId, conn);
         try {
             while (rs.next()) {
-                String dateSTR = rs.getString(2);
-                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateSTR);
-                String type = rs.getString(3);
-                Pair<LocalDate, String> p = new Pair<>(Functions.convertToLocalDateViaInstant(date), type);//have to check
+                Pair<Date, String> p = new Pair<>(new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString(2)), rs.getString(3));//have to check
                 ans.add(p);
             }
         } catch (Exception e) {
