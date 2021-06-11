@@ -5,11 +5,14 @@ import BusinessLayer.EmployeesModule.Controllers.StaffController;
 import BusinessLayer.EmployeesModule.Objects.Driver;
 import BusinessLayer.EmployeesModule.Objects.Shift;
 import BusinessLayer.Interfaces.Controller;
+import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.SuppliersModule.Order;
 import BusinessLayer.TransportsModule.Objects.Site;
 import BusinessLayer.TransportsModule.Objects.Transport;
 import BusinessLayer.TransportsModule.Objects.Truck;
+import DTO.OrderDTO;
+import DTO.TransportDTO;
 import DataAccessLayer.TransportsDAO;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
@@ -56,23 +59,23 @@ public class Transports implements Controller<Transport> {
 
     @Override
     public void Load() {
-        /*this.transports = new ArrayList<>();
+        this.transports = new ArrayList<>();
         ID = 0;
         try {
             List<TransportDTO> DTOS = DAO.getAll();
             for (TransportDTO el : DTOS) {
-                List<ItemContract> ICS = new ArrayList<>();
-                for (ItemContractDTO el2 : el.Contracts) {
-                    ICS.add(new ItemContract(el2.ID,sitesController.getSite(el2.destination), el2.items, el2.passed));
+                List<Order> ORDS = new ArrayList<>();
+                for (OrderDTO el2 : el.orders) {
+                    ORDS.add(OrderMapper.getInstance().getOrder(el2.orderID));
                 }
-                this.transports.add(new Transport(Misc.Functions.StringToDate(el.date), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ICS, sitesController.getSite(el.source), el.ID));
+                this.transports.add(new Transport(Misc.Functions.convertToLocalDateViaInstant(Misc.Functions.StringToDate(el.date)), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ORDS, sitesController.getSite(el.source), el.ID));
                 ID ++;
             }
         }
         catch (Exception e )
         {
 
-        }*/ // TODO
+        }
     }
 
     /**
@@ -121,7 +124,7 @@ public class Transports implements Controller<Transport> {
                 return false;
             }
             try {
-                Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder());
+                Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder(), D.getLicense());
                 if (Ttruck == null) return false;
                 this.addTransport(S.getDate(), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords, Si);
             } catch (Exception e) {

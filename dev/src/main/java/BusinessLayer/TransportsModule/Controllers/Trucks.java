@@ -29,9 +29,12 @@ public class Trucks implements Controller<Truck> {
      * @param dateOfOrder date for an available truck
      * @return
      */
-    public Truck getAvailableTruck(LocalDate dateOfOrder) {
+    public Truck getAvailableTruck(LocalDate dateOfOrder, int License) {
         for(Map.Entry<String, Truck> kaki : trucks.entrySet())
-            return kaki.getValue();
+        {
+            if(kaki.getValue().getFactoryWeight()<= License)
+                return kaki.getValue();
+        }
         return null;
     }
 

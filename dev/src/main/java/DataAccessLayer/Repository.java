@@ -226,6 +226,12 @@ public class Repository {
                 "\tFOREIGN KEY(\"Truck\") REFERENCES \"Trucks\"(\"Plate Num\")\n" +
                 ");";
 
+        String TransportsOdeTable = "CREATE TABLE \"TransportsOrders\" (\n" +
+                "\t\"OrderID\"\tINTEGER,\n" +
+                "\t\"TransportID\"\tTEXT,\n" +
+                "\tFOREIGN KEY(\"OrderID\") REFERENCES \"Orders\"(\"ID\"),\n" +
+                "\tPRIMARY KEY(\"OrderID\",\"TransportID\")\n" +
+                ");";
         //Employees Tables ------------------------------------------------------------------------------------------------------------------
 
         String DriversTable = "CREATE TABLE IF NOT EXISTS \"Drivers\" (\n" +
@@ -315,13 +321,13 @@ public class Repository {
             stmt.execute(SupplierFixedDays);
             stmt.execute(SupplierManu);
             stmt.execute(specificItem);
-
             //Transportation tables--------------------
             stmt.execute(SectionsTable);
             stmt.execute(SitesTable);
             stmt.execute(TrucksTable);
             stmt.execute(DriversTable);
             stmt.execute(TransportsTable);
+            stmt.execute(TransportsOdeTable);
             //Employees tables------------------------
             stmt.execute(EmployeesTable);
             stmt.execute(ShiftsTable);

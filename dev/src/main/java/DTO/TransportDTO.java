@@ -7,7 +7,7 @@ public class TransportDTO {
     public int weight;
     public String driver;
     public String truck;
-    public List<OrderDTO> Contracts;
+    public List<OrderDTO> orders;
     public String source;
     public int ID;
 
@@ -16,7 +16,7 @@ public class TransportDTO {
         this.weight = weight;
         this.driver = driver;
         this.truck = truck;
-        Contracts = contracts;
+        orders = contracts;
         this.source = source;
         this.ID = ID;
     }
