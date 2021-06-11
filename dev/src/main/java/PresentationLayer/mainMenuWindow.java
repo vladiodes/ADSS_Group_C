@@ -18,10 +18,10 @@ public class mainMenuWindow extends menuWindow {
         TransportsEmployeesFacade transportsEmployeeFacade=new TransportsEmployeesFacade(TypeOfEmployee.HRManager);
         SupplierFacadeImpl supplierFacade=new SupplierFacadeImpl();
         windows = new menuWindow[]{
-                new EmployeesMenuWindow(transportsEmployeeFacade.setTypeOfLoggedIn(TypeOfEmployee.HRManager)),
-                new StorageManagerWindow(supplierFacade,transportsEmployeeFacade.setTypeOfLoggedIn(TypeOfEmployee.Storage)),
-                new LogisticManagerWindow(supplierFacade,transportsEmployeeFacade.setTypeOfLoggedIn(TypeOfEmployee.LogisticManager)),
-                new StoreManagerWindow(supplierFacade,transportsEmployeeFacade.setTypeOfLoggedIn(TypeOfEmployee.BranchManager)),
+                new EmployeesMenuWindow(transportsEmployeeFacade),
+                new StorageManagerWindow(supplierFacade,transportsEmployeeFacade),
+                new LogisticManagerWindow(supplierFacade,transportsEmployeeFacade),
+                new StoreManagerWindow(supplierFacade,transportsEmployeeFacade),
                 new menuWindow("Exit") {
                     @Override
                     public void start() {
