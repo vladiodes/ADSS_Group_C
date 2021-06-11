@@ -215,4 +215,14 @@ public class TransportsEmployeesFacade {
         this.Tru.Load();
         this.Tra.Load();
     }
+
+    public Response<Boolean> markTransportAsDelivered(int transportID) {
+        try {
+            Tra.getTransport(transportID).setDelivered();
+            return new Response(true);
+        }
+        catch (IllegalArgumentException e){
+            return new Response(e);
+        }
+    }
 }

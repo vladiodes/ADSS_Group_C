@@ -17,11 +17,12 @@ public class ItemDAO extends DAOV1<ItemDTO> {
     public static final String sellingPrice = "SellingPrice";
     public static final String CategoryIDCOL = "CategoryID";
     public static final String alertCol="Alert";
-    private final String INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?,?)", tableName,LocationCol,NameCol,minCol,ProducerCol,sellingPrice,CategoryIDCOL,alertCol);
+    public static final String weightCol="Weight";
+    private final String INSERT_SQL = String.format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?,?,?)", tableName,LocationCol,NameCol,minCol,ProducerCol,sellingPrice,CategoryIDCOL,alertCol,weightCol);
 
-    private final String UPDATE_SQL = String.format("Update %s SET %s=?, %s=?, %s=?, %s=?, %s=?,%s=?, %s=? WHERE ID=?",
+    private final String UPDATE_SQL = String.format("Update %s SET %s=?, %s=?, %s=?, %s=?, %s=?,%s=?, %s=?, %s=? WHERE ID=?",
             tableName, LocationCol,
-            NameCol, minCol, ProducerCol, sellingPrice, CategoryIDCOL,alertCol);
+            NameCol, minCol, ProducerCol, sellingPrice, CategoryIDCOL,alertCol,weightCol);
 
     public ItemDAO() {
         super("Item");
@@ -41,6 +42,7 @@ public class ItemDAO extends DAOV1<ItemDTO> {
             ps.setDouble(5, dto.getSellingPrice());
             ps.setInt(6, dto.getCategoryID());
             ps.setInt(7, dto.getAlertTime());
+            ps.setInt(8,dto.getItemWeight());
             ps.executeUpdate();
             id = getInsertedID(con);
         } catch (SQLException e) {
@@ -65,7 +67,8 @@ public class ItemDAO extends DAOV1<ItemDTO> {
             ps.setDouble(5, dto.getSellingPrice());
             ps.setInt(6, dto.getCategoryID());
             ps.setInt(7, dto.getAlertTime());
-            ps.setInt(8,dto.getID());
+            ps.setInt(8,dto.getItemWeight());
+            ps.setInt(9,dto.getID());
             rowsAffected = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,7 +85,7 @@ public class ItemDAO extends DAOV1<ItemDTO> {
         try {
             if (!rs.isClosed())
                 output = new ItemDTO(rs.getInt("ID"), rs.getString(NameCol), rs.getInt(LocationCol), rs.getString(ProducerCol),
-                         rs.getInt(minCol), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL),rs.getInt(alertCol));
+                         rs.getInt(minCol), rs.getDouble(sellingPrice), rs.getInt(CategoryIDCOL),rs.getInt(alertCol),rs.getInt(weightCol));
         }catch (SQLException e) {
             e.printStackTrace();
         }

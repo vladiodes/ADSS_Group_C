@@ -195,13 +195,14 @@ public class itemsMenuWindow extends menuWindow {
         int storageAmount = utills.getNonNegativeNumber("please enter storage amount:\n");
         int shelfAmount = utills.getNonNegativeNumber("please enter shelf amount:\n");
         int minAmount = utills.getNonNegativeNumber("please enter minimum amount:\n");
+        int weight=utills.getNonNegativeNumber("please enter the weight of a single item:\n");
         LocalDate expDate = utills.getDateFromUser("Please enter expiration date");
         System.out.println("please enter selling price : ");
         double sellingPrice = scanner.nextDouble();
         scanner.nextLine();
 
 
-        Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice);
+        Response<ItemDTO> response = inventoryFacade.addItem(categoryID, location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice,weight);
         utills.printMessageOrSuccess(response, "Successfully added item\n" + response.getValue());
     }
 

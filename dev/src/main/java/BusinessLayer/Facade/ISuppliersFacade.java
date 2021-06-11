@@ -198,4 +198,15 @@ public interface ISuppliersFacade {
      * @return returns a response object, true upon success, false otherwise
      */
     Response<Boolean> findTransportForOrder(int supplierID, int orderID);
+
+    /**
+     * Receives a specific pio in an order
+     * @param supplierID
+     * @param orderID
+     * @param pioName
+     * @param received
+     * @param expDate
+     * @return
+     */
+    Response<Boolean> receiveItemInOrder(int supplierID, int orderID, String pioName, int received, LocalDate expDate);
 }

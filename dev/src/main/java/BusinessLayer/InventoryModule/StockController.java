@@ -38,14 +38,14 @@ public class StockController {
         return true;
     }
 
-    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double sellingPrice) {
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, int categoryID, double sellingPrice,int weight) {
 
         if (!isAvailableLocation(location))
             throw new IllegalArgumentException("location is already taken");
         Category c = categoryMapper.getCategory(categoryID);
         if (c == null)
             throw new IllegalArgumentException("No such category");
-        Item toReturn = c.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice);
+        Item toReturn = c.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, sellingPrice,weight);
         return toReturn;
     }
 

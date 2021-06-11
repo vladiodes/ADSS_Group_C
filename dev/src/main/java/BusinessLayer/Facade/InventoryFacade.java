@@ -35,9 +35,9 @@ public class InventoryFacade {
             return new Response<>(e);
         }
     }
-    public Response<ItemDTO> addItem(int categoryID, int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double sellingPrice) {
+    public Response<ItemDTO> addItem(int categoryID, int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate, double sellingPrice,int weight) {
         try {
-            Item item = stockController.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, categoryID, sellingPrice);
+            Item item = stockController.addItem(location, name, producer, storageAmount, shelfAmount, minAmount, expDate, categoryID, sellingPrice,weight);
             return new Response<>(new ItemDTO(item));
         } catch (IllegalArgumentException e) {
             return new Response<>(e);

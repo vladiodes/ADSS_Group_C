@@ -1,5 +1,6 @@
 package PresentationLayer;
 
+import BusinessLayer.Facade.Response;
 import BusinessLayer.Facade.TransportsEmployeesFacade;
 import Misc.Pair;
 import Misc.TypeOfShift;
@@ -33,7 +34,8 @@ public class TransportsMain extends menuWindow {
         menu.put(6, "Get all sites");
         menu.put(7, "Get all sections");
         menu.put(8, "Get all transports");
-        menu.put(9, "Go back");
+        menu.put(9,"Mark transport as arrived to store");
+        menu.put(10, "Go back");
     }
 
     @Override
@@ -66,11 +68,20 @@ public class TransportsMain extends menuWindow {
                     GetAllTransports(API);
                     break;
                 case 9:
+                    MarkTransportAsDelivered(API);
+                    break;
+                case 10:
                     terminate();
                     break;
             }
         }
         closeWindow();
+    }
+
+    private void MarkTransportAsDelivered(TransportsEmployeesFacade api) {
+        Response<Boolean> response=api.markTransportAsDelivered(
+                utills.getNonNegativeNumber("Please enter the id of the transport that has arrived to the store\n"));
+        utills.printMessageOrSuccess(response,"Successfully marked that the transport has arrived to store, storage workers need to take care of it now");
     }
 
     private void closeWindow() {

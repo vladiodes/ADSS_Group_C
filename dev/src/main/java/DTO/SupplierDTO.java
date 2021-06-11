@@ -18,6 +18,7 @@ public class SupplierDTO {
     public Map<Double,Integer> discountsByPrice;
     public List<Integer> orderIDs;//for loading from database
     public Map<Integer,Integer> contracts;
+    public String siteDestination;
     public SupplierDTO(Supplier supplier) {
         supplierName=supplier.getSupplierName();
         fixedDays=supplier.getFixedDays();
@@ -29,9 +30,10 @@ public class SupplierDTO {
         manufacturers=supplier.getManufacturers();
         contactInfo=supplier.getContactInfo();
         discountsByPrice=supplier.getDiscountsByPrice();
+        siteDestination=supplier.getSiteDestination();
     }
 
-    public SupplierDTO(String name, Set<DayOfWeek> fixedDays, Boolean selfpickup, int id, String bankAccount, String paymentMethod, Set<String> categories, Set<String> manufacturures, Map<String, String> contactInfo, Map<Double, Integer> discountsByPrice, List<Integer> orderIDs,Map<Integer,Integer> contracts) {
+    public SupplierDTO(String name, Set<DayOfWeek> fixedDays, Boolean selfpickup, int id, String bankAccount, String paymentMethod, Set<String> categories, Set<String> manufacturures, Map<String, String> contactInfo, Map<Double, Integer> discountsByPrice, List<Integer> orderIDs,Map<Integer,Integer> contracts,String siteDestination) {
         this.supplierName=name;
         this.fixedDays=fixedDays;
         this.selfPickUp=selfpickup;
@@ -49,6 +51,7 @@ public class SupplierDTO {
         this.discountsByPrice=discountsByPrice;
         this.orderIDs=orderIDs;
         this.contracts = contracts;
+        this.siteDestination=siteDestination;
     }
 
     public int getSupplierID() {
@@ -60,6 +63,7 @@ public class SupplierDTO {
         StringBuilder builder=new StringBuilder();
         builder.append("Supplier's ID: " + getSupplierID());
         builder.append("\nSupplier's name: " + supplierName);
+        builder.append("\nSupplier's site destination: " + siteDestination);
         builder.append("\nSupplier's fixed days: ");
         for(DayOfWeek day:fixedDays)
             builder.append(day.toString() + " ");

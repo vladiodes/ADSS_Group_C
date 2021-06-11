@@ -7,14 +7,13 @@ import java.sql.*;
 import java.util.*;
 
 public class SupplierDAO extends DAOV1<SupplierDTO> {
-    String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="paymentMethod",
-    INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s) VALUES(?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol),
-    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=? WHERE ID=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol,IDCol);
+    String IDCol="ID",NameCol="Name",SelfPickUpCol="selfPickUp",BankAccountCol="bankAccount",PaymentMethodCol="paymentMethod", siteDestinationCol="Address",
+    INSERT_SQL=String.format("INSERT INTO %s (%s,%s,%s,%s,%s) VALUES(?,?,?,?,?)",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol,siteDestinationCol),
+    UPDATE_SQL=String.format("Update %s SET %s=?,%s=?,%s=?,%s=?,%s=? WHERE %s=?",tableName,NameCol,SelfPickUpCol,BankAccountCol,PaymentMethodCol,siteDestinationCol,IDCol);
 
     public  SupplierDAO(){super("Supplier");}
     @Override
     public int insert(SupplierDTO dto) {
-        //@TODO: add all values to the assocation table (contact info, discounts, etc)
         int id=-1;
         Connection con=Repository.getInstance().connect();
         PreparedStatement ps = null;
@@ -24,6 +23,7 @@ public class SupplierDAO extends DAOV1<SupplierDTO> {
             ps.setBoolean(2,dto.selfPickUp);
             ps.setString(3,dto.bankAccount);
             ps.setString(4,String.valueOf(dto.paymentMethod));
+            ps.setString(5,dto.siteDestination);
             ps.executeUpdate();
             id=getInsertedID(con);
         } catch (SQLException e) {
@@ -83,7 +83,8 @@ public class SupplierDAO extends DAOV1<SupplierDTO> {
             ps.setBoolean(2,dto.selfPickUp);
             ps.setString(3,dto.bankAccount);
             ps.setString(4,String.valueOf(dto.paymentMethod));
-            ps.setString(5,String.valueOf(dto.getSupplierID()));
+            ps.setString(5,dto.siteDestination);
+            ps.setString(6,String.valueOf(dto.getSupplierID()));
             rowsAffected=ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,9 +108,7 @@ public class SupplierDAO extends DAOV1<SupplierDTO> {
         Connection con=Repository.getInstance().connect();
         ResultSet rs=null;
         ResultSet temprs=null;
-        String name;
-        String bankAccount;
-        String paymentMethod;
+        String name,bankAccount,paymentMethod,siteDestination;
         boolean selfpickup;
         Set<String> categories=new LinkedHashSet<>();
         Set<String> manufacturures=new LinkedHashSet<>();
@@ -130,6 +129,7 @@ public class SupplierDAO extends DAOV1<SupplierDTO> {
             selfpickup=rs.getBoolean(SelfPickUpCol);
             bankAccount=rs.getString(BankAccountCol);
             paymentMethod=rs.getString(PaymentMethodCol);
+            siteDestination=rs.getString(siteDestinationCol);
             String query=String.format("SELECT * FROM SupplierCatagories WHERE SupplierID=%s",id);
             stmt=con.createStatement();
             temprs=stmt.executeQuery(query);
@@ -166,7 +166,7 @@ public class SupplierDAO extends DAOV1<SupplierDTO> {
             while (temprs.next()){
                 contracts.put(temprs.getInt("ItemID"),temprs.getInt("CatalogueIDbySupplier"));
             }
-            output=new SupplierDTO(name,fixedDays,selfpickup,id,bankAccount,paymentMethod,categories,manufacturures,contactInfo,discountsByPrice,orderIDs,contracts);
+            output=new SupplierDTO(name,fixedDays,selfpickup,id,bankAccount,paymentMethod,categories,manufacturures,contactInfo,discountsByPrice,orderIDs,contracts,siteDestination);
         } catch (SQLException e) {
             e.printStackTrace();
         }

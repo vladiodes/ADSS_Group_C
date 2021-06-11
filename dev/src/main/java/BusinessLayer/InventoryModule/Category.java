@@ -71,7 +71,8 @@ public class Category {
     public List<Category> getSubCategories() {
         return subCategories;
     }
-    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice) {
+
+    public Item addItem(int location, String name, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int weight) {
         if (storageAmount<0)
             throw new IllegalArgumentException("invalid storage amount");
         if (shelfAmount<0)
@@ -82,7 +83,7 @@ public class Category {
         if (expDate.compareTo(LocalDate.now())<0)
             throw new IllegalArgumentException("invalid exp date");
 
-        Item toAdd = new Item(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID());
+        Item toAdd = new Item(name,location,producer,storageAmount,shelfAmount,minAmount,expDate,sellingPrice,getID(),weight);
         this.items.put(toAdd.getId(), toAdd);
         return toAdd;
     }

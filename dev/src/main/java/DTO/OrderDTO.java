@@ -19,6 +19,7 @@ public class OrderDTO {
     public double priceBeforeDiscount;
     public double priceAfterDiscount;
     public int totalQuantity;
+    public HashMap<String,String> productsNamesDescription;
     public List<String> productsInOrder;
     public boolean isFixed;
     public int supplierID;
@@ -33,10 +34,14 @@ public class OrderDTO {
         totalQuantity = order.getTotalQuantity();
         isFixed = order.getisFixed();
         productsInOrder = new ArrayList<>();
-        for (ProductInOrder pio : order.getProductsInOrder())
-            productsInOrder.add("\nProduct name: " + pio.getContract().getProduct().getName() +
+        productsNamesDescription=new HashMap<>();
+        for (ProductInOrder pio : order.getProductsInOrder()) {
+            String val=("\nProduct name: " + pio.getContract().getProduct().getName() +
                     "\nQuantity: " + pio.getQuantity() +
                     "\nTotal price after discounts: " + pio.getTotalPrice());
+            productsInOrder.add(val);
+            productsNamesDescription.put(pio.getContract().getProduct().getName(),val);
+        }
     }
 
     public OrderDTO(LocalDate dateOfOrder, int orderID, Order.ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, HashMap<Integer, Pair<Integer, Integer>> productsInOrderIDs, String isFixed, int supplierID) {

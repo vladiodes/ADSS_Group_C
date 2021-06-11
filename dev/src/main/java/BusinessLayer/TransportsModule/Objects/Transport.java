@@ -2,13 +2,14 @@ package BusinessLayer.TransportsModule.Objects;
 
 import BusinessLayer.EmployeesModule.Objects.Driver;
 import BusinessLayer.Interfaces.persistentObject;
-import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
+
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+
 import static Misc.Functions.LocalDateToString;
 
 public class Transport implements persistentObject<TransportDTO> {
@@ -88,33 +89,44 @@ public class Transport implements persistentObject<TransportDTO> {
         return source;
     }
 
-    /***
-     * when an order arrives this function is called. Its purpose is to update  the Mlai with the items.
-     * In case some orders and not Ok, and needed to be inserted manualy, allgood is false and bad orders has bad orders IDS.
-     * @param AllGood are all the items alright?
-     * @param badOrders what orders are bad and shouldnt update in the Mlai
+    public int getID() {
+        return ID;
+    }
+
+    /**
+     * Once the order has arrived to the store, it's marked as arrived, and the orders it contains can now be stashed
+     * in the inventory
      */
-    public void setDelivered(boolean AllGood, List<Integer> badOrders) {
-        SuppliersController SC = SuppliersController.getInstance();
-        if (AllGood)
-            for (Order d : this.getOrders()) {
-                SC.receiveOrder(d.getSupplierID(), d.getOrderID());
-                d.transportHasArrived();
-            }
-        else {
-            if (badOrders == null || badOrders.size() == 0)
-                throw new IllegalArgumentException();
-            for (Order d : this.getOrders()) {
-                d.transportHasArrived();
-                if (!badOrders.contains(d.getOrderID()))
-                    SC.receiveOrder(d.getSupplierID(), d.getOrderID());
-            }
-        }
-        this.delivered = true;
+    public void setDelivered() {
+        //@TODO: synchronize this with the database
+        delivered=true;
+        for(Order o:Orders)
+            o.transportHasArrived(); //simply changes shipment status
+
+        /**
+         * Ilay's prev implementation
+         */
+//        SuppliersController SC = SuppliersController.getInstance();
+//        if (AllGood)
+//            for (Order d : this.getOrders()) {
+//                SC.receiveOrder(d.getSupplierID(), d.getOrderID());
+//                d.transportHasArrived();
+//            }
+//        else {
+//            if (badOrders == null || badOrders.size() == 0)
+//                throw new IllegalArgumentException();
+//            for (Order d : this.getOrders()) {
+//                d.transportHasArrived();
+//                if (!badOrders.contains(d.getOrderID()))
+//                    SC.receiveOrder(d.getSupplierID(), d.getOrderID());
+//            }
+//        }
+//        this.delivered = true;
     }
 
     @Override
     public String toString() {
+        //@TODO: Order object doesn't have any toString() method, you should first create an orderDTO object, which DOES have a toString() method
         return "Transport{" +
                 "date=" + date +
                 ", weight=" + weight +

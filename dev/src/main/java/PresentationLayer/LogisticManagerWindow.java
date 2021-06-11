@@ -16,7 +16,6 @@ public class LogisticManagerWindow extends menuWindow {
         shouldTerminate=false;
         windows=new menuWindow[]{
                 new TransportsMain(transportsEmployeesFacade),
-                new ordersMenuWindow(supplierFacade,"Manage orders"),
                 new menuWindow("Logout") {
                     @Override
                     public void start() {
@@ -52,7 +51,6 @@ public class LogisticManagerWindow extends menuWindow {
     protected void createMenu() {
         menu=new HashMap<>();
         menu.put(1,"Manage transports");
-        menu.put(2,"Manage Orders");
-        menu.put(3,"Logout");
+        menu.put(2,"Logout");
     }
 }

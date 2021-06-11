@@ -256,4 +256,15 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
             return new Response<>(e);
         }
     }
+
+    @Override
+    public Response<Boolean> receiveItemInOrder(int supplierID, int orderID, String pioName, int received, LocalDate expDate) {
+        try{
+            suppliersController.getSupplier(supplierID).receiveItemInOrder(orderID,pioName,received,expDate);
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e) {
+            return new Response<>(e);
+        }
+    }
 }

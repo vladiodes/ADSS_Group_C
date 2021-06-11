@@ -5,6 +5,7 @@ import BusinessLayer.Mappers.ContractMapper;
 import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.Mappers.SupplierMapper;
 import BusinessLayer.SuppliersModule.Controllers.SuppliersController;
+import BusinessLayer.TransportsModule.Controllers.Sites;
 import DTO.SupplierDTO;
 
 import java.time.LocalDate;
@@ -43,6 +44,7 @@ public class Supplier{
         discountsByPrice=dto.discountsByPrice;
         ordersFromSupplier=new LinkedList<>();
         supplierContracts=new LinkedList<>();
+        siteDestination=dto.siteDestination;
     }
     public Supplier(String supplierName, Set<DayOfWeek>supplyingDays, boolean selfPickup, String bankAccount, PaymentAgreement paymentMethod, Set<String> categories, Set<String> manufactures, Map<String,String>contactInfo, Map<Double,Integer>discounts, String siteDestination) {
         setSupplierName(supplierName);
@@ -56,6 +58,8 @@ public class Supplier{
         setDiscountsByPrice(discounts);
         this.ordersFromSupplier = new LinkedList<>();
         this.supplierContracts = new LinkedList<>();
+        if(Sites.getInstance().getSite(siteDestination)==null)
+            throw new IllegalArgumentException("No such site in the system, first add the site destination");
         this.siteDestination=siteDestination;
     }
 
@@ -194,7 +198,7 @@ public class Supplier{
      * @param isFixed is the order fixed (can be re-ordered)
      */
     public Order addOrder(LocalDate date, Boolean isFixed){
-        Order toAdd=new Order(date,isFixed,SupplierID,siteDestination);
+        Order toAdd=new Order(date,isFixed,SupplierID);
         ordersFromSupplier.add(toAdd);
         return toAdd;
     }
@@ -213,7 +217,7 @@ public class Supplier{
      * @param date the date issued with the new order
      */
     public Order reOrder(int originalOrderID, LocalDate date) {
-        Order toReturn = new Order(findOrder(originalOrderID), date,SupplierID,siteDestination);
+        Order toReturn = new Order(findOrder(originalOrderID), date,SupplierID);
         ordersFromSupplier.add(toReturn);
         return toReturn;
     }
@@ -431,7 +435,7 @@ public class Supplier{
      * @param orderID the id of the order to find transport to
      */
     public void findTransport(int orderID) {
-        if(!findOrder(orderID).findTransport())
+        if(!findOrder(orderID).findTransport(siteDestination))
             throw new IllegalArgumentException("No transportation was found within a week from the date of the order");
     }
 
@@ -476,4 +480,10 @@ public class Supplier{
         return discountsByPrice;
     }
 
+    public String getSiteDestination(){return  siteDestination;}
+
+    public void receiveItemInOrder(int orderID, String pioName, int received, LocalDate expDate) {
+        Order order=findOrder(orderID);
+        order.receiveItem(pioName,received,expDate);
+    }
 }

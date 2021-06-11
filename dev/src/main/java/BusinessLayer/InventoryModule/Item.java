@@ -23,6 +23,7 @@ public class Item {
     private double sellingPrice;
     private int location;
     private String producer;
+    private int itemWeight;
     private int categoryID; //for database
 
 
@@ -38,13 +39,14 @@ public class Item {
         this.alertTime=dto.getAlertTime();
         this.sellingPrice=dto.getSellingPrice();
         this.categoryID=dto.getCategoryID();
+        this.itemWeight=dto.getItemWeight();
         this.id=dto.getID();
         for(specificItemDTO specific:dto.getSpecificItemDTOList()){
             items.add(new SpecificItem(specific));
         }
         contractList=new ArrayList<>();
     }
-    public Item(String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID){
+    public Item(String name, int location, String producer, int storageAmount, int shelfAmount, int minAmount, LocalDate expDate,double sellingPrice,int categoryID,int itemWeight){
         this.name=name;
         this.minAmount=minAmount;
         this.alertTime=2;
@@ -53,6 +55,7 @@ public class Item {
         this.producer=producer;
         this.categoryID=categoryID;
         this.location=location;
+        this.itemWeight=itemWeight;
         items = new ArrayList<>();
         SpecificItem item = new SpecificItem(storageAmount,shelfAmount,expDate,getId());
         items.add(item);
@@ -241,4 +244,6 @@ public class Item {
     public List<Contract> getContractList() {
         return contractList;
     }
+
+    public int getItemWeight(){return itemWeight;}
 }

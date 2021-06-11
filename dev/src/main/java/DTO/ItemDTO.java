@@ -17,9 +17,10 @@ public class ItemDTO {
     private int minAmount;
     private double sellingPrice;
     private double buyingPrice;
+    private int itemWeight;
     private List<specificItemDTO> specificItemDTOList;
 
-    public ItemDTO(int id, String name, int location, String producer,int minAmount, double sellingPrice, int categoryID, int alertTime){
+    public ItemDTO(int id, String name, int location, String producer,int minAmount, double sellingPrice, int categoryID, int alertTime,int itemWeight){
         this.id=id;
         this.producer=producer;
         this.location=location;
@@ -28,8 +29,10 @@ public class ItemDTO {
         this.sellingPrice=sellingPrice;
         this.categoryID=categoryID;
         this.alertTime=alertTime;
+        this.itemWeight=itemWeight;
     }
     public ItemDTO(Item i){
+        this.itemWeight=i.getItemWeight();
         this.id=i.getId();
         this.itemName = i.getName();
         this.location=i.getLocation();
@@ -53,6 +56,7 @@ public class ItemDTO {
         builder.append("Item Name: " + this.itemName + "\n");
         builder.append("Item Location: "+ this.location + "\n");
         builder.append("Item Producer: "+ this.producer + "\n");
+        builder.append("Item weight: " + itemWeight + "\n");
         builder.append("Item Selling price: " + sellingPrice + "\n");
         builder.append("Item Buying price: " + buyingPrice + "\n");
         builder.append("Item Available Amount: "+ this.availableAmount + "\n");
@@ -119,5 +123,9 @@ public class ItemDTO {
 
     public List<specificItemDTO> getSpecificItemDTOList() {
         return specificItemDTOList;
+    }
+
+    public int getItemWeight() {
+        return itemWeight;
     }
 }

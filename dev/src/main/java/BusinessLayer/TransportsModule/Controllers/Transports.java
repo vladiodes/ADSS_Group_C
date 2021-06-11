@@ -158,4 +158,12 @@ public class Transports implements Controller<Transport> {
         }
         return false;
     }
+
+    public Transport getTransport(int ID){
+        for(Transport transport:transports){
+            if(transport.getID()==ID)
+                return transport;
+        }
+        throw new IllegalArgumentException("No such transport with the given ID");
+    }
 }

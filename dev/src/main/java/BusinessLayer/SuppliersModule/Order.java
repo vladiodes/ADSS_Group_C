@@ -16,7 +16,6 @@ public class Order{
      * weightOf1Item is for adding this order to a transport, means the weight of 1 item.
      * nothing but a constraint for transports.
      */
-    private int weightOf1Item = 5;
     private LocalDate dateOfOrder;
     private int orderID=-1;
     private ShipmentStatus shipmentStatus;
@@ -26,9 +25,8 @@ public class Order{
     private Set<ProductInOrder> productsInOrder;
     private boolean isFixed;
     private int supplierID;
-    private String siteDestination;
 
-    public Order(LocalDate date,Boolean isFixed,int supplierID,String siteDestination){
+    public Order(LocalDate date,Boolean isFixed,int supplierID){
         setDateOfOrder(date);
         priceBeforeDiscount=0;
         priceAfterDiscount=0;
@@ -36,9 +34,9 @@ public class Order{
         productsInOrder=new LinkedHashSet<>();
         setisFixed(isFixed);
         this.supplierID=supplierID;
-        this.siteDestination=siteDestination;
-        if(siteDestination!=null){
-            findTransport();
+        String siteDestination=SuppliersController.getInstance().getSupplier(supplierID).getSiteDestination();
+        if(SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp()){
+            findTransport(siteDestination);
         }
         else{
             shipmentStatus=ShipmentStatus.TransportBySupplier;
@@ -52,7 +50,7 @@ public class Order{
      * @param original
      * @param date
      */
-    public Order(Order original,LocalDate date,int supplierID,String siteDestination){
+    public Order(Order original,LocalDate date,int supplierID){
         if(!original.isFixed)
             throw new IllegalArgumentException("The order you want to re-order from isn't fixed!");
         setDateOfOrder(date);
@@ -63,16 +61,15 @@ public class Order{
         this.productsInOrder.addAll(original.productsInOrder);
         isFixed=true;
         this.supplierID=supplierID;
-        this.siteDestination=siteDestination;
-        if(siteDestination!=null){
-            findTransport();
+        String siteDestination=SuppliersController.getInstance().getSupplier(supplierID).getSiteDestination();
+        if(!SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp()){
+            findTransport(siteDestination);
         }
         else{
             shipmentStatus=ShipmentStatus.TransportBySupplier;
         }
     }
 
-    //@TODO: fix this constructor (which handles the construction of an order when loaded from database) to receive the destinationSite as well.
     public Order(LocalDate dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed,int supplierID) {
         this.dateOfOrder=dateOfOrder;
         this.orderID=orderID;
@@ -164,11 +161,11 @@ public class Order{
      * is set to no transport available
      * @return true - if found a transport, false otherwise
      */
-    public boolean findTransport() {
+    public boolean findTransport(String siteDestination) {
         if(siteDestination==null || !(shipmentStatus==ShipmentStatus.NoTransportAvailable || shipmentStatus==null))
             throw new IllegalArgumentException("This order doesn't need a transportation");
 
-        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),weightOf1Item * this.totalQuantity)){
+        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),calculateTotalWeight())){
             shipmentStatus=ShipmentStatus.NoTransportAvailable;
             return false;
         }
@@ -178,28 +175,23 @@ public class Order{
     }
 
     /**
-     * This function tells if everything is ok with the order (a transportation was found either by supplier
-     * or by the store employees and we're waiting for the transport to arrive).
-     * @return return true if yes, false otherwise
+     * Calculates the total weight of the order (this param is needed for transport module)
      */
-    public boolean isWaitingForDelivery(){
-        return !(shipmentStatus==ShipmentStatus.NoTransportAvailable);
+    private int calculateTotalWeight(){
+        int output=0;
+        for(ProductInOrder pio:productsInOrder)
+            output+=pio.getContract().getProduct().getItemWeight()*pio.getQuantity();
+        return output;
     }
-
 
     /**
      *  this function is used when an order is received
-     *  simply change the status to received and calculates the final price of the order according to the current
      *  throws an exception if the order was already in the status of delivered
      */
     public void receive() {
         if(!(shipmentStatus==ShipmentStatus.TransportArrived || shipmentStatus==ShipmentStatus.TransportBySupplier)) //those are the only statuses in which the order can be received.
             throw new IllegalArgumentException("This order can't be receive (either transportation hasn't arrived yet\n" +
                     "or no transportation was assigned or the order was already delivered");
-
-        //An assumption: the items received in an order are to expire in 3 weeks from when receiving an order
-        for(ProductInOrder pio:productsInOrder)
-            pio.getContract().getProduct().addSpecificItem(0,pio.getQuantity(), LocalDate.now().plusWeeks(3));
         shipmentStatus=ShipmentStatus.Delivered;
         OrderMapper.getInstance().update(this,supplierID);
     }
@@ -296,6 +288,27 @@ public class Order{
     public void transportHasArrived(){
         if(shipmentStatus==ShipmentStatus.WaitingForTransport)
             shipmentStatus=ShipmentStatus.TransportArrived;
+        OrderMapper.getInstance().update(this,supplierID);
+    }
+
+    public void receiveItem(String pioName, int received, LocalDate expDate) {
+        if (!(shipmentStatus == ShipmentStatus.TransportArrived || shipmentStatus == ShipmentStatus.TransportBySupplier)) //those are the only statuses in which the order can be received.
+            throw new IllegalArgumentException("This order can't be received (either transportation hasn't arrived yet\n" +
+                    "or no transportation was assigned or the order was already delivered");
+        ProductInOrder pio = findProductByName(pioName);
+        if (pio == null)
+            throw new IllegalArgumentException("No such product with this name in the order");
+        if(pio.getQuantity()<received)
+            throw new IllegalArgumentException("There are less than " + received + " products of " + pioName + "  in the order");
+        pio.getContract().getProduct().addSpecificItem(0,received,expDate);
+    }
+
+    private ProductInOrder findProductByName(String name){
+        for(ProductInOrder pio:productsInOrder){
+            if(pio.getContract().getProduct().getName().equals(name))
+                return pio;
+        }
+        return null;
     }
 
     public enum ShipmentStatus{
