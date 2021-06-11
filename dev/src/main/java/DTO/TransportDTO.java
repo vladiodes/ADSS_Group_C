@@ -8,16 +8,16 @@ public class TransportDTO {
     public String driver;
     public String truck;
     public List<OrderDTO> orders;
-    public String source;
+    public boolean wasDelivered;
     public int ID;
 
-    public TransportDTO(String date, int weight, String driver, String truck, List<OrderDTO> contracts, String source, int ID) {
+    public TransportDTO(String date, int weight, String driver, String truck, List<OrderDTO> contracts, boolean _wasDelivered, int ID) {
         this.date = date;
         this.weight = weight;
         this.driver = driver;
         this.truck = truck;
         orders = contracts;
-        this.source = source;
+        this.wasDelivered = _wasDelivered;
         this.ID = ID;
     }
 }

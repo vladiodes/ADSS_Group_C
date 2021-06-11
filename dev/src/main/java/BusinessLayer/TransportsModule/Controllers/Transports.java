@@ -47,7 +47,7 @@ public class Transports implements Controller<Transport> {
     }
 
     public void addTransport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, Site source) throws Exception {
-        Transport toAdd = new Transport(date, weight, driver, truck, orders, source, ID);
+        Transport toAdd = new Transport(date, weight, driver, truck, orders, ID);
         transports.add(toAdd);
         ID++;
         DAO.insert(toAdd.toDTO());
@@ -68,7 +68,7 @@ public class Transports implements Controller<Transport> {
                 for (OrderDTO el2 : el.orders) {
                     ORDS.add(OrderMapper.getInstance().getOrder(el2.orderID));
                 }
-                this.transports.add(new Transport(Misc.Functions.convertToLocalDateViaInstant(Misc.Functions.StringToDate(el.date)), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ORDS, sitesController.getSite(el.source), el.ID));
+                this.transports.add(new Transport(Misc.Functions.convertToLocalDateViaInstant(Misc.Functions.StringToDate(el.date)), el.weight, (Driver)staffController.getEmployeeByID(el.driver), trucksController.getTruck(el.truck), ORDS, el.ID, el.wasDelivered));
                 ID ++;
             }
         }
@@ -149,11 +149,13 @@ public class Transports implements Controller<Transport> {
                             int newWeight = TranstoAdd.getWeight() + weight;
                             if (newWeight <= TranstoAdd.getTruck().getMaxWeight()) {
                                 TranstoAdd.getOrders().add(order);
+                                TransportsDAO TDAO = new TransportsDAO();
                                 try {
                                     TranstoAdd.setWeight(newWeight);
                                 } //because ima shitty programer dont ask questions please
                                 catch (Exception e) {
                                 }
+                                TDAO.update(TranstoAdd.toDTO());
                                 return true;
                             }
                         }

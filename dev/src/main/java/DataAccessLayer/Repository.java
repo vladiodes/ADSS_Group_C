@@ -226,7 +226,7 @@ public class Repository {
                 "\tFOREIGN KEY(\"Truck\") REFERENCES \"Trucks\"(\"Plate Num\")\n" +
                 ");";
 
-        String TransportsOdeTable = "CREATE TABLE \"TransportsOrders\" (\n" +
+        String TransportsOdeTable = "CREATE TABLE IF NOT EXISTS \"TransportsOrders\" (\n" +
                 "\t\"OrderID\"\tINTEGER,\n" +
                 "\t\"TransportID\"\tTEXT,\n" +
                 "\tFOREIGN KEY(\"OrderID\") REFERENCES \"Orders\"(\"ID\"),\n" +

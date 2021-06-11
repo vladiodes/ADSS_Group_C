@@ -18,19 +18,27 @@ public class Transport implements persistentObject<TransportDTO> {
     private Driver driver = null;
     private Truck truck = null;
     private List<Order> Orders;
-    private Site source = null;
     private int ID;
     private boolean delivered;
 
-    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, Site source, int ID) throws Exception {
+    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, int ID) throws Exception {
         setTruck(truck);
         setDate(date);
         setDriver(driver);
         setOrders(orders);
-        setSource(source);
         setWeight(weight);
         this.ID = ID;
         delivered = false;
+    }
+
+    public Transport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, int ID, boolean Del) throws Exception {
+        setTruck(truck);
+        setDate(date);
+        setDriver(driver);
+        setOrders(orders);
+        setWeight(weight);
+        this.ID = ID;
+        delivered = Del;
     }
 
     public void setDate(LocalDate date) {
@@ -61,10 +69,6 @@ public class Transport implements persistentObject<TransportDTO> {
         Orders = orders;
     }
 
-    public void setSource(Site source) {
-        this.source = source;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -83,10 +87,6 @@ public class Transport implements persistentObject<TransportDTO> {
 
     public List<Order> getOrders() {
         return Orders;
-    }
-
-    public Site getSource() {
-        return source;
     }
 
     public int getID() {
@@ -133,7 +133,7 @@ public class Transport implements persistentObject<TransportDTO> {
                 ", driver=" + driver +
                 ", truck=" + truck +
                 ", Contracts=" + Orders +
-                ", source=" + source +
+                ", Delivered=" + this.delivered +
                 '}';
     }
 
@@ -143,6 +143,6 @@ public class Transport implements persistentObject<TransportDTO> {
         for (Order ord : Orders) {
             OrdersDTO.add(new OrderDTO(ord, ord.getSupplierID()));
         }
-        return new TransportDTO(LocalDateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(), OrdersDTO, getSource().getAddress(), ID);
+        return new TransportDTO(LocalDateToString(getDate()), getWeight(), getDriver().getId(), getTruck().getPlateNum(), OrdersDTO, this.delivered, ID);
     }
 }
