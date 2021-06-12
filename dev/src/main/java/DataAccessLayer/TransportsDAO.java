@@ -46,7 +46,7 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
         try {
             //updating transport core stats
             s = conn.createStatement();
-            s.executeUpdate(String.format("UPDATE Transports SET Weight = %d, Date = \"%s\", Truck=\"%s\", Driver = \"%s\", wasDelivered = %s WHERE ID =\"%s\";",updatedOb.weight, updatedOb.date,updatedOb.truck,updatedOb.driver,updatedOb.wasDelivered, updatedOb.ID));
+            s.executeUpdate(String.format("UPDATE Transports SET Weight = %d, Date = \"%s\", Truck=\"%s\", Driver = \"%s\", wasDelivered = \"%s\" WHERE ID =\"%s\";",updatedOb.weight, updatedOb.date,updatedOb.truck,updatedOb.driver,updatedOb.wasDelivered, updatedOb.ID));
             //update orders
             s = conn.createStatement();
             s.executeUpdate(String.format("DELETE FROM TransportsOrders WHERE TransportID =  \"%s\";", updatedOb.ID));
