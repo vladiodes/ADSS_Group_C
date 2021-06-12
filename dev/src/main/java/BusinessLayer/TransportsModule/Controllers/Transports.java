@@ -78,6 +78,10 @@ public class Transports implements Controller<Transport> {
         }
     }
 
+    public void setScheduleController (ScheduleController sc){
+        this.scheduleController = sc;
+    }
+
     /**
      * This function should find an available transport within a week from the date issued with the order
      * With the given constraint of the fixed days the supplier is in the site destination
@@ -130,11 +134,11 @@ public class Transports implements Controller<Transport> {
                 Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder(), D.getLicense());
                 if (Ttruck == null) return false;
                 this.addTransport(Functions.convertToLocalDateViaInstant(S.getDate()), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords, Si);
+                return true;
             } catch (Exception e) {
                 return false;
             }
         }
-        return false;
     }
 
     private boolean checkForExistingTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
@@ -143,7 +147,7 @@ public class Transports implements Controller<Transport> {
         Transport TranstoAdd = null;
         for (Transport temp : this.transports) {
             if (TranstoAdd != null) break;
-            if (temp.getDate().isAfter(order.getDateOfOrder())) { //if the order is ready before the transport
+            if (temp.getDate().isAfter(order.getDateOfOrder()) && !temp.getDelivered()) { //if the order is ready before the transport
                 long TimeDiff = ChronoUnit.DAYS.between(temp.getDate(), order.getDateOfOrder());
                 if (TimeDiff <= 7) //week time difference
                     for (DayOfWeek DOW : fixedDays)

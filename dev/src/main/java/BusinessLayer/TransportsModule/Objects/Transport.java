@@ -93,6 +93,8 @@ public class Transport implements persistentObject<TransportDTO> {
         return ID;
     }
 
+    public boolean getDelivered(){return this.delivered;}
+
     /**
      * Once the order has arrived to the store, it's marked as arrived, and the orders it contains can now be stashed
      * in the inventory
@@ -132,7 +134,7 @@ public class Transport implements persistentObject<TransportDTO> {
                 ", weight=" + weight +
                 ", driver=" + driver +
                 ", truck=" + truck +
-                ", Contracts=" + Orders +
+                ", Orders=" + Orders +
                 ", Delivered=" + this.delivered +
                 '}';
     }

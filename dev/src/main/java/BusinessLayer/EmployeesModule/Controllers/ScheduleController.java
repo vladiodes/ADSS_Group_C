@@ -3,6 +3,7 @@ package BusinessLayer.EmployeesModule.Controllers;
 import BusinessLayer.EmployeesModule.Objects.DailySchedule;
 import BusinessLayer.EmployeesModule.Objects.Employee;
 import BusinessLayer.EmployeesModule.Objects.Shift;
+import BusinessLayer.TransportsModule.Controllers.Transports;
 import DTO.ShiftDTO;
 import DataAccessLayer.ShiftDAO;
 import Misc.TypeOfEmployee;
@@ -30,6 +31,7 @@ public class ScheduleController {
         this.typeOfLoggedIn = type;
         this.schedule = new HashMap<>();
         this.shiftDAO = new ShiftDAO();
+        Transports.getInstance().setScheduleController(this);
     }
 
     //========================================================Methods====================================================

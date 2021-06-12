@@ -375,8 +375,9 @@ public class Supplier{
      * @param orderID the id of the order to cancel
      */
     public void cancelOrder(int orderID) {
-
         Order order=findOrder(orderID);
+        if(order.getShipmentStatus().equals(Order.ShipmentStatus.WaitingForTransport))
+            throw new IllegalArgumentException("Order is already in a transport.");
         ordersFromSupplier.remove(order);
         OrderMapper.getInstance().remove(order);
     }
