@@ -164,8 +164,7 @@ public class Order{
     public boolean findTransport(String siteDestination) {
         if(siteDestination==null || !(shipmentStatus==ShipmentStatus.NoTransportAvailable || shipmentStatus==null))
             throw new IllegalArgumentException("This order doesn't need a transportation");
-
-        if(!Transports.getInstance().requestTransport(this,siteDestination, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),calculateTotalWeight())){
+        if(!Transports.getInstance().requestTransport(this, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),calculateTotalWeight())){
             shipmentStatus=ShipmentStatus.NoTransportAvailable;
             return false;
         }
