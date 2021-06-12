@@ -159,7 +159,7 @@ public class TransportsEmployeesFacade {
         Tru.addTruck(plate, model, maxweight, type, factoryweight);
     }
 
-    public void addTransport(LocalDate date, int weight, String driverID, String TruckID, List<Pair<Integer, Integer>> OrderIDs, String Source, TypeOfShift TransportationShift) throws Exception {
+    public void addTransport(LocalDate date, int weight, String driverID, String TruckID, List<Pair<Integer, Integer>> OrderIDs, TypeOfShift TransportationShift) throws Exception {
         if (!scheduleController.shiftContainsEmployee(driverID, Functions.LocalDateToDate(date), TransportationShift))
             throw new Exception("Driver not in shift at the time of the transport.");
         if (!scheduleController.shiftContainsTypeOfEmployee(TypeOfEmployee.Storage, Functions.LocalDateToDate(date), TransportationShift))
@@ -171,7 +171,7 @@ public class TransportsEmployeesFacade {
         ArrayList<Order> orders = new ArrayList<>();
         for (Pair<Integer, Integer> pair : OrderIDs)
             orders.add(suppliersController.getOrder(pair.first, pair.second));
-        Tra.addTransport(date, weight, (Driver) staffController.getEmployeeByID(driverID), Tru.getTruck(TruckID), orders, Sit.getSite(Source)); //TODO
+        Tra.addTransport(date, weight, (Driver) staffController.getEmployeeByID(driverID), Tru.getTruck(TruckID), orders); //TODO
         int newDriverAmount = scheduleController.getNumOfConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Driver);
         if (newDriverAmount == -1)
             this.scheduleController.addConstraint(Functions.LocalDateToDate(date), TransportationShift, TypeOfEmployee.Driver, 1);

@@ -8,7 +8,6 @@ import BusinessLayer.Interfaces.Controller;
 import BusinessLayer.Mappers.OrderMapper;
 import BusinessLayer.SuppliersModule.DayOfWeek;
 import BusinessLayer.SuppliersModule.Order;
-import BusinessLayer.TransportsModule.Objects.Site;
 import BusinessLayer.TransportsModule.Objects.Transport;
 import BusinessLayer.TransportsModule.Objects.Truck;
 import DTO.OrderDTO;
@@ -17,6 +16,7 @@ import DataAccessLayer.TransportsDAO;
 import Misc.Functions;
 import Misc.Pair;
 import Misc.TypeOfEmployee;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class Transports implements Controller<Transport> {
         DAO = new TransportsDAO();
     }
 
-    public void addTransport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders, Site source) throws Exception {
+    public void addTransport(LocalDate date, int weight, Driver driver, Truck truck, List<Order> orders) throws Exception {
         Transport toAdd = new Transport(date, weight, driver, truck, orders, ID);
         transports.add(toAdd);
         ID++;
@@ -88,17 +88,16 @@ public class Transports implements Controller<Transport> {
      * (meaning that the transport can only be executed on a day which is included in the fixedDays set).
      *
      * @param order           - the order to transport
-     * @param siteDestination - the destination to pick the order from
      * @param fixedDays       - the fixed days of the supplier (the constraint).
      * @return returns true if found a transport, returns false if no transport that fulfills the constraints was found.
      */
-    public boolean requestTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
-        if (checkForExistingTransport(order, siteDestination, fixedDays, weight))
+    public boolean requestTransport(Order order, Set<DayOfWeek> fixedDays, int weight) {
+        if (checkForExistingTransport(order, fixedDays, weight))
             return true;
-        else return tryMakeTransport(order, siteDestination, fixedDays, weight);
+        else return tryMakeTransport(order, fixedDays, weight);
     }
 
-    private boolean tryMakeTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
+    private boolean tryMakeTransport(Order order, Set<DayOfWeek> fixedDays, int weight) {
         LocalDate orderDate = order.getDateOfOrder();
         int dayslater = 0;
         List<LocalDate> maybeDates = new ArrayList<>();
@@ -123,17 +122,11 @@ public class Transports implements Controller<Transport> {
                 if (currP.second == TypeOfEmployee.Driver)
                     D = (Driver) staffController.getEmployeeByID(currP.first);
             List<Order> ords = new ArrayList<>();
-            Site Si = null;
             ords.add(order);
-            try {
-                Si = Sites.getInstance().getSite(siteDestination);
-            } catch (Exception e) {
-                return false;
-            }
             try {
                 Truck Ttruck = this.trucksController.getAvailableTruck(order.getDateOfOrder(), D.getLicense());
                 if (Ttruck == null) return false;
-                this.addTransport(Functions.convertToLocalDateViaInstant(S.getDate()), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords, Si);
+                this.addTransport(Functions.convertToLocalDateViaInstant(S.getDate()), Ttruck.getFactoryWeight() + weight, D, Ttruck, ords);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -141,8 +134,8 @@ public class Transports implements Controller<Transport> {
         }
     }
 
-    private boolean checkForExistingTransport(Order order, String siteDestination, Set<DayOfWeek> fixedDays, int weight) {
-        if (order == null || sitesController.getSite(siteDestination) == null || fixedDays.isEmpty())
+    private boolean checkForExistingTransport(Order order, Set<DayOfWeek> fixedDays, int weight) {
+        if (order == null || fixedDays.isEmpty())
             return false;
         Transport TranstoAdd = null;
         for (Transport temp : this.transports) {

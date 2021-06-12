@@ -146,9 +146,6 @@ public class TransportsMain extends menuWindow {
             String driverID = in.nextLine();
             System.out.println("Please enter the plate number of the truck");
             String plateNum = in.nextLine();
-            System.out.println("Please enter where the transport is going from");
-            String source = in.nextLine();
-
             System.out.println("Please enter the ID for the order you would like to transport");
             ArrayList<Pair<Integer, Integer>> orderIDs = new ArrayList<>();
             while (true) {
@@ -160,7 +157,7 @@ public class TransportsMain extends menuWindow {
             }
             while (true) {
                 try {
-                    API.addTransport(transDate, weight, driverID, plateNum, orderIDs, source, typeOfShift);
+                    API.addTransport(transDate, weight, driverID, plateNum, orderIDs, typeOfShift);
                     System.out.println("The transport was successfuly recorded!");
                     break;
                 } catch (Exception e) {

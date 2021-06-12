@@ -5,11 +5,9 @@ import BusinessLayer.Interfaces.persistentObject;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
-
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-
 import static Misc.Functions.LocalDateToString;
 
 public class Transport implements persistentObject<TransportDTO> {
@@ -66,6 +64,11 @@ public class Transport implements persistentObject<TransportDTO> {
     }
 
     public void setOrders(List<Order> orders) {
+        for (Order order : orders) {
+            Order.ShipmentStatus status = order.getShipmentStatus();
+            if (!(status.equals(Order.ShipmentStatus.NoTransportAvailable) || status.equals(Order.ShipmentStatus.Delivered)))
+                throw new IllegalArgumentException("order " + order.getOrderID() + " from supplier " + order.getSupplierID() + " doesn't need a transportation");
+        }
         Orders = orders;
     }
 
@@ -93,7 +96,9 @@ public class Transport implements persistentObject<TransportDTO> {
         return ID;
     }
 
-    public boolean getDelivered(){return this.delivered;}
+    public boolean getDelivered() {
+        return delivered;
+    }
 
     /**
      * Once the order has arrived to the store, it's marked as arrived, and the orders it contains can now be stashed
@@ -101,8 +106,8 @@ public class Transport implements persistentObject<TransportDTO> {
      */
     public void setDelivered() {
         //@TODO: synchronize this with the database
-        delivered=true;
-        for(Order o:Orders)
+        delivered = true;
+        for (Order o : Orders)
             o.transportHasArrived(); //simply changes shipment status
 
         /**
