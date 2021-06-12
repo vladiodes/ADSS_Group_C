@@ -209,4 +209,14 @@ public interface ISuppliersFacade {
      * @return
      */
     Response<Boolean> receiveItemInOrder(int supplierID, int orderID, String pioName, int received, LocalDate expDate);
+
+    /**
+     * Receives all items in an order
+     * @param supplierID
+     * @param orderID
+     * @return
+     */
+    Response<Boolean> receiveAllItemsInOrder(int supplierID,int orderID);
+
+    Response<Boolean> canReceiveOrder(int supplierID,int orderID);
 }

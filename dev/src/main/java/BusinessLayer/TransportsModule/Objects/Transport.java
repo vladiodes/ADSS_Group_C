@@ -35,7 +35,7 @@ public class Transport implements persistentObject<TransportDTO> {
         setTruck(truck);
         setDate(date);
         setDriver(driver);
-        setOrders(orders);
+        Orders=orders; //throws an exception if using the setter, because loading it from database
         setWeight(weight);
         this.ID = ID;
         delivered = Del;
@@ -107,6 +107,8 @@ public class Transport implements persistentObject<TransportDTO> {
      * in the inventory
      */
     public void setDelivered() {
+        if(LocalDate.now().isBefore(date))
+            throw new IllegalArgumentException("This is too early, the transport hasn't come out yet");
         delivered = true;
         for (Order o : Orders)
             o.transportHasArrived(); //simply changes shipment status

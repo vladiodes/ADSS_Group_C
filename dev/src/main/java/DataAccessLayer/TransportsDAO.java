@@ -74,7 +74,7 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
             String Truckplate = RS.getString(4);
             int transportID = RS.getInt(3);
             List<OrderDTO> Orders = new ArrayList<OrderDTO>();
-            boolean wasDel = RS.getBoolean(6);
+            boolean wasDel = RS.getString(6).equals("true");
             ResultSet contractsRS = getWithInt("TransportsOrders", "TransportID", transportID,conn);
             while (contractsRS.next()) {
                 int OrderID = contractsRS.getInt(1);

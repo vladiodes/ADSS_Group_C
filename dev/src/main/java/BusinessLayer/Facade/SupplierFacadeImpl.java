@@ -267,4 +267,26 @@ public class SupplierFacadeImpl implements ISuppliersFacade {
             return new Response<>(e);
         }
     }
+
+    @Override
+    public Response<Boolean> receiveAllItemsInOrder(int supplierID, int orderID) {
+        try{
+            suppliersController.getSupplier(supplierID).receiveAllItemsInOrder(orderID);
+            return new Response<>(true);
+        }
+        catch (IllegalArgumentException e){
+            return new Response<>(e);
+        }
+    }
+
+    @Override
+    public Response<Boolean> canReceiveOrder(int supplierID, int orderID) {
+        try {
+            return new Response<>(suppliersController.getSupplier(supplierID).canReceiveOrder(orderID));
+        }
+        catch (IllegalArgumentException e){
+            return new Response<>(e);
+        }
+
+    }
 }

@@ -105,22 +105,37 @@ public class ordersMenuWindow extends menuWindow {
     private void receiveOrder() {
         int supplierID=utills.getNonNegativeNumber("\nEnter supplier's id the order was supplied by");
         int orderID=utills.getNonNegativeNumber("\nEnter the id of the supplied order");
+        Response<Boolean> canReceive=facade.canReceiveOrder(supplierID,orderID);
+        if(canReceive.WasException() || !canReceive.getValue()){
+            System.out.println("Can't receive this order");
+            return;
+        }
         Response<OrderDTO> response=facade.getOrder(supplierID,orderID);
         if(response.WasException()) {
             System.out.println(response.getMessage());
             return;
         }
         OrderDTO order=response.getValue();
-        for(String pioName: order.productsNamesDescription.keySet()){
-            System.out.println(order.productsNamesDescription.get(pioName));
-            Response<Boolean> resp=facade.receiveItemInOrder(supplierID,orderID,pioName,
-                    utills.getNonNegativeNumber("Enter how much products of this type you actually received\n")
-                    ,utills.getDateFromUser("Please enter the expiration date of the products\n"));
-            while (resp.WasException()){
+        System.out.println("Receive all order items automatically? Y/N");
+        if(utills.scanner.nextLine().equals("Y")) {
+            Response<Boolean> resp = facade.receiveAllItemsInOrder(supplierID, orderID);
+            if(resp.WasException()) {
                 System.out.println(resp.getMessage());
-                resp=facade.receiveItemInOrder(supplierID,orderID,pioName,
+                return;
+            }
+        }
+        else {
+            for (String pioName : order.productsNamesDescription.keySet()) {
+                System.out.println(order.productsNamesDescription.get(pioName));
+                Response<Boolean> resp = facade.receiveItemInOrder(supplierID, orderID, pioName,
                         utills.getNonNegativeNumber("Enter how much products of this type you actually received\n")
-                        ,utills.getDateFromUser("Please enter the expiration date of the products\n"));
+                        , utills.getDateFromUser("Please enter the expiration date of the products\n"));
+                while (resp.WasException()) {
+                    System.out.println(resp.getMessage());
+                    resp = facade.receiveItemInOrder(supplierID, orderID, pioName,
+                            utills.getNonNegativeNumber("Enter how much products of this type you actually received\n")
+                            , utills.getDateFromUser("Please enter the expiration date of the products\n"));
+                }
             }
         }
         Response<Boolean> receivedOrder=facade.receiveOrder(supplierID,orderID);

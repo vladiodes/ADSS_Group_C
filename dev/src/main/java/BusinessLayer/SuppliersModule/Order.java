@@ -286,6 +286,14 @@ public class Order{
         OrderMapper.getInstance().update(this,supplierID);
     }
 
+    public void receiveAllItems(){
+        if (!(shipmentStatus == ShipmentStatus.TransportArrived || shipmentStatus == ShipmentStatus.TransportBySupplier)) //those are the only statuses in which the order can be received.
+            throw new IllegalArgumentException("This order can't be received (either transportation hasn't arrived yet\n" +
+                    "or no transportation was assigned or the order was already delivered");
+        for(ProductInOrder pio:productsInOrder)
+            pio.getContract().getProduct().addSpecificItem(0, pio.getQuantity(), LocalDate.now().plusWeeks(3));
+    }
+
     public void receiveItem(String pioName, int received, LocalDate expDate) {
         if (!(shipmentStatus == ShipmentStatus.TransportArrived || shipmentStatus == ShipmentStatus.TransportBySupplier)) //those are the only statuses in which the order can be received.
             throw new IllegalArgumentException("This order can't be received (either transportation hasn't arrived yet\n" +
@@ -304,6 +312,12 @@ public class Order{
                 return pio;
         }
         return null;
+    }
+
+    public Boolean canReceive() {
+        if(LocalDate.now().isBefore(dateOfOrder))
+            return false;
+        return shipmentStatus==ShipmentStatus.TransportArrived || shipmentStatus==ShipmentStatus.TransportBySupplier;
     }
 
     public enum ShipmentStatus{

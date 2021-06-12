@@ -113,7 +113,7 @@ public class Transports implements Controller<Transport> {
         for (LocalDate d : maybeDates)
             dateTimes.add(Functions.LocalDateToDate(d));
         List<Shift> maybeShifts = scheduleController.getWeeklyShiftsForTransport(dateTimes);
-        if (maybeShifts == null)
+        if (maybeShifts == null || maybeShifts.size()==0)
             return false;
         else {
             Shift S = maybeShifts.get(0);

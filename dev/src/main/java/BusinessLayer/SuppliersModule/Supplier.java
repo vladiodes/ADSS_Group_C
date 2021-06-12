@@ -487,4 +487,12 @@ public class Supplier{
         Order order=findOrder(orderID);
         order.receiveItem(pioName,received,expDate);
     }
+
+    public void receiveAllItemsInOrder(int orderID){
+        findOrder(orderID).receiveAllItems();
+    }
+
+    public Boolean canReceiveOrder(int orderID) {
+        return findOrder(orderID).canReceive();
+    }
 }
