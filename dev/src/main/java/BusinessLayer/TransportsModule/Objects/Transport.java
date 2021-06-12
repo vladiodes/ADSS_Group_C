@@ -5,6 +5,8 @@ import BusinessLayer.Interfaces.persistentObject;
 import BusinessLayer.SuppliersModule.Order;
 import DTO.OrderDTO;
 import DTO.TransportDTO;
+import DataAccessLayer.TransportsDAO;
+
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,7 +111,8 @@ public class Transport implements persistentObject<TransportDTO> {
         delivered = true;
         for (Order o : Orders)
             o.transportHasArrived(); //simply changes shipment status
-
+        TransportsDAO DAO = new TransportsDAO();
+        DAO.update(this.toDTO());
         /**
          * Ilay's prev implementation
          */
