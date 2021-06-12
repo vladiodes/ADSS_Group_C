@@ -18,11 +18,12 @@ public class TransportsDAO extends DAOV2<TransportDTO> {
     public int insert(TransportDTO Ob) {
         Connection conn = Repository.getInstance().connect();
         if (Ob == null) return 0;
-        String Values = String.format("(%d,\"%s\",\"%s\",\"%s\",\"%s\", %s)", Ob.weight,Ob.date, Ob.ID, Ob.truck, Ob.driver, Ob.wasDelivered);
+        String Values = String.format("(%d,\"%s\",\"%s\",\"%s\",\"%s\", \"%s\")", Ob.weight,Ob.date, Ob.ID, Ob.truck, Ob.driver, Ob.wasDelivered);
         Statement s;
         try {
             s = conn.createStatement();
-            s.executeUpdate(InsertStatement(Values));
+            String StatementS = InsertStatement(Values);
+            s.executeUpdate(StatementS);
             for(OrderDTO currOrd : Ob.orders)
             {
                 s = conn.createStatement();
