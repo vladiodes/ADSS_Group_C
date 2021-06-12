@@ -34,13 +34,10 @@ public class Order{
         productsInOrder=new LinkedHashSet<>();
         setisFixed(isFixed);
         this.supplierID=supplierID;
-        String siteDestination=SuppliersController.getInstance().getSupplier(supplierID).getSiteDestination();
-        if(SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp()){
-            findTransport(siteDestination);
-        }
-        else{
+        if(SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp())
+            shipmentStatus=ShipmentStatus.NoTransportAvailable;
+        else
             shipmentStatus=ShipmentStatus.TransportBySupplier;
-        }
     }
 
     /**
@@ -61,13 +58,11 @@ public class Order{
         this.productsInOrder.addAll(original.productsInOrder);
         isFixed=true;
         this.supplierID=supplierID;
-        String siteDestination=SuppliersController.getInstance().getSupplier(supplierID).getSiteDestination();
-        if(!SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp()){
-            findTransport(siteDestination);
-        }
-        else{
+        if(SuppliersController.getInstance().getSupplier(supplierID).isSelfPickUp())
+            shipmentStatus=ShipmentStatus.NoTransportAvailable;
+        else
             shipmentStatus=ShipmentStatus.TransportBySupplier;
-        }
+
     }
 
     public Order(LocalDate dateOfOrder, int orderID, ShipmentStatus shipmentStatus, double priceBeforeDiscount, double priceAfterDiscount, int totalQuantity, Set<ProductInOrder> productsInOrder, boolean isFixed,int supplierID) {
@@ -128,6 +123,8 @@ public class Order{
     public void addItem(Contract productContract, int quantity, Map<Double,Integer> discountsByPrice){
         if(shipmentStatus==ShipmentStatus.Delivered)
             throw new IllegalArgumentException("Can't add items to a delivered order");
+        if(shipmentStatus==ShipmentStatus.WaitingForTransport || shipmentStatus==ShipmentStatus.TransportArrived)
+            throw new IllegalArgumentException("There is already a transport for the order, can't add more items");
         ProductInOrder pio=findProductInOrder(productContract.getProduct());
         if(pio==null){
             pio=new ProductInOrder(quantity,productContract);
@@ -141,7 +138,6 @@ public class Order{
         totalQuantity+=quantity;
         calculateDiscount(discountsByPrice);
         OrderMapper.getInstance().update(this,supplierID);
-
     }
 
     //this functions receives a product and searches for a productInOrder matching to that product.
@@ -176,7 +172,7 @@ public class Order{
     /**
      * Calculates the total weight of the order (this param is needed for transport module)
      */
-    private int calculateTotalWeight(){
+    public int calculateTotalWeight(){
         int output=0;
         for(ProductInOrder pio:productsInOrder)
             output+=pio.getContract().getProduct().getItemWeight()*pio.getQuantity();

@@ -68,7 +68,7 @@ public class Transport implements persistentObject<TransportDTO> {
     public void setOrders(List<Order> orders) {
         for (Order order : orders) {
             Order.ShipmentStatus status = order.getShipmentStatus();
-            if (!(status.equals(Order.ShipmentStatus.NoTransportAvailable) || status.equals(Order.ShipmentStatus.Delivered)))
+            if (!(status.equals(Order.ShipmentStatus.NoTransportAvailable)))
                 throw new IllegalArgumentException("order " + order.getOrderID() + " from supplier " + order.getSupplierID() + " doesn't need a transportation");
         }
         Orders = orders;
@@ -107,42 +107,24 @@ public class Transport implements persistentObject<TransportDTO> {
      * in the inventory
      */
     public void setDelivered() {
-        //@TODO: synchronize this with the database
         delivered = true;
         for (Order o : Orders)
             o.transportHasArrived(); //simply changes shipment status
         TransportsDAO DAO = new TransportsDAO();
         DAO.update(this.toDTO());
-        /**
-         * Ilay's prev implementation
-         */
-//        SuppliersController SC = SuppliersController.getInstance();
-//        if (AllGood)
-//            for (Order d : this.getOrders()) {
-//                SC.receiveOrder(d.getSupplierID(), d.getOrderID());
-//                d.transportHasArrived();
-//            }
-//        else {
-//            if (badOrders == null || badOrders.size() == 0)
-//                throw new IllegalArgumentException();
-//            for (Order d : this.getOrders()) {
-//                d.transportHasArrived();
-//                if (!badOrders.contains(d.getOrderID()))
-//                    SC.receiveOrder(d.getSupplierID(), d.getOrderID());
-//            }
-//        }
-//        this.delivered = true;
     }
 
     @Override
     public String toString() {
-        //@TODO: Order object doesn't have any toString() method, you should first create an orderDTO object, which DOES have a toString() method
+        StringBuilder builder=new StringBuilder();
+        for(Order o:Orders)
+            builder.append(new OrderDTO(o,o.getSupplierID())).append("\n");
         return "Transport{" +
                 "date=" + date +
                 ", weight=" + weight +
                 ", driver=" + driver +
                 ", truck=" + truck +
-                ", Orders=" + Orders +
+                ", Orders=" + builder.toString() +
                 ", Delivered=" + this.delivered +
                 '}';
     }
