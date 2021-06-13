@@ -162,10 +162,12 @@ public class Order{
             throw new IllegalArgumentException("This order doesn't need a transportation");
         if(!Transports.getInstance().requestTransport(this, SuppliersController.getInstance().getSupplier(supplierID).getFixedDays(),calculateTotalWeight())){
             shipmentStatus=ShipmentStatus.NoTransportAvailable;
+            OrderMapper.getInstance().update(this,supplierID);
             return false;
         }
         else
             shipmentStatus=ShipmentStatus.WaitingForTransport;
+        OrderMapper.getInstance().update(this,supplierID);
         return true;
     }
 

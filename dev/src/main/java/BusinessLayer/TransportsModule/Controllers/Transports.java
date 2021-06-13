@@ -140,11 +140,11 @@ public class Transports implements Controller<Transport> {
         Transport TranstoAdd = null;
         for (Transport temp : this.transports) {
             if (TranstoAdd != null) break;
-            if (temp.getDate().isAfter(order.getDateOfOrder()) && !temp.getDelivered()) { //if the order is ready before the transport
+            if (!temp.getDate().isBefore(order.getDateOfOrder()) && !temp.getDelivered()) { //if the order is ready before the transport
                 long TimeDiff = ChronoUnit.DAYS.between(temp.getDate(), order.getDateOfOrder());
                 if (TimeDiff <= 7) //week time difference
                     for (DayOfWeek DOW : fixedDays)
-                        if (DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue() - 1) % 8)) == 0) {
+                        if (DOW.compareTo(DayOfWeek.valueOf((temp.getDate().getDayOfWeek().getValue() + 1) % 7)) == 0) {
                             TranstoAdd = temp;
                             int newWeight = TranstoAdd.getWeight() + weight;
                             if (newWeight <= TranstoAdd.getTruck().getMaxWeight()) {
